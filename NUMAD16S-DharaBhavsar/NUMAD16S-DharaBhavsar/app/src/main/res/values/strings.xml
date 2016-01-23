@@ -30,4 +30,10 @@ both sides in the larger game.
 
     <string name="about_app_screen"> About </string>
 
+    <string name="name">Dhara Bhavsar</string>
+    <string name="email">bhavsar.d@husky.neu.edu</string>
+    <string name="year">1st Year</string>
+    <string name="program">Master of Science in Computer Science</string>
+    <string name="imei">IMEI : </string>
+
 </resources>
