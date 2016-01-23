@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context=".AboutActivity"
+    android:orientation="vertical">
+
+    //Custom Title Bar
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/about_title_bar_height"
+        android:id="@+id/about_title_bar"
+        android:background="@color/about_title_bar_color"
+        android:textColor="@color/about_title_bar_font_color"
+        android:text="@string/about_app_screen"
+        android:focusable="false"
+        android:textSize="@dimen/abc_action_bar_content_inset_material"
+        android:textStyle="bold"
+        android:typeface="sans">
+    </TextView>
+
+    <fragment
+        android:id="@+id/fragment_main_about"
+        class="edu.neu.madcourse.dharabhavsar.about.MainFragmentAbout"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

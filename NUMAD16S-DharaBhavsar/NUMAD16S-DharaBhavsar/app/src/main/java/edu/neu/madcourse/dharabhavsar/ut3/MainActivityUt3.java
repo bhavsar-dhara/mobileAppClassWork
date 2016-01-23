@@ -9,19 +9,18 @@
 package edu.neu.madcourse.dharabhavsar.ut3;
 
 import android.app.Activity;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class MainActivityUt3 extends Activity {
-   MediaPlayer mMediaPlayer;
+//   MediaPlayer mMediaPlayer;
    // ...
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.ativity_main_ut3);
+      setContentView(R.layout.activity_main_ut3);
    }
 
    @Override

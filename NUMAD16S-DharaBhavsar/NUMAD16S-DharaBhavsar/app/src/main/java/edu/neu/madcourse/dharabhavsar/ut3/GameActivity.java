@@ -69,9 +69,9 @@ public class GameActivity extends Activity {
          @Override
          public void run() {
             mMediaPlayer = MediaPlayer.create(GameActivity.this,
-                    winner == Tile.Owner.X ? R.raw.oldedgar_winner
-                            : winner == Tile.Owner.O ? R.raw.notr_loser
-                            : R.raw.department64_draw
+                    winner == Tile.Owner.X ? R.raw.winner_sound_freesound_org
+                            : winner == Tile.Owner.O ? R.raw.loser_sound_freesound_org
+                            : R.raw.draw_sound_freesound_org
             );
             mMediaPlayer.start();
             dialog.show();
@@ -95,9 +95,10 @@ public class GameActivity extends Activity {
    @Override
    protected void onResume() {
       super.onResume();
-      mMediaPlayer = MediaPlayer.create(this, R.raw.frankum_loop001e);
-      mMediaPlayer.setLooping(true);
+      mMediaPlayer = MediaPlayer.create(this, R.raw.cooltron_homemadepodracingcar_freesound_org);
+
       mMediaPlayer.start();
+      mMediaPlayer.setLooping(true);
    }
 
    @Override
@@ -110,7 +111,7 @@ public class GameActivity extends Activity {
       String gameData = mGameFragment.getState();
       getPreferences(MODE_PRIVATE).edit()
             .putString(PREF_RESTORE, gameData)
-            .commit();
+              .commit();
       Log.d("UT3", "state = " + gameData);
    }
 }

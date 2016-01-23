@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AboutActivity"
+    android:weightSum="1"
+    android:showDividers="none">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.11" />
+
+    <!--<View android:id="@+id/primerdivisor_5" android:layout_height="2dp" android:layout_width="match_parent" android:background="#aaaaaa" />-->
+
+    <ImageView
+        android:layout_width="218dp"
+        android:layout_height="141dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.50" />
+
+    <!--<View android:id="@+id/primerdivisor_1" android:layout_height="2dp" android:layout_width="match_parent" android:background="#aaaaaa" />-->
+
+    <TextView
+        android:id="@+id/about_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tile_size"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_gravity="center"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/about_email"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tile_size"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_gravity="center"
+        android:textAlignment="center" />
+
+    <!--<View android:id="@+id/primerdivisor_2" android:layout_height="2dp" android:layout_width="match_parent" android:background="#aaaaaa" />-->
+
+    <TextView
+        android:id="@+id/about_school_year"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tile_size"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_gravity="center"
+        android:textAlignment="center" />
+
+    <!--<View android:id="@+id/primerdivisor_3" android:layout_height="2dp" android:layout_width="match_parent" android:background="#aaaaaa" />-->
+
+    <TextView
+        android:id="@+id/about_degree"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tile_size"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_weight="0.08"
+        android:layout_gravity="center"
+        android:textAlignment="center" />
+
+    <!--<View android:id="@+id/primerdivisor_4" android:layout_height="2dp" android:layout_width="match_parent" android:background="#aaaaaa" />-->
+
+    <TextView
+        android:id="@+id/about_imei"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tile_size"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_gravity="center"
+        android:textAlignment="center" />
+
+    <!--<View android:id="@+id/primerdivisor_6" android:layout_height="2dp" android:layout_width="match_parent" android:background="#aaaaaa" />-->
+
+</LinearLayout>
