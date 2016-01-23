@@ -9,7 +9,7 @@
     android:columnCount="2"
     android:rowCount="8"
     android:alignmentMode="alignMargins"
-    android:paddingLeft="50dp">
+    android:paddingLeft="35dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -34,8 +34,8 @@
         android:layout_column="1" />
 
     <ImageView
-        android:layout_width="225dp"
-        android:layout_height="254dp"
+        android:layout_width="200dp"
+        android:layout_height="229dp"
         android:id="@+id/imageView"
         android:layout_gravity="left|center_vertical"
         android:layout_weight="0.85"
@@ -50,8 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tile_size"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="top|center"
         android:textAlignment="center"
         android:layout_column="1"
         android:width="320dp"
@@ -62,8 +62,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tile_size"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="top|center"
         android:textAlignment="center"
         android:layout_column="1"
         android:width="320dp"
@@ -78,8 +78,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tile_size"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="top|center"
         android:textAlignment="center"
         android:layout_column="1"
         android:width="320dp"
@@ -90,9 +90,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_weight="0.08"
-        android:layout_gravity="center"
+        android:layout_gravity="top|center"
         android:textAlignment="center"
         android:layout_column="1"
         android:width="320dp"
@@ -104,7 +104,7 @@
         android:id="@+id/about_imei"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_gravity="top|center"
         android:textAlignment="center"
         android:layout_column="1"
