@@ -9,12 +9,13 @@
 package edu.neu.madcourse.dharabhavsar.ut3;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class MainActivityUt3 extends Activity {
-//   MediaPlayer mMediaPlayer;
+   MediaPlayer mMediaPlayer;
    // ...
 
    @Override
@@ -26,17 +27,17 @@ public class MainActivityUt3 extends Activity {
    @Override
    protected void onResume() {
       super.onResume();
-//      mMediaPlayer = MediaPlayer.create(this, R.raw.a_guy_1_epicbuilduploop);
-//      mMediaPlayer.setVolume(0.5f, 0.5f);
-//      mMediaPlayer.setLooping(true);
-//      mMediaPlayer.start();
+      mMediaPlayer = MediaPlayer.create(this, R.raw.snapper4298__credits2_freesound_org);
+      mMediaPlayer.setVolume(0.5f, 0.5f);
+      mMediaPlayer.setLooping(true);
+      mMediaPlayer.start();
    }
 
    @Override
    protected void onPause() {
       super.onPause();
-//      mMediaPlayer.stop();
-//      mMediaPlayer.reset();
-//      mMediaPlayer.release();
+      mMediaPlayer.stop();
+      mMediaPlayer.reset();
+      mMediaPlayer.release();
    }
 }
