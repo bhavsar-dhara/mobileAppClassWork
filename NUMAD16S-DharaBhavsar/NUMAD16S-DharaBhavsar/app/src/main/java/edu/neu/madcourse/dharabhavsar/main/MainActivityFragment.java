@@ -187,6 +187,14 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
+        Button btn5 = (Button) rootView.findViewById(R.id.dictionary_button);
+        btn5.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return rootView;
     }
 }
