@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,16 +57,10 @@ public class MainFragmentDict extends Fragment {
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
 
-//                editWordText.setText("");
-//                editWordText.getText().clear();
-
                 // Clear text when clicked
-                editWordText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        editWordText.setText("");
-                    }
-                });
+//                editWordText.setText("");
+                editWordText.getText().clear();
+                Log.v("MainFragmentDict", "onClick: "+editWordText.getText());
                 textViewWordList.setText("");
             }
         });

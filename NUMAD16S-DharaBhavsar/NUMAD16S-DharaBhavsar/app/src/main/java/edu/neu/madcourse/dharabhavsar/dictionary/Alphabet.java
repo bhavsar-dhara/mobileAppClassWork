@@ -25,10 +25,12 @@ public abstract class Alphabet {
 
 
     public Alphabet(String alphabet) {
+
         this.alphabet = alphabet;
     }
 
     public byte[] toInt(String word) {
+
         byte[] r = new byte[word.length()];
         for (int i = 0; i < r.length; i++) {
             r[i] = getIndex(word.charAt(i));
@@ -38,11 +40,13 @@ public abstract class Alphabet {
 
 
     public byte getIndex(char c) {
+
         return (byte) alphabet.indexOf(c);
     };
 
 
     public int size() {
+
         return alphabet.length();
     }
 }
