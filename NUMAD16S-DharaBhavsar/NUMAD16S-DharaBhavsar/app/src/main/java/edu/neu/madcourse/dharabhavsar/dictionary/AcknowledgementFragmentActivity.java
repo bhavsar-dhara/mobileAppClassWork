@@ -28,7 +28,7 @@ public class AcknowledgementFragmentActivity extends Fragment {
         View rootView =
                 inflater.inflate(R.layout.fragment_main_ack, container, false);
 
-        AcknowledgementFragmentActivity.this.getActivity().setContentView(R.layout.fragment_main_ack);
+//        AcknowledgementFragmentActivity.this.getActivity().setContentView(R.layout.fragment_main_ack);
 
         return rootView;
     }

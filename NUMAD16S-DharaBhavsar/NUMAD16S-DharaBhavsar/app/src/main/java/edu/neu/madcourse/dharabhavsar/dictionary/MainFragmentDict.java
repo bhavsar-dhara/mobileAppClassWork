@@ -36,7 +36,7 @@ public class MainFragmentDict extends Fragment {
         View rootView =
                 inflater.inflate(R.layout.fragment_main_dict, container, false);
 
-        MainFragmentDict.this.getActivity().setContentView(R.layout.fragment_main_dict);
+//        MainFragmentDict.this.getActivity().setContentView(R.layout.fragment_main_dict);
 
         final TextView textViewWordList;
         final EditText editWordText;
