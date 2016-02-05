@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import edu.neu.madcourse.dharabhavsar.main.MainActivity;
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 /**
@@ -75,8 +74,13 @@ public class MainFragmentDict extends Fragment {
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
 
-                Intent intent = new Intent(MainFragmentDict.this.getActivity(), MainActivity.class);
-                startActivity(intent);
+                // wrong implementation as it starts a new activity
+//                Intent intent = new Intent(MainFragmentDict.this.getActivity(), MainActivity.class);5
+//                startActivity(intent);
+//                Method 2
+//                super.onBackPressed();
+//                Method 3
+                MainFragmentDict.this.getActivity().finish();
             }
         });
 
