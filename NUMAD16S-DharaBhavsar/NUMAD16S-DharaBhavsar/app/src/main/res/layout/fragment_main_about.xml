@@ -4,9 +4,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AboutActivity"
+    tools:context="edu.neu.madcourse.dharabhavsar.about.MainActivityAbout"
     android:weightSum="1"
     android:showDividers="none">
+    <!--tools:context=".AboutActivity"-->
 
     <TextView
         android:layout_width="match_parent"

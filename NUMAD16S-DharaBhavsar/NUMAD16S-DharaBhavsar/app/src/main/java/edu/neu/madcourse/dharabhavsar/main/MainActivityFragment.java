@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import edu.neu.madcourse.dharabhavsar.about.MainActivityAbout;
+import edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict;
 import edu.neu.madcourse.dharabhavsar.ut3.MainActivityUt3;
 
 /**
@@ -35,7 +36,8 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(), R.raw.short_ping_freesound_org);
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.short_ping_freesound_org);
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
 
@@ -60,7 +62,8 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(), R.raw.short_ping_freesound_org);
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.short_ping_freesound_org);
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
 
@@ -76,7 +79,8 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(), R.raw.distillerystudio_error_03_freesound_org);
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.distillerystudio_error_03_freesound_org);
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
 
@@ -178,7 +182,8 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(), R.raw.short_ping_freesound_org);
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.short_ping_freesound_org);
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
 
@@ -192,6 +197,13 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.short_ping_freesound_org);
+                mMediaPlayer.setVolume(0.5f, 0.5f);
+                mMediaPlayer.start();
+
+                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityDict.class);
+                startActivity(intent);
             }
         });
 

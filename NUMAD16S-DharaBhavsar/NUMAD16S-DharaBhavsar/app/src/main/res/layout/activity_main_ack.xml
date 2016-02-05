@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipChildren="false"
-    tools:context="edu.neu.madcourse.dharabhavsar.about.MainActivityAbout"
-    android:orientation="vertical">
-    <!--tools:context=".AboutActivity"-->
+    tools:context="edu.neu.madcourse.dharabhavsar.dictionary.AcknowledgementMainActivity"
+    android:weightSum="1">
 
     //Custom Title Bar
     <TextView
@@ -15,7 +14,7 @@
         android:id="@+id/about_title_bar"
         android:background="@color/about_title_bar_color"
         android:textColor="@color/about_title_bar_font_color"
-        android:text="@string/about_app_screen"
+        android:text="@string/ack_app_screen"
         android:focusable="false"
         android:textSize="@dimen/abc_action_bar_content_inset_material"
         android:textStyle="bold"
@@ -23,12 +22,12 @@
     </TextView>
 
     <fragment
-        android:id="@+id/fragment_main_about"
-        class="edu.neu.madcourse.dharabhavsar.about.MainFragmentAbout"
+        android:id="@+id/fragment_main_ack"
+        class="edu.neu.madcourse.dharabhavsar.dictionary.AcknowledgementFragmentActivity"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        tools:layout="@layout/fragment_main_about" />
+        tools:layout="@layout/fragment_main_ack" />
 
 </LinearLayout>
