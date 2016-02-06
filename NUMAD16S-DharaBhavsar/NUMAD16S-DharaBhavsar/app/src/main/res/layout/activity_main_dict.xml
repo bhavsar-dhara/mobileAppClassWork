@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -18,16 +18,55 @@
         android:focusable="false"
         android:textSize="@dimen/abc_action_bar_content_inset_material"
         android:textStyle="bold"
-        android:typeface="sans">
+        android:typeface="sans"
+        android:layout_row="0" >
     </TextView>
 
-    <fragment
-        android:id="@+id/fragment_main_dict"
-        class="edu.neu.madcourse.dharabhavsar.dictionary.MainFragmentDict"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
+    <EditText
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        tools:layout="@layout/fragment_main_dict" />
+        android:id="@+id/editWordText"
+        android:layout_gravity="left|center_horizontal"
+        android:hint="Enter word here.."
+        android:layout_row="1" />
 
-</LinearLayout>
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clearBtn"
+        android:id="@+id/clearBtn"
+        android:layout_gravity="center_horizontal|right"
+        android:textAllCaps="false"
+        android:layout_row="1" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/returnToMenuBtn"
+        android:id="@+id/returnToMenuBtn"
+        android:layout_gravity="left|center_horizontal"
+        android:textAllCaps="false"
+        android:layout_row="3" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/acknowledgementsBtn"
+        android:id="@+id/acknowledgementsBtn"
+        android:layout_gravity="center_horizontal|right"
+        android:textAllCaps="false"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_row="3" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textViewWordList"
+        android:layout_row="2"
+        android:maxLines = "10"
+        android:scrollbars = "vertical"/>
+
+</GridLayout>
