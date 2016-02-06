@@ -22,7 +22,7 @@ import edu.neu.madcourse.dharabhavsar.main.R;
  */
 public class DatabaseTable {
 
-    private static final String TAG = "DictionaryDatabase";
+    private static final String TAG = "VocabularyDatabase";
 
     //The columns we'll include in the dictionary table
     public static final String COL_WORD = "WORD";

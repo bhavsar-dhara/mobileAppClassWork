@@ -2,7 +2,9 @@ package edu.neu.madcourse.dharabhavsar.dictionary;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
 
@@ -41,7 +46,7 @@ public class MainFragmentDict extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView =
@@ -55,14 +60,19 @@ public class MainFragmentDict extends Fragment {
 
 //        Reading from a file occurs in the AsyncTaskRunner
         editWordText.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void afterTextChanged(Editable s) {
                 String word = String.valueOf(editWordText.getText());
+                Log.e("WORD LENGTH Fragment", "afterTextChanged: " + word.length());
 //                    Intent intent = Intent.getIntent(word);
 //                for word.length() >= 3
                 if(word.length() >= 3) {
-                    Intent i = new Intent(MainFragmentDict.this.getActivity(), MainActivityDict.class);
+//                    if (trie.searchNode(word) == null) {
+////                        Do nothing
+//                    } else {
+//                        result.concat(String.valueOf(trie.searchNode(word)));
+//                    }
+                    Intent i = new Intent(MainFragmentDict.this.getActivity(), MainFragmentDict.class);
                     mainActDict.onNewIntent(i);
                     result = mainActDict.resultStr;
                     Log.e("RESULT CONCAT Fragment", "afterTextChanged: " + result);
@@ -167,53 +177,7 @@ public class MainFragmentDict extends Fragment {
         textViewWordList.setText(fields[index++]);
     }
 
-//    private class KPM {
-        /**
-         * Search the data byte array for the first occurrence
-         * of the byte array pattern.
-         */
-        /*public int indexOf(byte[] data, byte[] pattern) {
-            int[] failure = computeFailure(pattern);
-
-            int j = 0;
-
-            for (int i = 0; i < data.length; i++) {
-                while (j > 0 && pattern[j] != data[i]) {
-                    j = failure[j - 1];
-                }
-                if (pattern[j] == data[i]) {
-                    j++;
-                }
-                if (j == pattern.length) {
-                    return i - pattern.length + 1;
-                }
-            }
-            return -1;
-        }
-
-        *//**
-         * Computes the failure function using a boot-strapping process,
-         * where the pattern is matched against itself.
-         *//*
-        private int[] computeFailure(byte[] pattern) {
-            int[] failure = new int[pattern.length];
-
-            int j = 0;
-            for (int i = 1; i < pattern.length; i++) {
-                while (j>0 && pattern[j] != pattern[i]) {
-                    j = failure[j - 1];
-                }
-                if (pattern[j] == pattern[i]) {
-                    j++;
-                }
-                failure[i] = j;
-            }
-
-            return failure;
-        }*/
-//    }
-
-    /*private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
 
         private String resp;
 
@@ -233,9 +197,9 @@ public class MainFragmentDict extends Fragment {
                     result = new String(b);
                     String[] strings = result.split("\\n");
                     Log.e("INSERT", "inserting");
-//                    for (String s : strings) {
-//                        trie.insert(s);
-//                    }
+                    for (String s : strings) {
+                        trie.insert(s);
+                    }
                     Log.e("INSERT", "inserted");
                 } catch (IOException e) {
                     Log.e("ERROR", "not inserted");
@@ -271,5 +235,5 @@ public class MainFragmentDict extends Fragment {
         protected void onProgressUpdate(String... text) {
             textViewWordList.setText(text[0]);
         }
-    }*/
+    }
 }

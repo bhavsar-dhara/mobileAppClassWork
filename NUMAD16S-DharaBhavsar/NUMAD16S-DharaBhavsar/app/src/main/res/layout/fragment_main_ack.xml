@@ -10,7 +10,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="http://developer.android.com/guide/topics/data/data-storage.html \n \n
+        android:text="CODE AND IDEAS: \n \n
+        http://developer.android.com/guide/topics/data/data-storage.html \n \n
         https://github.com/acbellini/juzzle/blob/master/TrieDictionary/src/net/webeggs/juzzle/VocabularyTests.java \n \n
         http://www.toptal.com/java/the-trie-a-neglected-data-structure \n \n
         http://codereview.stackexchange.com/questions/44021/fast-way-of-searching-for-a-string-in-a-text-file \n \n
@@ -21,6 +22,10 @@
         http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/ \n \n
         https://sites.google.com/site/gson/gson-user-guide \n \n
         http://www.geeksforgeeks.org/longest-prefix-matching-a-trie-based-solution-in-java/ \n \n
+ALL SOUNDS: \n \n
+        freesounds.org \n \n
+ULTIMATE TIC-TAC-TOE: \n \n
+        Hello, Android : Introducing Google's Mobile Development Platform - 4th Edition - Burnette, ED
         "/>
 
 </LinearLayout>
