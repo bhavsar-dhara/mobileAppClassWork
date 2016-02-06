@@ -1,9 +1,7 @@
 package edu.neu.madcourse.dharabhavsar.dictionary;
 
 import android.app.Fragment;
-import android.app.SearchManager;
 import android.content.Intent;
-import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.net.URISyntaxException;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
 
@@ -33,25 +29,10 @@ public class MainFragmentDict extends Fragment {
     Trie trie;
     String result = "";
     byte[] b;
-    DatabaseTable db = new DatabaseTable(MainFragmentDict.this.getActivity());
+    MainActivityDict mainActDict = new MainActivityDict();
+//    DatabaseTable db = new DatabaseTable(MainFragmentDict.this.getActivity());
 
     public MainFragmentDict() {
-    }
-
-    private String handleIntent(Intent intent) {
-        String result1 = "";
-        Log.e("SEARCH", "starting search");
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Log.e("HANDLE SEARCH", "handleIntent: "+SearchManager.QUERY );
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Cursor c = db.getWordMatches(query, null);
-            //process Cursor and display results
-            c.moveToFirst();
-            Log.e("SEARCH 2", "handleIntent: " + c.getString(0) + c.getString(1));
-            result1 = c.getString(0);
-            Log.e("SEARCH 3", result1);
-        }
-        return result1;
     }
 
     @Override
@@ -78,14 +59,14 @@ public class MainFragmentDict extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String word = String.valueOf(editWordText.getText());
-                try {
-                    Intent intent = Intent.getIntent(word);
-                    result.concat(handleIntent(Intent.getIntent(word)));
-                    Log.e("RESULT CONCAT", "afterTextChanged: " + result);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
+//                    Intent intent = Intent.getIntent(word);
+//                for word.length() >= 3
+                if(word.length() >= 3) {
+                    Intent i = new Intent(MainFragmentDict.this.getActivity(), MainActivityDict.class);
+                    mainActDict.onNewIntent(i);
+                    result = mainActDict.resultStr;
+                    Log.e("RESULT CONCAT Fragment", "afterTextChanged: " + result);
                 }
-
 //                Intent intent = Intent.getIntent(word);
 //                if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 //                    String query = intent.getStringExtra(SearchManager.QUERY);

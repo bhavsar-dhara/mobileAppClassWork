@@ -10,7 +10,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="https://github.com/acbellini/juzzle/blob/master/TrieDictionary/src/net/webeggs/juzzle/VocabularyTests.java \n
-        http://www.toptal.com/java/the-trie-a-neglected-data-structure"/>
+        android:text="http://developer.android.com/guide/topics/data/data-storage.html \n \n
+        https://github.com/acbellini/juzzle/blob/master/TrieDictionary/src/net/webeggs/juzzle/VocabularyTests.java \n \n
+        http://www.toptal.com/java/the-trie-a-neglected-data-structure \n \n
+        http://codereview.stackexchange.com/questions/44021/fast-way-of-searching-for-a-string-in-a-text-file \n \n
+        http://developer.android.com/training/search/search.html \n \n
+        http://developer.android.com/training/search/setup.html \n \n
+        http://developer.android.com/reference/android/database/Cursor.html \n \n
+        http://developer.android.com/reference/android/database/sqlite/SQLiteCursor.html \n \n
+        http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/ \n \n
+        https://sites.google.com/site/gson/gson-user-guide \n \n
+        http://www.geeksforgeeks.org/longest-prefix-matching-a-trie-based-solution-in-java/ \n \n
+        "/>
 
 </LinearLayout>

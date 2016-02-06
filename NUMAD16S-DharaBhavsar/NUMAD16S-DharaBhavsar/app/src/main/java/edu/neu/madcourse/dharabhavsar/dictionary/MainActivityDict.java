@@ -1,6 +1,9 @@
 package edu.neu.madcourse.dharabhavsar.dictionary;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -18,6 +21,8 @@ public class MainActivityDict extends Activity {
     public static final String PREF_RESTORE = "pref_restore";
     private Handler mHandler = new Handler();
     private MainFragmentDict mFragmentDict;
+    DatabaseTable db = new DatabaseTable(this);
+    public String resultStr = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,31 @@ public class MainActivityDict extends Activity {
                 mFragmentDict.putData(gameData);
             }
         }
+        handleIntent(getIntent());
         Log.d("MainActivityDict", "restore = " + restore);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private String handleIntent(Intent intent) {
+        String result1 = "";
+        Log.e("SEARCH", "starting search : Intent action : "+intent.getAction());
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Log.e("HANDLE SEARCH", "handleIntent: "+ SearchManager.QUERY );
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Cursor c = db.getWordMatches(query, null);
+            //process Cursor and display results
+            c.moveToFirst();
+            Log.e("SEARCH 2", "handleIntent: " + c.getString(0) + c.getString(1));
+            result1 = c.getString(0);
+            Log.e("SEARCH 3", result1);
+        }
+        Log.e("RESULT CONCAT", "afterTextChanged: " + result1);
+        resultStr.concat(result1);
+        return resultStr;
     }
 
     static{
