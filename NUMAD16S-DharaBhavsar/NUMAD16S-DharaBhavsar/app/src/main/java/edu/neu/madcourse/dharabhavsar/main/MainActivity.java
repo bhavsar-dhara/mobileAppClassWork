@@ -1,14 +1,8 @@
 package edu.neu.madcourse.dharabhavsar.main;
 
-import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import edu.neu.madcourse.dharabhavsar.dictionary.Trie;
 
@@ -36,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         });*/
     }
 
-    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+    /*private class AsyncTaskRunner extends AsyncTask<String, String, String> {
 
         private String resp;
 
@@ -48,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     Resources res = getResources();
-                    InputStream in_s = res.openRawResource(R.raw.wordlist);
+                    InputStream in_s = res.openRawResource(
+                            R.raw.wordlist);
 
                     byte[] b = new byte[in_s.available()];
                     in_s.read(b);
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... text) {
 //            textViewWordList.setText(text[0]);
         }
-    }
+    }*/
 
 //    To remove the settings menu from the Title Bar
 //    @Override

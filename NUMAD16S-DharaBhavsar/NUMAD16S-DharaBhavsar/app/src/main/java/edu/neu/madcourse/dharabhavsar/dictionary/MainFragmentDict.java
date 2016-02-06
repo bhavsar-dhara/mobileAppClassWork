@@ -2,6 +2,7 @@ package edu.neu.madcourse.dharabhavsar.dictionary;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 /**
@@ -27,6 +31,7 @@ public class MainFragmentDict extends Fragment {
     MediaPlayer mMediaPlayer;
     Trie trie;
     String result;
+    byte[] b;
 
     public MainFragmentDict() {
     }
@@ -68,12 +73,13 @@ public class MainFragmentDict extends Fragment {
 
 //        String result;
 //        Map<String, String> map = new HashMap<String, String>();
+//        byte[] b;
 
-//        try {
-//            Resources res = getResources();
-//            InputStream in_s = res.openRawResource(R.raw.wordlist);
-//
-//            byte[] b = new byte[in_s.available()];
+        try {
+            Resources res = getResources();
+            InputStream in_s = res.openRawResource(R.raw.wordlist);
+
+            b = new byte[in_s.available()];
 //            in_s.read(b);
 //            result = new String(b);
 //            String[] strings = result.split("\\n");
@@ -92,10 +98,10 @@ public class MainFragmentDict extends Fragment {
 //                }
 //            } while (true);
 
-//        } catch (IOException e) {
-//            // e.printStackTrace();
-//            Log.e("ERROR", "Error: can't show file.");
-//        }
+        } catch (IOException e) {
+            // e.printStackTrace();
+            Log.e("ERROR", "Error: can't show file.");
+        }
 
 //        Log.e("RES TEST", String.valueOf(result.length()));
 
@@ -210,8 +216,16 @@ public class MainFragmentDict extends Fragment {
             public void afterTextChanged(Editable s) {
                 String word = String.valueOf(editWordText.getText());
 
-                boolean flag = trie.search(word);
-                Log.e("SEARCH", String.valueOf(flag));
+                byte[] byteWord = word.getBytes();
+                int presence = indexOf(b, byteWord);
+
+                if(presence >= 1) {
+                    result.concat(word+"\\n");
+                }
+
+//                boolean flag = trie.search(word);
+//                Log.e("SEARCH", String.valueOf(flag));
+
 //                Try 1
 //                int r = (int) (Math.random() * words.size());
 //                Log.e("EditTextBox","Checking word Trie with int[], r = "+r);
@@ -298,61 +312,109 @@ public class MainFragmentDict extends Fragment {
 //    getData()
 //    putData()
 
-//    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
-//
-//        private String resp;
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            publishProgress("Sleeping..."); // Calls onProgressUpdate()
-//            try {
-//                // Do your long operations here and return the result
-////                String result;
-//                try {
-//                    Resources res = getResources();
-//                    InputStream in_s = res.openRawResource(R.raw.wordlist);
-//
-//                    byte[] b = new byte[in_s.available()];
-//                    in_s.read(b);
-//                    result = new String(b);
-//                    String[] strings = result.split("\\n");
-//                    Log.e("INSERT", "inserting");
-//                    for (String s : strings) {
-//                        trie.insert(s);
-//                    }
-//                    Log.e("INSERT", "inserted");
-//                } catch (IOException e) {
-//                    Log.e("ERROR", "not inserted");
-//                }
-//                int time = Integer.parseInt(params[0]);
-//                // Sleeping for given time period
-//                Thread.sleep(time);
-//                resp = "Slept for " + time + " milliseconds";
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//                resp = e.getMessage();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                resp = e.getMessage();
-//            }
-//            return resp;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            // execution of result of Long time consuming operation
-//            textViewWordList.setText(result);
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            // Things to be done before execution of long running operation. For
-//            // example showing ProgessDialog
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(String... text) {
-//            textViewWordList.setText(text[0]);
-//        }
+//    private class KPM {
+        /**
+         * Search the data byte array for the first occurrence
+         * of the byte array pattern.
+         */
+        public int indexOf(byte[] data, byte[] pattern) {
+            int[] failure = computeFailure(pattern);
+
+            int j = 0;
+
+            for (int i = 0; i < data.length; i++) {
+                while (j > 0 && pattern[j] != data[i]) {
+                    j = failure[j - 1];
+                }
+                if (pattern[j] == data[i]) {
+                    j++;
+                }
+                if (j == pattern.length) {
+                    return i - pattern.length + 1;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Computes the failure function using a boot-strapping process,
+         * where the pattern is matched against itself.
+         */
+        private int[] computeFailure(byte[] pattern) {
+            int[] failure = new int[pattern.length];
+
+            int j = 0;
+            for (int i = 1; i < pattern.length; i++) {
+                while (j>0 && pattern[j] != pattern[i]) {
+                    j = failure[j - 1];
+                }
+                if (pattern[j] == pattern[i]) {
+                    j++;
+                }
+                failure[i] = j;
+            }
+
+            return failure;
+        }
 //    }
+
+    /*private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+
+        private String resp;
+
+        @Override
+        protected String doInBackground(String... params) {
+            publishProgress("Sleeping..."); // Calls onProgressUpdate()
+            Log.e("ASYNC TASK", "starting");
+            try {
+                // Do your long operations here and return the result
+//                String result;
+                try {
+                    Resources res = getResources();
+                    InputStream in_s = res.openRawResource(R.raw.wordlist);
+
+                    byte[] b = new byte[in_s.available()];
+                    in_s.read(b);
+                    result = new String(b);
+                    String[] strings = result.split("\\n");
+                    Log.e("INSERT", "inserting");
+                    for (String s : strings) {
+                        trie.insert(s);
+                    }
+                    Log.e("INSERT", "inserted");
+                } catch (IOException e) {
+                    Log.e("ERROR", "not inserted");
+                }
+                int time = Integer.parseInt(params[0]);
+                // Sleeping for given time period
+                Thread.sleep(time);
+                resp = "Slept for " + time + " milliseconds";
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            }
+            Log.e("ASYNC TASK", "finishing");
+            return resp;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // execution of result of Long time consuming operation
+            textViewWordList.setText(result);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // Things to be done before execution of long running operation. For
+            // example showing ProgessDialog
+        }
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+            textViewWordList.setText(text[0]);
+        }
+    }*/
 }
