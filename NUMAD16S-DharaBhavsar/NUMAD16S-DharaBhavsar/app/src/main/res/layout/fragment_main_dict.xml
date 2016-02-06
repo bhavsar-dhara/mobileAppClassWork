@@ -50,7 +50,9 @@
         android:layout_height="200dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/textViewWordList"
-        android:layout_row="1" />
+        android:layout_row="1"
+        android:maxLines = "10"
+        android:scrollbars = "vertical"/>
     <!--android:text="Medium Text"-->
 
 </GridLayout>
