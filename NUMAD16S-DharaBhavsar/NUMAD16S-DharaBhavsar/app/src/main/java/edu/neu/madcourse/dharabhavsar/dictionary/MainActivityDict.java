@@ -30,8 +30,7 @@ public class MainActivityDict extends Activity {
             String gameData = getPreferences(MODE_PRIVATE)
                     .getString(PREF_RESTORE, null);
             if (gameData != null) {
-//                TODO
-//                mFragmentDict.putData(gameData);
+                mFragmentDict.putData(gameData);
             }
         }
         Log.d("MainActivityDict", "restore = " + restore);
@@ -52,8 +51,7 @@ public class MainActivityDict extends Activity {
         super.onPause();
         mHandler.removeCallbacks(null);
 //        TODO
-        String gameData = "";
-//                mFragmentDict.getData();
+        String gameData = mFragmentDict.getData();
         getPreferences(MODE_PRIVATE).edit()
                 .putString(PREF_RESTORE, gameData)
                 .commit();
