@@ -1,10 +1,10 @@
 package edu.neu.madcourse.dharabhavsar.dictionary;
 
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.database.Cursor;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,8 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.net.URISyntaxException;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
 
@@ -28,13 +27,31 @@ import edu.neu.madcourse.dharabhavsar.main.R;
 public class MainFragmentDict extends Fragment {
 
     TextView textViewWordList;
+//    AutoCompleteTextView acTextViewWordList;
     EditText editWordText;
     MediaPlayer mMediaPlayer;
     Trie trie;
-    String result;
+    String result = "";
     byte[] b;
+    DatabaseTable db = new DatabaseTable(MainFragmentDict.this.getActivity());
 
     public MainFragmentDict() {
+    }
+
+    private String handleIntent(Intent intent) {
+        String result1 = "";
+        Log.e("SEARCH", "starting search");
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Log.e("HANDLE SEARCH", "handleIntent: "+SearchManager.QUERY );
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Cursor c = db.getWordMatches(query, null);
+            //process Cursor and display results
+            c.moveToFirst();
+            Log.e("SEARCH 2", "handleIntent: " + c.getString(0) + c.getString(1));
+            result1 = c.getString(0);
+            Log.e("SEARCH 3", result1);
+        }
+        return result1;
     }
 
     @Override
@@ -51,6 +68,7 @@ public class MainFragmentDict extends Fragment {
 
         // Method to show the list of words found from the provided word list
         textViewWordList = (TextView) rootView.findViewById(R.id.textViewWordList);
+//        acTextViewWordList = (AutoCompleteTextView) rootView.findViewById(R.id.textViewWordList);
         textViewWordList.setMovementMethod(new ScrollingMovementMethod());
         editWordText = (EditText) rootView.findViewById(R.id.editWordText);
 
@@ -60,13 +78,30 @@ public class MainFragmentDict extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String word = String.valueOf(editWordText.getText());
-
-                byte[] byteWord = word.getBytes();
-                int presence = indexOf(b, byteWord);
-
-                if(presence >= 1) {
-                    result.concat(word+"\\n");
+                try {
+                    Intent intent = Intent.getIntent(word);
+                    result.concat(handleIntent(Intent.getIntent(word)));
+                    Log.e("RESULT CONCAT", "afterTextChanged: " + result);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
                 }
+
+//                Intent intent = Intent.getIntent(word);
+//                if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//                    String query = intent.getStringExtra(SearchManager.QUERY);
+//                    Cursor c = db.getWordMatches(query, null);
+//                    //process Cursor and display results
+//                    c.moveToFirst();
+//                    result = c.getString(0);
+//                }
+
+//                String word = String.valueOf(editWordText.getText());
+//                byte[] byteWord = word.getBytes();
+//                int presence = indexOf(b, byteWord);
+//
+//                if(presence >= 1) {
+//                    result.concat(word+"\\n");
+//                }
             }
 
             @Override
@@ -156,7 +191,7 @@ public class MainFragmentDict extends Fragment {
          * Search the data byte array for the first occurrence
          * of the byte array pattern.
          */
-        public int indexOf(byte[] data, byte[] pattern) {
+        /*public int indexOf(byte[] data, byte[] pattern) {
             int[] failure = computeFailure(pattern);
 
             int j = 0;
@@ -175,10 +210,10 @@ public class MainFragmentDict extends Fragment {
             return -1;
         }
 
-        /**
+        *//**
          * Computes the failure function using a boot-strapping process,
          * where the pattern is matched against itself.
-         */
+         *//*
         private int[] computeFailure(byte[] pattern) {
             int[] failure = new int[pattern.length];
 
@@ -194,10 +229,10 @@ public class MainFragmentDict extends Fragment {
             }
 
             return failure;
-        }
+        }*/
 //    }
 
-    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+    /*private class AsyncTaskRunner extends AsyncTask<String, String, String> {
 
         private String resp;
 
@@ -217,9 +252,9 @@ public class MainFragmentDict extends Fragment {
                     result = new String(b);
                     String[] strings = result.split("\\n");
                     Log.e("INSERT", "inserting");
-                    for (String s : strings) {
-                        trie.insert(s);
-                    }
+//                    for (String s : strings) {
+//                        trie.insert(s);
+//                    }
                     Log.e("INSERT", "inserted");
                 } catch (IOException e) {
                     Log.e("ERROR", "not inserted");
@@ -255,5 +290,5 @@ public class MainFragmentDict extends Fragment {
         protected void onProgressUpdate(String... text) {
             textViewWordList.setText(text[0]);
         }
-    }
+    }*/
 }

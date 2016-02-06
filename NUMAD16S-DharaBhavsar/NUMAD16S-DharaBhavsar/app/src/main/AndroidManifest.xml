@@ -38,8 +38,12 @@
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict"
             android:label="@string/dictActivityLabel" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
+                android:name="android.app.searchable"
+                android:resource="@raw/wordlist"
                 android:value="edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict" />
         </activity>
         <activity
