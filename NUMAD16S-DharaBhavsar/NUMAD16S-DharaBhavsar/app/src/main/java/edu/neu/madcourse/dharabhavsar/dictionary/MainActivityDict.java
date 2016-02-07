@@ -190,7 +190,6 @@ public class MainActivityDict extends Activity {
         @Override
         protected String doInBackground(String... params) {
             String word = params[0];
-            resp=word;
                 try {
                     try {
                         Resources res = getResources();
@@ -314,29 +313,12 @@ public class MainActivityDict extends Activity {
                 Log.e("TEST HASHMAP VALUES", vocabList.get(s));
             }*/
 
-            /*for(Entry<String, String> entry : vocabList.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                System.out.println(key + " " + value);
-            }*/
-
 //            Log.e("VOCAB COUNT ", String.valueOf(vocabulary.size()) +" " +result);
 //            if (vocabulary.contains(result)) {
 //                Log.e("INSIDE IF", "PASSED");
 //                resultStr.concat(result);
 //            }
 
-            /*for (HashMap.Entry<String,String> entry : vocabList.entrySet()) {
-//                Log.e("ENTRY SET", "inside for each loop");
-//                Log.e("ENTRY SET", entry.getKey());
-                String key = entry.getKey();
-                Log.e("ENTRY SET KEY", key);
-                Log.e("ENTRY SET VLAUE", entry.getValue());
-                if (result.equalsIgnoreCase(key)) {
-                    result1 = entry.getValue();
-                    Log.e("ENTRY SET", "passed");
-                }
-            }*/
             if(vocabList.containsKey(result)){
                 System.out.println("Matched key = " + result);
                 Log.e("TEST PASS", result);
@@ -346,32 +328,7 @@ public class MainActivityDict extends Activity {
                 resultStr.concat(result);
                 System.out.println("Key not matched with ID");
             }
-//            resultStr.concat(result1 + "\\n");
-//            for (String tab : vocabList.values()) {
-////                Log.e("WORD COUNT 22 "," inside for loop");
-//                // get a value from vocabList
-//                if (tab.equalsIgnoreCase(result)) {
-//                    resultStr.concat(tab + "\\n");
-//                    Log.e("WORD COUNT 33 ", " match");
-//                }
-//            }
-//            if(vocabList.get(result) != null) {
-//                Log.e("WORD LENGTH Search", "afterTextChanged: -12 " + vocabList.get(resp));
-//                result1 = vocabList.get(result);
-//                Log.e("WORD LENGTH Search", "afterTextChanged: -13 " + result1);
-//                resultStr.concat(result1+"\n");
-//                resp.concat(result1);
-//                Log.e("WORD LENGTH Search", "afterTextChanged: -14 " + resp);
-//            }
             textViewWordList.setText(resultStr);
-//            String result1;
-//            if(vocabList.get(resp) != null) {
-//                Log.e("WORD LENGTH Search", "afterTextChanged: -2 " + vocabList.get(resp));
-//                result1 = vocabList.get(resp);
-//                Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
-//                resultStr.concat(result1);
-//                textViewWordList.setText(resultStr);
-//            }
         }
     }
 
