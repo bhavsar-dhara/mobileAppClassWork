@@ -38,7 +38,8 @@ public class MainActivityDict extends Activity {
     EditText editWordText;
     MediaPlayer mMediaPlayer;
     String result = "";
-    HashMap<String,String> vocabList = new HashMap<String, String>(650000);
+    HashMap<String,String> vocabList = new HashMap<String, String>();
+//    HashMap vocabList = new HashMap(650000);
     Trie trie;
 
     @Override
@@ -47,7 +48,7 @@ public class MainActivityDict extends Activity {
         setContentView(R.layout.activity_main_dict);
 //        Intent intent = new Intent(this, MainActivityDict.class);
 //        startActivity(intent);
-        getIntent().setAction(Intent.ACTION_SEARCH);
+//        getIntent().setAction(Intent.ACTION_SEARCH);
 
         db = new DatabaseTable(this);
 
@@ -59,7 +60,7 @@ public class MainActivityDict extends Activity {
                 putData(gameData);
             }
         }
-        Log.e("WORD LENGTH intent 1", "afterTextChanged: " + getIntent().getAction());
+//        Log.e("WORD LENGTH intent 1", "afterTextChanged: " + getIntent().getAction());
 //        handleIntent(getIntent());
 
         // Method to show the list of words found from the provided word list
@@ -71,7 +72,7 @@ public class MainActivityDict extends Activity {
         editWordText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                String result1;
+                String result1 = "";
                 String word = String.valueOf(editWordText.getText());
                 Log.e("WORD LENGTH Fragment", "afterTextChanged: " + word.length()+" word = " + word);
                 if(word.length() >= 3) {
@@ -81,27 +82,10 @@ public class MainActivityDict extends Activity {
                         result1 = vocabList.get(word);
                         Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
                         resultStr.concat(result1);
+                        textViewWordList.setText(resultStr);
                     }
-//                    Log.e("WORD LENGTH Search", "afterTextChanged: ");
-//                    Log.e("WORD LENGTH Search", "afterTextChanged: 112 " + word);
-////                    resultStr = trie.getMatchingPrefix(word);
-//                    /*if(vocabList.get(word) != null) {
-//                        Log.e("WORD LENGTH Search", "afterTextChanged: -2 " + vocabList.get(word));
-//                        result1 = vocabList.get(word);
-//                        Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
-//                        resultStr.concat(result1);
-//                    }*/
-//                    Log.e("WORD LENGTH Search", "afterTextChanged: 113 " + resultStr);
-////                    Intent i = new Intent(MainActivityDict.this, MainActivityDict.class);
-////                    i.putExtra("QUERY",word);
-////                    Log.e("WORD LENGTH intent 1", "afterTextChanged: " + i.getAction() + " " + i.getStringExtra("QUERY"));
-////                    i.setAction(Intent.ACTION_SEARCH);
-////                    onNewIntent(i);
-////                    Log.e("WORD LENGTH intent 2", "afterTextChanged: " + getIntent().getAction());
-////                    getIntent().putExtra("QUERY", word);
-////                    onNewIntent(getIntent());
-//                    result = resultStr;
-//                    Log.e("RESULT CONCAT Fragment", "afterTextChanged: " + result);
+                    result1 = resultStr;
+                  Log.e("RESULT CONCAT Fragment", "afterTextChanged: RESULT STRING = " + result1);
                 }
             }
 
@@ -167,43 +151,6 @@ public class MainActivityDict extends Activity {
         Log.d("MainActivityDict", "restore = " + restore);
     }
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        setIntent(intent);
-//        handleIntent(intent);
-//    }
-
-//    private String handleIntent(Intent intent) {
-//        String result1 = "";
-////        Log.e("SEARCH", "starting search : Intent action : "+intent.getAction());
-////        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-////            Log.e("HANDLE SEARCH", "handleIntent: "+ SearchManager.QUERY + "  " + getIntent().getStringExtra("QUERY") );
-////            String query = intent.getStringExtra(SearchManager.QUERY);
-////            Log.e("HANDLE SEARCH", "handleIntent: "+ intent.getStringExtra(SearchManager.QUERY) );
-////            Cursor c = db.getWordMatches(query, null);
-////            Log.e("HANDLE SEARCH", "handleIntent: cursor count "+ c.getCount());
-////            //process Cursor and display results
-////            if (c.getCount() > 0) {
-////                c.moveToFirst();
-////                Log.e("SEARCH 2", "handleIntent: " + c.getString(c.getColumnIndex("WORD")));
-////                result1 = c.getString(c.getColumnIndex("WORD"));
-////                Log.e("SEARCH 3", result1);
-////            }
-////        }
-////        Log.e("RESULT CONCAT", "afterTextChanged: " + result1);
-////        resultStr.concat(result1);
-////        return resultStr;
-//        String word = getIntent().getStringExtra("QUERY");
-//        if(word.length()==3)
-//            result1 = vocabList.get(word);
-//        else {
-//            result1 = vocabList.get(word.substring(0, 2));
-//        }
-//        resultStr.concat(result1);
-//        return resultStr;
-//    }
-
     static{
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -244,24 +191,19 @@ public class MainActivityDict extends Activity {
         textViewWordList.setText(fields[index++]);
     }
 
-    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+    private class AsyncTaskRunner extends AsyncTask<String, Void, String> {
 
         String resp;
 
         @Override
         protected String doInBackground(String... params) {
-            publishProgress("Sleeping..."); // Calls onProgressUpdate()
             String word = params[0];
             resp=word;
                 try {
                     try {
                         Resources res = getResources();
-                        InputStream in_s = new InputStream() {
-                            @Override
-                            public int read() throws IOException {
-                                return 0;
-                            }
-                        };
+                        InputStream in_s = null;
+
                         switch (word.charAt(0)) {
                             case 'a':
                                 in_s = res.openRawResource(R.raw.a);
@@ -354,15 +296,6 @@ public class MainActivityDict extends Activity {
 //                            Log.e("TEST HASHMAP", vocabList.get(s));
                         }
                         Log.e("INSERT", "inserted");
-
-                        String result1;
-                        if(vocabList.get(resp) != null) {
-                            Log.e("WORD LENGTH Search", "afterTextChanged: -2 " + vocabList.get(resp));
-                            result1 = vocabList.get(resp);
-                            Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
-                            resultStr.concat(result1);
-                        }
-
                     } catch (IOException e) {
                         Log.e("ERROR", "not inserted");
                     }
@@ -370,32 +303,63 @@ public class MainActivityDict extends Activity {
                     Thread.interrupted();
                     Log.e("AsyncTaskRunner", "Exception occurred");
                 }
-            return resp;
+            return word;
         }
 
         @Override
         protected void onPostExecute(String result) {
             // execution of result of Long time consuming operation
-//            textViewWordList.setText(result);
             String result1;
-            if(vocabList.get(resp) != null) {
-                Log.e("WORD LENGTH Search", "afterTextChanged: -2 " + vocabList.get(resp));
-                result1 = vocabList.get(resp);
-                Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
-                resultStr.concat(result1);
-                textViewWordList.setText(resultStr);
+            Log.e("WORD COUNT ", String.valueOf(vocabList.size()) +" " +result);
+            Log.e("WORD COUNT 12 "," " + vocabList.get(result));
+
+            /*for(Entry<String, String> entry : vocabList.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                System.out.println(key + " " + value);
+            }*/
+
+            for (HashMap.Entry<String,String> entry : vocabList.entrySet()) {
+                Log.e("ENTRY SET", "inside for each loop");
+                Log.e("ENTRY SET", entry.getKey());
+                if (result.equalsIgnoreCase(entry.getKey())) {
+                    entry.getValue();
+                    Log.e("ENTRY SET", "passed");
+                }
             }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            // Things to be done before execution of long running operation. For
-            // example showing ProgessDialog
-        }
-
-        @Override
-        protected void onProgressUpdate(String... text) {
-//            textViewWordList.setText(text[0]);
+            /*if(vocabList.containsKey(result)){
+                System.out.println("Matched key = " + result);
+                Log.e("TEST PASS", result);
+            } else{
+                Log.e("TEST FAIL", result);
+                System.out.println("Key not matched with ID");
+            }*/
+            resultStr.concat(result + "\\n");
+//            for (String tab : vocabList.values()) {
+////                Log.e("WORD COUNT 22 "," inside for loop");
+//                // get a value from vocabList
+//                if (tab.equalsIgnoreCase(result)) {
+//                    resultStr.concat(tab + "\\n");
+//                    Log.e("WORD COUNT 33 ", " match");
+//                }
+//            }
+//            if(vocabList.get(result) != null) {
+//                Log.e("WORD LENGTH Search", "afterTextChanged: -12 " + vocabList.get(resp));
+//                result1 = vocabList.get(result);
+//                Log.e("WORD LENGTH Search", "afterTextChanged: -13 " + result1);
+//                resultStr.concat(result1+"\n");
+//                resp.concat(result1);
+//                Log.e("WORD LENGTH Search", "afterTextChanged: -14 " + resp);
+//            }
+            textViewWordList.setText(resultStr);
+//            String result1;
+//            if(vocabList.get(resp) != null) {
+//                Log.e("WORD LENGTH Search", "afterTextChanged: -2 " + vocabList.get(resp));
+//                result1 = vocabList.get(resp);
+//                Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
+//                resultStr.concat(result1);
+//                textViewWordList.setText(resultStr);
+//            }
         }
     }
 
