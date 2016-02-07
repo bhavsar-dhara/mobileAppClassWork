@@ -69,6 +69,7 @@ public class DatabaseTable {
         }
 
         private void loadDictionary() {
+            Log.e("loadDictionary", "starting");
             new Thread(new Runnable() {
                 public void run() {
                     try {
@@ -78,11 +79,13 @@ public class DatabaseTable {
                     }
                 }
             }).start();
+            Log.e("loadDictionary", "end");
         }
 
         private void loadWords() throws IOException {
             final Resources resources = mHelperContext.getResources();
-            InputStream inputStream = resources.openRawResource(R.raw.wordlist);
+//            InputStream inputStream = resources.openRawResource(R.raw.wordlist);
+            InputStream inputStream = resources.openRawResource(R.raw.b_wordlist);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
             try {
@@ -110,7 +113,8 @@ public class DatabaseTable {
 
     public Cursor getWordMatches(String query, String[] columns) {
         String selection = COL_WORD + " MATCH ?";
-        String[] selectionArgs = new String[] {query+"*"};
+//        String[] selectionArgs = new String[] {query+"*"};
+        String[] selectionArgs = new String[] {query};
 
         return query(selection, selectionArgs, columns);
     }
