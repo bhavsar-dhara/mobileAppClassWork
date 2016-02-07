@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
@@ -32,25 +33,18 @@ public class MainActivityDict extends Activity {
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
     private Handler mHandler = new Handler();
-    DatabaseTable db;
     public String resultStr = "";
     TextView textViewWordList;
     EditText editWordText;
     MediaPlayer mMediaPlayer;
     String result = "";
     HashMap<String,String> vocabList = new HashMap<String, String>();
-//    HashMap vocabList = new HashMap(650000);
-    Trie trie;
+    ArrayList<String> vocabulary = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_dict);
-//        Intent intent = new Intent(this, MainActivityDict.class);
-//        startActivity(intent);
-//        getIntent().setAction(Intent.ACTION_SEARCH);
-
-        db = new DatabaseTable(this);
 
         boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {
@@ -60,8 +54,6 @@ public class MainActivityDict extends Activity {
                 putData(gameData);
             }
         }
-//        Log.e("WORD LENGTH intent 1", "afterTextChanged: " + getIntent().getAction());
-//        handleIntent(getIntent());
 
         // Method to show the list of words found from the provided word list
         textViewWordList = (TextView) findViewById(R.id.textViewWordList);
@@ -293,6 +285,7 @@ public class MainActivityDict extends Activity {
                         Log.e("INSERT", "inserting count = " + strings.length);
                         for (String s : strings) {
                             vocabList.put(s, s);
+//                            vocabulary.add(s);
 //                            Log.e("TEST HASHMAP", vocabList.get(s));
                         }
                         Log.e("INSERT", "inserted");
@@ -309,9 +302,17 @@ public class MainActivityDict extends Activity {
         @Override
         protected void onPostExecute(String result) {
             // execution of result of Long time consuming operation
-            String result1;
+            String result1 = "";
             Log.e("WORD COUNT ", String.valueOf(vocabList.size()) +" " +result);
             Log.e("WORD COUNT 12 "," " + vocabList.get(result));
+
+            /*for (String s : vocabList.keySet()) {
+                Log.e("TEST HASHMAP KEYSET", vocabList.get(s));
+            }
+
+            for (String s : vocabList.values()) {
+                Log.e("TEST HASHMAP VALUES", vocabList.get(s));
+            }*/
 
             /*for(Entry<String, String> entry : vocabList.entrySet()) {
                 String key = entry.getKey();
@@ -319,22 +320,33 @@ public class MainActivityDict extends Activity {
                 System.out.println(key + " " + value);
             }*/
 
-            for (HashMap.Entry<String,String> entry : vocabList.entrySet()) {
-                Log.e("ENTRY SET", "inside for each loop");
-                Log.e("ENTRY SET", entry.getKey());
-                if (result.equalsIgnoreCase(entry.getKey())) {
-                    entry.getValue();
+//            Log.e("VOCAB COUNT ", String.valueOf(vocabulary.size()) +" " +result);
+//            if (vocabulary.contains(result)) {
+//                Log.e("INSIDE IF", "PASSED");
+//                resultStr.concat(result);
+//            }
+
+            /*for (HashMap.Entry<String,String> entry : vocabList.entrySet()) {
+//                Log.e("ENTRY SET", "inside for each loop");
+//                Log.e("ENTRY SET", entry.getKey());
+                String key = entry.getKey();
+                Log.e("ENTRY SET KEY", key);
+                Log.e("ENTRY SET VLAUE", entry.getValue());
+                if (result.equalsIgnoreCase(key)) {
+                    result1 = entry.getValue();
                     Log.e("ENTRY SET", "passed");
                 }
-            }
-            /*if(vocabList.containsKey(result)){
+            }*/
+            if(vocabList.containsKey(result)){
                 System.out.println("Matched key = " + result);
                 Log.e("TEST PASS", result);
+                resultStr.concat(result);
             } else{
                 Log.e("TEST FAIL", result);
+                resultStr.concat(result);
                 System.out.println("Key not matched with ID");
-            }*/
-            resultStr.concat(result + "\\n");
+            }
+//            resultStr.concat(result1 + "\\n");
 //            for (String tab : vocabList.values()) {
 ////                Log.e("WORD COUNT 22 "," inside for loop");
 //                // get a value from vocabList
