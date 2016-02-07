@@ -19,8 +19,9 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
 
@@ -39,7 +40,8 @@ public class MainActivityDict extends Activity {
     MediaPlayer mMediaPlayer;
     String result = "";
     HashMap<String,String> vocabList = new HashMap<String, String>();
-    ArrayList<String> vocabulary = new ArrayList<>();
+//    ArrayList<String> vocabulary = new ArrayList<>();
+    String insertedText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +70,24 @@ public class MainActivityDict extends Activity {
                 String word = String.valueOf(editWordText.getText());
                 Log.e("WORD LENGTH Fragment", "afterTextChanged: " + word.length()+" word = " + word);
                 if(word.length() >= 3) {
-                    new AsyncTaskRunner().execute(word);
-                    if(vocabList.get(word) != null) {
-                        Log.e("WORD LENGTH Search", "afterTextChanged: -2 " + vocabList.get(word));
-                        result1 = vocabList.get(word);
-                        Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
-                        resultStr.concat(result1);
-                        textViewWordList.setText(resultStr);
+                    insertedText = word;
+                    try {
+                        HashMap<String, String> vocabMap = new AsyncTaskRunner().execute(word).get();
+                        resultStr = new AsyncTaskRunner2().execute(vocabMap).get();
+                        textViewWordList.setText(resultStr+"\n");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
                     }
+
+//                    if(vocabList.get(word) != null) {
+//                        Log.e("WORD LENGTH Search", "afterTextChanged: -2 " + vocabList.get(word));
+//                        result1 = vocabList.get(word);
+//                        Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
+//                        resultStr.concat(result1);
+//                        textViewWordList.setText(resultStr);
+//                    }
                     result1 = resultStr;
                   Log.e("RESULT CONCAT Fragment", "afterTextChanged: RESULT STRING = " + result1);
                 }
@@ -183,12 +195,9 @@ public class MainActivityDict extends Activity {
         textViewWordList.setText(fields[index++]);
     }
 
-    private class AsyncTaskRunner extends AsyncTask<String, Void, String> {
-
-        String resp;
-
+    private class AsyncTaskRunner extends AsyncTask<String, Void, HashMap> {
         @Override
-        protected String doInBackground(String... params) {
+        protected HashMap doInBackground(String... params) {
             String word = params[0];
                 try {
                     try {
@@ -295,20 +304,20 @@ public class MainActivityDict extends Activity {
                     Thread.interrupted();
                     Log.e("AsyncTaskRunner", "Exception occurred");
                 }
-            return word;
+            return vocabList;
         }
 
-        @Override
         protected void onPostExecute(String result) {
             // execution of result of Long time consuming operation
             String result1 = "";
             Log.e("WORD COUNT ", String.valueOf(vocabList.size()) +" " +result);
             Log.e("WORD COUNT 12 "," " + vocabList.get(result));
 
-            /*for (String s : vocabList.keySet()) {
+            for (String s : vocabList.keySet()) {
                 Log.e("TEST HASHMAP KEYSET", vocabList.get(s));
             }
 
+            /*
             for (String s : vocabList.values()) {
                 Log.e("TEST HASHMAP VALUES", vocabList.get(s));
             }*/
@@ -332,4 +341,46 @@ public class MainActivityDict extends Activity {
         }
     }
 
+    private class AsyncTaskRunner2 extends AsyncTask<HashMap, Void, String> {
+        @Override
+        protected String doInBackground(HashMap... params) {
+            HashMap<String, String> wordList = params[0];
+            String resp = "";
+            try {
+                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
+                Log.e("AsyncTaskRunner2", "wordList = " + String.valueOf(wordList.size()));
+//                Log.e("AsyncTaskRunner2", "wordList boolean = " + wordList.containsValue(insertedText));
+
+//                for (String s : vocabList.values()) {
+//                    if (insertedText.equalsIgnoreCase(s))
+//                        resp = insertedText;
+//                    Log.e("TEST HASHMAP VALUES", vocabList.get(s));
+//                }
+
+                Set<String> keys = wordList.keySet();
+                if(keys.contains(insertedText)) {
+                    Log.e("Worked", "Worked");
+                } else {
+                    Log.e("Fail", "Fail");
+                }
+
+
+//                if (wordList.containsValue(insertedText)){
+//                    Log.e("AsyncTaskRunner2", "wordList boolean = " + wordList.containsValue(insertedText));
+////                            System.out.println("Matched key = " + result);
+////                            Log.e("TEST PASS", result);
+//                    resp = insertedText;
+//                } else{
+//                            Log.e("TEST FAIL", insertedText);
+////                            resultStr.concat(result);
+////                            System.out.println("Key not matched with ID");
+//                        }
+////                textViewWordList.setText(resultStr);
+            } catch (Exception e) {
+                Log.e("AsyncTaskRunner2", "Error encountered");
+            }
+            Log.e("AsyncTaskRunner2", "result = " + resp);
+            return resp;
+        }
+    }
 }

@@ -28,6 +28,7 @@
         android:id="@+id/editWordText"
         android:layout_gravity="left|center_horizontal"
         android:hint="Enter word here.."
+        android:digits="abcdefghijklmnopqrstuvwxyz"
         android:layout_row="1" />
 
     <Button
