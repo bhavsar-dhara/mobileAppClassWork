@@ -33,14 +33,14 @@ public class MainActivityDict extends Activity {
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
     private Handler mHandler = new Handler();
-    public String resultStr = "";
+    String resultStr = "";
     TextView textViewWordList;
     EditText editWordText;
     MediaPlayer mMediaPlayer;
     String result = "";
     HashMap<String,String> vocabList = new HashMap<String, String>();
-//    ArrayList<String> vocabulary = new ArrayList<>();
     String insertedText = "";
+    String resp = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,22 +71,18 @@ public class MainActivityDict extends Activity {
                 if(word.length() >= 3) {
                     insertedText = word;
                     try {
-                        HashMap<String, String> vocabMap = new AsyncTaskRunner().execute(word).get();
-                        resultStr = new AsyncTaskRunner2().execute(vocabMap).get();
-                        textViewWordList.setText(resultStr+"\n");
+                        new AsyncTaskRunner().execute(word).get();
+                        new AsyncTaskRunner2().execute().get();
+                        Log.e("addTextChangedListener", resp);
+                        resultStr=resultStr+resp+"\n";
+                       // resultStr=resultStr+"\n";
+                        Log.e("addTextChangedListener", resultStr);
+                        textViewWordList.setText(resultStr);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     }
-
-//                    if(vocabList.get(word) != null) {
-//                        Log.e("WORD LENGTH Search", "afterTextChanged: -2 " + vocabList.get(word));
-//                        result1 = vocabList.get(word);
-//                        Log.e("WORD LENGTH Search", "afterTextChanged: -3 " + result1);
-//                        resultStr.concat(result1);
-//                        textViewWordList.setText(resultStr);
-//                    }
                     result1 = resultStr;
                   Log.e("RESULT CONCAT Fragment", "afterTextChanged: RESULT STRING = " + result1);
                 }
@@ -292,8 +288,6 @@ public class MainActivityDict extends Activity {
                         Log.e("INSERT", "inserting count = " + strings.length);
                         for (String s : strings) {
                             vocabList.put(s, s);
-//                            vocabulary.add(s);
-//                            Log.e("TEST HASHMAP", vocabList.get(s));
                         }
                         Log.e("INSERT", "inserted");
                     } catch (IOException e) {
@@ -305,91 +299,22 @@ public class MainActivityDict extends Activity {
                 }
             return vocabList;
         }
-
-        protected void onPostExecute(String result) {
-            // execution of result of Long time consuming operation
-            String result1 = "";
-            Log.e("WORD COUNT ", String.valueOf(vocabList.size()) +" " +result);
-            Log.e("WORD COUNT 12 "," " + vocabList.get(result));
-
-            for (String s : vocabList.keySet()) {
-                Log.e("TEST HASHMAP KEYSET", vocabList.get(s));
-            }
-
-            /*
-            for (String s : vocabList.values()) {
-                Log.e("TEST HASHMAP VALUES", vocabList.get(s));
-            }*/
-
-//            Log.e("VOCAB COUNT ", String.valueOf(vocabulary.size()) +" " +result);
-//            if (vocabulary.contains(result)) {
-//                Log.e("INSIDE IF", "PASSED");
-//                resultStr.concat(result);
-//            }
-
-            if(vocabList.containsKey(result)){
-                System.out.println("Matched key = " + result);
-                Log.e("TEST PASS", result);
-                resultStr.concat(result);
-            } else{
-                Log.e("TEST FAIL", result);
-                resultStr.concat(result);
-                System.out.println("Key not matched with ID");
-            }
-            textViewWordList.setText(resultStr);
-        }
     }
 
-    private class AsyncTaskRunner2 extends AsyncTask<HashMap, Void, String> {
+    private class AsyncTaskRunner2 extends AsyncTask<Void, Void, String> {
         @Override
-        protected String doInBackground(HashMap... params) {
-            HashMap<String, String> wordList = params[0];
-            String resp = "";
+        protected String doInBackground(Void... params) {
+//            HashMap<String, String> wordList = params[0];
             try {
-                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
-                Log.e("AsyncTaskRunner2", "wordList = " + String.valueOf(wordList.size()));
-                Log.e("AsyncTaskRunner2", "wordList boolean = " + wordList.containsValue(insertedText));
+//                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
+//                Log.e("AsyncTaskRunner2", "vocabList = " + String.valueOf(vocabList.size()));
 
-                for (String s : wordList.values()) {
+                for (String s : vocabList.values()) {
                     if (insertedText.equalsIgnoreCase(s.trim())) {
-                        Log.e("entered if",resp );
                         resp = insertedText;
                     }
-                    Log.e("TEST HASHMAP 123", wordList.get(s));
-                    Log.e("TEST HASHMAP resp", resp);
                 }
-
-//                if(wordList.values().contains(insertedText))
-//                {
-//                    // do something if hashMap has key
-//                    Log.e("Worked", "Worked");
-//                }
-//
-//                if(wordList.containsKey("" + insertedText))
-//                {
-//                    // do something if hashMap has key
-//                    Log.e("Worked Keys", "Worked");
-//                }
-
-//                Set<String> keys = wordList.keySet();
-//                if(keys.contains(insertedText)) {
-//                    Log.e("Worked", "Worked");
-//                    resp = insertedText;
-//                } else {
-//                    Log.e("Fail", "Fail");
-//                }
-
-//                if (wordList.containsValue(insertedText)){
-//                    Log.e("AsyncTaskRunner2", "wordList boolean = " + wordList.containsValue(insertedText));
-////                            System.out.println("Matched key = " + result);
-////                            Log.e("TEST PASS", result);
-//                    resp = insertedText;
-//                } else{
-//                            Log.e("TEST FAIL", insertedText);
-////                            resultStr.concat(result);
-////                            System.out.println("Key not matched with ID");
-//                        }
-////                textViewWordList.setText(resultStr);
+                Log.e("TEST HASHMAP resp", resp);
             } catch (Exception e) {
                 Log.e("AsyncTaskRunner2", "Error encountered");
             }
