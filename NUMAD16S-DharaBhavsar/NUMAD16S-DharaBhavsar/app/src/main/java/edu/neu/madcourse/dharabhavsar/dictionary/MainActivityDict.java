@@ -20,7 +20,6 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
@@ -349,21 +348,36 @@ public class MainActivityDict extends Activity {
             try {
                 Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
                 Log.e("AsyncTaskRunner2", "wordList = " + String.valueOf(wordList.size()));
-//                Log.e("AsyncTaskRunner2", "wordList boolean = " + wordList.containsValue(insertedText));
+                Log.e("AsyncTaskRunner2", "wordList boolean = " + wordList.containsValue(insertedText));
 
-//                for (String s : vocabList.values()) {
-//                    if (insertedText.equalsIgnoreCase(s))
-//                        resp = insertedText;
-//                    Log.e("TEST HASHMAP VALUES", vocabList.get(s));
-//                }
-
-                Set<String> keys = wordList.keySet();
-                if(keys.contains(insertedText)) {
-                    Log.e("Worked", "Worked");
-                } else {
-                    Log.e("Fail", "Fail");
+                for (String s : wordList.values()) {
+                    if (insertedText.equalsIgnoreCase(s.trim())) {
+                        Log.e("entered if",resp );
+                        resp = insertedText;
+                    }
+                    Log.e("TEST HASHMAP 123", wordList.get(s));
+                    Log.e("TEST HASHMAP resp", resp);
                 }
 
+//                if(wordList.values().contains(insertedText))
+//                {
+//                    // do something if hashMap has key
+//                    Log.e("Worked", "Worked");
+//                }
+//
+//                if(wordList.containsKey("" + insertedText))
+//                {
+//                    // do something if hashMap has key
+//                    Log.e("Worked Keys", "Worked");
+//                }
+
+//                Set<String> keys = wordList.keySet();
+//                if(keys.contains(insertedText)) {
+//                    Log.e("Worked", "Worked");
+//                    resp = insertedText;
+//                } else {
+//                    Log.e("Fail", "Fail");
+//                }
 
 //                if (wordList.containsValue(insertedText)){
 //                    Log.e("AsyncTaskRunner2", "wordList boolean = " + wordList.containsValue(insertedText));
