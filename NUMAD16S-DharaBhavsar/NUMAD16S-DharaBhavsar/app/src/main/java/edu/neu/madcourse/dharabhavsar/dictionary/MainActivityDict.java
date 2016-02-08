@@ -19,7 +19,12 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
@@ -34,13 +39,14 @@ public class MainActivityDict extends Activity {
     public static final String PREF_RESTORE = "pref_restore";
     private Handler mHandler = new Handler();
     String resultStr = "";
+    String finalResult = "";
     TextView textViewWordList;
     EditText editWordText;
     MediaPlayer mMediaPlayer;
     String result = "";
     HashMap<String,String> vocabList = new HashMap<String, String>();
     String insertedText = "";
-    String resp = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +78,25 @@ public class MainActivityDict extends Activity {
                     insertedText = word;
                     try {
                         new AsyncTaskRunner().execute(word).get();
-                        new AsyncTaskRunner2().execute().get();
-                        Log.e("addTextChangedListener", resp);
-                        resultStr=resultStr+resp+"\n";
-                       // resultStr=resultStr+"\n";
-                        Log.e("addTextChangedListener", resultStr);
-                        textViewWordList.setText(resultStr);
+                        String res = new AsyncTaskRunner2().execute().get();
+                        Log.e("addTextChangedListener", "res = "+res);
+//                        Log.e("addTextChangedListener", resp);
+                        resultStr = resultStr + res + "\n";
+                        List<String> list = Arrays.asList(resultStr.split("\n"));
+                        Set<String> uniqueWords = new HashSet<String>(list);
+                        finalResult = "";
+                        for (String s1 : uniqueWords) {
+                            System.out.println(word + ": " + Collections.frequency(list, s1));
+                            finalResult = finalResult + s1 + "\n";
+                        }
+                        Log.e("addTextChangedListener", finalResult);
+                        textViewWordList.setText(finalResult);
+                        if(res != "") {
+                            mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
+                                    R.raw.short_ping_freesound_org);
+                            mMediaPlayer.setVolume(0.5f, 0.5f);
+                            mMediaPlayer.start();
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
@@ -85,6 +104,8 @@ public class MainActivityDict extends Activity {
                     }
                     result1 = resultStr;
                   Log.e("RESULT CONCAT Fragment", "afterTextChanged: RESULT STRING = " + result1);
+                } else {
+                    resultStr = "";
                 }
             }
 
@@ -305,12 +326,13 @@ public class MainActivityDict extends Activity {
         @Override
         protected String doInBackground(Void... params) {
 //            HashMap<String, String> wordList = params[0];
+            String resp = "";
             try {
-//                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
+                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
 //                Log.e("AsyncTaskRunner2", "vocabList = " + String.valueOf(vocabList.size()));
 
                 for (String s : vocabList.values()) {
-                    if (insertedText.equalsIgnoreCase(s.trim())) {
+                    if (insertedText.equals(s.trim())) {
                         resp = insertedText;
                     }
                 }
