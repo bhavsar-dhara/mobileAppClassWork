@@ -105,7 +105,16 @@ public class MainActivityDict extends Activity {
                     result1 = resultStr;
                   Log.e("RESULT CONCAT Fragment", "afterTextChanged: RESULT STRING = " + result1);
                 } else {
-                    resultStr = "";
+                    List<String> list = Arrays.asList(resultStr.split("\n"));
+                    Set<String> uniqueWords = new HashSet<String>(list);
+                    finalResult = "";
+                    for (String s1 : uniqueWords) {
+                        System.out.println(word + ": " + Collections.frequency(list, s1));
+                        finalResult = finalResult + s1 + "\n";
+                    }
+                    Log.e("addTextChangedListener", finalResult);
+                    textViewWordList.setText(finalResult);
+//                    resultStr = "";
                 }
             }
 
@@ -219,87 +228,92 @@ public class MainActivityDict extends Activity {
                     try {
                         Resources res = getResources();
                         InputStream in_s = null;
+                        String fileName = String.valueOf(word.charAt(0));
+                        int resID = getResources().getIdentifier(fileName, "raw", getPackageName());
+                        in_s = res.openRawResource(resID);
 
-                        switch (word.charAt(0)) {
+//                        in_s = res.openRawResource(R.raw.(word.charAt(0)));
+
+                        /*switch (word.charAt(0)) {
                             case 'a':
                                 in_s = res.openRawResource(R.raw.a);
                                 break;
                             case 'b':
-                                in_s = res.openRawResource(R.raw.b_wordlist);
+                                in_s = res.openRawResource(R.raw.b);
                                 break;
                             case 'c':
-                                in_s = res.openRawResource(R.raw.c_wordlist);
+                                in_s = res.openRawResource(R.raw.c);
                                 break;
                             case 'd':
-                                in_s = res.openRawResource(R.raw.d_wordlist);
+                                in_s = res.openRawResource(R.raw.d);
                                 break;
                             case 'e':
-                                in_s = res.openRawResource(R.raw.e_wordlist);
+                                in_s = res.openRawResource(R.raw.e);
                                 break;
                             case 'f':
-                                in_s = res.openRawResource(R.raw.f_wordlist);
+                                in_s = res.openRawResource(R.raw.f);
                                 break;
                             case 'g':
-                                in_s = res.openRawResource(R.raw.g_wordlist);
+                                in_s = res.openRawResource(R.raw.g);
                                 break;
                             case 'h':
-                                in_s = res.openRawResource(R.raw.h_wordlist);
+                                in_s = res.openRawResource(R.raw.h);
                                 break;
                             case 'i':
-                                in_s = res.openRawResource(R.raw.i_wordlist);
+                                in_s = res.openRawResource(R.raw.i);
                                 break;
                             case 'j':
-                                in_s = res.openRawResource(R.raw.j_wordlist);
+                                in_s = res.openRawResource(R.raw.j);
                                 break;
                             case 'k':
-                                in_s = res.openRawResource(R.raw.k_wordlist);
+                                in_s = res.openRawResource(R.raw.k);
                                 break;
                             case 'l':
-                                in_s = res.openRawResource(R.raw.l_wordlist);
+                                in_s = res.openRawResource(R.raw.l);
                                 break;
                             case 'm':
-                                in_s = res.openRawResource(R.raw.m_wordlist);
+                                in_s = res.openRawResource(R.raw.m);
                                 break;
                             case 'n':
-                                in_s = res.openRawResource(R.raw.n_wordlist);
+                                in_s = res.openRawResource(R.raw.n);
                                 break;
                             case 'o':
-                                in_s = res.openRawResource(R.raw.o_wordlist);
+                                in_s = res.openRawResource(R.raw.o);
                                 break;
                             case 'p':
-                                in_s = res.openRawResource(R.raw.p_wordlist);
+                                in_s = res.openRawResource(R.raw.p);
                                 break;
                             case 'q':
-                                in_s = res.openRawResource(R.raw.q_wordlist);
+                                in_s = res.openRawResource(R.raw.q);
                                 break;
                             case 'r':
-                                in_s = res.openRawResource(R.raw.r_wordlist);
+                                in_s = res.openRawResource(R.raw.r);
                                 break;
                             case 's':
-                                in_s = res.openRawResource(R.raw.s_wordlist);
+                                in_s = res.openRawResource(R.raw.s);
                                 break;
                             case 't':
-                                in_s = res.openRawResource(R.raw.t_wordlist);
+                                in_s = res.openRawResource(R.raw.t);
                                 break;
                             case 'u':
-                                in_s = res.openRawResource(R.raw.u_wordlist);
+                                in_s = res.openRawResource(R.raw.u);
                                 break;
                             case 'v':
-                                in_s = res.openRawResource(R.raw.v_wordlist);
+                                in_s = res.openRawResource(R.raw.v);
                                 break;
                             case 'w':
-                                in_s = res.openRawResource(R.raw.w_wordlist);
+                                in_s = res.openRawResource(R.raw.w);
                                 break;
                             case 'x':
-                                in_s = res.openRawResource(R.raw.x_wordlist);
+                                in_s = res.openRawResource(R.raw.x);
                                 break;
                             case 'y':
-                                in_s = res.openRawResource(R.raw.y_wordlist);
+                                in_s = res.openRawResource(R.raw.y);
                                 break;
                             case 'z':
-                                in_s = res.openRawResource(R.raw.z_wordlist);
+                                in_s = res.openRawResource(R.raw.z);
                                 break;
-                        }
+                        }*/
 //                        in_s = res.openRawResource(R.raw.wordlist);
 
                         byte[] b = new byte[in_s.available()];
