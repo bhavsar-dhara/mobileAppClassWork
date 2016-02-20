@@ -6,6 +6,7 @@
     <string name="generate_error_label"> Generate Error </string>
     <string name="tictactoe_label"> Tic Tac Toe </string>
     <string name="dictionary_label"> Dictionary </string>
+    <string name="wordgame_label"> Word Game </string>
     <string name="quit_label"> Quit </string>
 
     <string name="ut3_app_name">UT3</string>
