@@ -13,14 +13,16 @@ import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +46,13 @@ public class MainActivityDict extends Activity {
     EditText editWordText;
     MediaPlayer mMediaPlayer;
     String result = "";
-    HashMap<String,String> vocabList = new HashMap<String, String>();
+    HashMap<String, String> vocabList = new HashMap<String, String>();
+    Set<String> uniqueWords = new HashSet<String>();
+    List<String> wordArray = new ArrayList<String>();
+//    HashMap<String, > wordList = new HashMap<String, >();
+    HashMap<String, String> wordList = new HashMap<String, String>();
+    int wordListCount = 0;
+    int incrementCount = 0;
     String insertedText = "";
 
 
@@ -52,6 +60,20 @@ public class MainActivityDict extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_dict);
+
+        ArrayAdapter<String> myAdapter=new
+                ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                wordArray);
+        ListView myList=(ListView)
+                findViewById(R.id.listView);
+        myList.setAdapter(myAdapter);
+
+        this.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        this.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {
@@ -79,18 +101,44 @@ public class MainActivityDict extends Activity {
                     try {
                         new AsyncTaskRunner().execute(word).get();
                         String res = new AsyncTaskRunner2().execute().get();
-                        Log.e("addTextChangedListener", "res = "+res);
-//                        Log.e("addTextChangedListener", resp);
-                        resultStr = resultStr + res + "\n";
-                        List<String> list = Arrays.asList(resultStr.split("\n"));
-                        Set<String> uniqueWords = new HashSet<String>(list);
+                        Log.e("addTextChangedListener", "res = " + res);
+
                         finalResult = "";
-                        for (String s1 : uniqueWords) {
-                            System.out.println(word + ": " + Collections.frequency(list, s1));
-                            finalResult = finalResult + s1 + "\n";
+                        wordList.put(res, res);
+                        for(String str : wordList.keySet()) {
+                            finalResult = finalResult + str + "\n";
                         }
+
+                        wordArray.add(res);
+                        /*incrementCount = wordListCount;
+                        wordList.put(res, wordListCount++);
+                        SortedSet<> keys = new TreeSet<>(wordList.values());
+                        finalResult = "";
+                        for(int i : keys) {
+                            Log.e("test entry sorted", String.valueOf(i));
+                            for (Map.Entry<String, > entry : wordList.entrySet()) {
+                                if (i == entry.getValue())
+                                    finalResult = finalResult + entry.getKey() + "\n";
+                            }
+                        }*/
+//                        Log.e("addTextChangedListener", resp);
+
+//                        resultStr = resultStr + res + "\n";
+//                        List<String> list = Arrays.asList(resultStr.split("\n"));
+//                        Set<String> uniqueWords = new HashSet<String>(list);
+//                        uniqueWords.add(res);
+//                        for (String s1 : uniqueWords) {
+////                            System.out.println(word + ": " + Collections.frequency(list, s1));
+//                            finalResult = finalResult + s1 + "\n";
+//                        }
                         Log.e("addTextChangedListener", finalResult);
                         textViewWordList.setText(finalResult);
+                        /*if(wordListCount - incrementCount == 1){
+                            mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
+                                    R.raw.short_ping_freesound_org);
+                            mMediaPlayer.setVolume(0.5f, 0.5f);
+                            mMediaPlayer.start();
+                        }*/
                         if(res != "") {
                             mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
                                     R.raw.short_ping_freesound_org);
@@ -105,13 +153,28 @@ public class MainActivityDict extends Activity {
                     result1 = resultStr;
                   Log.e("RESULT CONCAT Fragment", "afterTextChanged: RESULT STRING = " + result1);
                 } else {
-                    List<String> list = Arrays.asList(resultStr.split("\n"));
-                    Set<String> uniqueWords = new HashSet<String>(list);
+//                    List<String> list = Arrays.asList(resultStr.split("\n"));
+//                    Set<String> uniqueWords = new HashSet<String>(list);
+
                     finalResult = "";
-                    for (String s1 : uniqueWords) {
-                        System.out.println(word + ": " + Collections.frequency(list, s1));
-                        finalResult = finalResult + s1 + "\n";
+                    for(String str : wordList.keySet()) {
+                        finalResult = finalResult + str + "\n";
                     }
+                    
+                    /*SortedSet<> keys = new TreeSet<>(wordList.values());
+                    finalResult = "";
+                    for(int i : keys) {
+                        Log.e("test entry sorted 2", String.valueOf(i));
+                        for (Map.Entry<String, > entry : wordList.entrySet()) {
+                            if (i == entry.getValue())
+                                finalResult = finalResult + entry.getKey() + "\n";
+                        }
+                    }*/
+//                    finalResult = "";
+//                    for (String s1 : uniqueWords) {
+////                        System.out.println(word + ": " + Collections.frequency(list, s1));
+//                        finalResult = finalResult + s1 + "\n";
+//                    }
                     Log.e("addTextChangedListener", finalResult);
                     textViewWordList.setText(finalResult);
 //                    resultStr = "";
@@ -146,6 +209,10 @@ public class MainActivityDict extends Activity {
                 editWordText.getText().clear();
                 Log.v("MainActivityDict", "onClick: " + editWordText.getText());
                 textViewWordList.setText("");
+//                uniqueWords.clear();
+                wordList.clear();
+                wordListCount = 0;
+                incrementCount = 0;
             }
         });
 
@@ -322,7 +389,8 @@ public class MainActivityDict extends Activity {
                         String[] strings = result.split("\\n");
                         Log.e("INSERT", "inserting count = " + strings.length);
                         for (String s : strings) {
-                            vocabList.put(s, s);
+//                            vocabList.put(s, s);
+                            vocabList.put(s.trim(), s.trim());
                         }
                         Log.e("INSERT", "inserted");
                     } catch (IOException e) {
@@ -346,7 +414,8 @@ public class MainActivityDict extends Activity {
 //                Log.e("AsyncTaskRunner2", "vocabList = " + String.valueOf(vocabList.size()));
 
                 for (String s : vocabList.values()) {
-                    if (insertedText.equals(s.trim())) {
+                    if (insertedText.equals(s)) {
+//                    if (insertedText.equals(s.trim())) {
                         resp = insertedText;
                     }
                 }

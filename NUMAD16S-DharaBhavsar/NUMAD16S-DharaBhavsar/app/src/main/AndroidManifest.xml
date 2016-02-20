@@ -37,7 +37,8 @@
         </activity>
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict"
-            android:label="@string/dictActivityLabel" >
+            android:label="@string/dictActivityLabel"
+            android:windowSoftInputMode="stateVisible|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict" />
