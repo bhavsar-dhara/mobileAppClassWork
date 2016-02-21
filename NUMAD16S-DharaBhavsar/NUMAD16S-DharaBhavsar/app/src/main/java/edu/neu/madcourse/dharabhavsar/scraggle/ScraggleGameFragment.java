@@ -17,10 +17,10 @@ import java.util.Set;
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class ScraggleGameFragment extends Fragment {
-   static private int mLargeIds[] = {R.id.large1, R.id.large2, R.id.large3,
+   static private int mLargeIdList[] = {R.id.large1, R.id.large2, R.id.large3,
          R.id.large4, R.id.large5, R.id.large6, R.id.large7, R.id.large8,
          R.id.large9,};
-   static private int mSmallIds[] = {R.id.small1, R.id.small2, R.id.small3,
+   static private int mSmallIdList[] = {R.id.small1, R.id.small2, R.id.small3,
          R.id.small4, R.id.small5, R.id.small6, R.id.small7, R.id.small8,
          R.id.small9,};
    private Handler mHandler = new Handler();
@@ -65,7 +65,7 @@ public class ScraggleGameFragment extends Fragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                             Bundle savedInstanceState) {
       View rootView =
-            inflater.inflate(R.layout.large_board, container, false);
+            inflater.inflate(R.layout.large_board_scraggle, container, false);
       initViews(rootView);
       updateAllTiles();
       return rootView;
@@ -74,12 +74,12 @@ public class ScraggleGameFragment extends Fragment {
    private void initViews(View rootView) {
       mEntireBoard.setView(rootView);
       for (int large = 0; large < 9; large++) {
-         View outer = rootView.findViewById(mLargeIds[large]);
+         View outer = rootView.findViewById(mLargeIdList[large]);
          mLargeTiles[large].setView(outer);
 
          for (int small = 0; small < 9; small++) {
             ImageButton inner = (ImageButton) outer.findViewById
-                  (mSmallIds[small]);
+                  (mSmallIdList[small]);
             final int fLarge = large;
             final int fSmall = small;
             final ScraggleTile smallTile = mSmallTiles[large][small];

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/tile_blue_scraggle"
+        android:maxLevel="0" />
+    <item
+        android:drawable="@drawable/tile_red_scraggle"
+        android:maxLevel="1" />
+    <item
+        android:drawable="@drawable/tile_gray_scraggle"
+        android:maxLevel="2" />
+    <item
+        android:drawable="@drawable/tile_purple_scraggle"
+        android:maxLevel="3" />
+</level-list>

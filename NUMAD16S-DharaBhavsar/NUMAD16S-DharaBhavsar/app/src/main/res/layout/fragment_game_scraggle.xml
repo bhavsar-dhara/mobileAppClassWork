@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context="edu.neu.madcourse.dharabhavsar.scraggle.ScraggleGameActivity">
+    tools:context=".ScraggleGameActivity">
 
     <include
-        layout="@layout/large_board"
+        layout="@layout/large_board_scraggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

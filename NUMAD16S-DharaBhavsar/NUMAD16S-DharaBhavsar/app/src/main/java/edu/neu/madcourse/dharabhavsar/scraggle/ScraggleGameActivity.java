@@ -22,7 +22,7 @@ public class ScraggleGameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_game_scraggle);
         mGameFragment = (ScraggleGameFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
         boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
@@ -75,12 +75,12 @@ public class ScraggleGameActivity extends Activity {
     }
 
     public void startThinking() {
-        View thinkView = findViewById(R.id.thinking);
+        View thinkView = findViewById(R.id.thinking_scraggle);
         thinkView.setVisibility(View.VISIBLE);
     }
 
     public void stopThinking() {
-        View thinkView = findViewById(R.id.thinking);
+        View thinkView = findViewById(R.id.thinking_scraggle);
         thinkView.setVisibility(View.GONE);
     }
 
