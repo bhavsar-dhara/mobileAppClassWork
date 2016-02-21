@@ -46,5 +46,30 @@ both sides in the larger game.
     <string name="ack_app_screen"> Acknowledgements </string>
 
     <string name="scraggle_app_name">Scraggle</string>
+    <string name="game_instructions_label">How To Play</string>
+
+    <string name="help_text">\
+This game is played just like
+regular Boggle game. Except that it has two rounds.\n\
+\n\
+In the first round, you have to find 9 words from
+each of the 9 scrambled letters in 1.5minute\n\
+\n\
+Similarly in the second round, you have to make words
+from the remaining letters of the words made from the
+first round in 1.5minute\n\
+\n\
+Scoring is based on the words prepared.
+</string>
+
+    <string name="ack_text">\
+Pictures: depositphotos\n\
+        dreamstime\n\
+\n\
+Code Snippets: \n\
+\n\
+Sound: \n\
+\n\
+</string>
 
 </resources>

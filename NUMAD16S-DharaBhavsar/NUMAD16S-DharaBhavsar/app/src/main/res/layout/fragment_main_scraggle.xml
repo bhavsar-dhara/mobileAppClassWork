@@ -5,7 +5,8 @@
     android:elevation="@dimen/elevation_high"
     android:orientation="vertical"
     android:padding="@dimen/menu_padding"
-    tools:context=".ScraggleActivity">
+    tools:context="edu.neu.madcourse.dharabhavsar.scraggle.MainActivityScraggle"
+    android:background="#a083b5">
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,7 +15,19 @@
         android:layout_marginBottom="@dimen/menu_space"
         android:text="@string/scraggle_app_name"
         android:textAppearance="?android:textAppearanceLarge"
-        android:textSize="@dimen/menu_text_size" />
+        android:textSize="@dimen/menu_text_size"
+        android:textColor="#b11717" />
+
+    <Button
+        android:id="@+id/game_instructions_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/menu_button_margin"
+        android:padding="@dimen/menu_button_padding"
+        android:text="@string/game_instructions_label"
+        android:textAllCaps="false"
+        android:textColor="#3b3692"
+        android:background="#86dfc2" />
 
     <Button
         android:id="@+id/continue_button"
@@ -23,7 +36,9 @@
         android:layout_margin="@dimen/menu_button_margin"
         android:padding="@dimen/menu_button_padding"
         android:text="@string/continue_label"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textColor="#3b3692"
+        android:background="#86dfc2" />
 
     <Button
         android:id="@+id/new_button"
@@ -33,7 +48,9 @@
         android:layout_margin="@dimen/menu_button_margin"
         android:padding="@dimen/menu_button_padding"
         android:text="@string/new_game_label"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textColor="#3b3692"
+        android:background="#86dfc2" />
 
     <Button
         android:id="@+id/acknowledgementsBtn"
@@ -43,5 +60,7 @@
         android:layout_margin="@dimen/menu_button_margin"
         android:padding="@dimen/menu_button_padding"
         android:text="@string/acknowledgementsBtn"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textColor="#3b3692"
+        android:background="#86dfc2" />
 </LinearLayout>

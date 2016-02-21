@@ -4,7 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    tools:context=".ScraggleActivity">
+    tools:context="edu.neu.madcourse.dharabhavsar.scraggle.MainActivityScraggle">
+
+    <edu.neu.madcourse.dharabhavsar.scraggle.ScrollingViewScraggle
+        android:id="@+id/main_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:scrollingDrawable="@drawable/letters_background"/>
 
     <fragment
         android:id="@+id/main_fragment"

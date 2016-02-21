@@ -13,6 +13,7 @@
     <color name="purple_color">#7f007f</color>
     <color name="red_color">#ff7f7f</color>
     <color name="thinking_background_color">#cfdfdfdf</color>
+    <color name="faded_color">#ffcc99</color>
 
     <color name="about_title_bar_color">#cccccc</color>
     <color name="about_title_bar_font_color">#000000</color>

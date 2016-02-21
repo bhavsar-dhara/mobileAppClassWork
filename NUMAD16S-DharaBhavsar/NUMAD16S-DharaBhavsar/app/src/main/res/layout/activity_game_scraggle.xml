@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScraggleGameActivity">
+    tools:context="edu.neu.madcourse.dharabhavsar.scraggle.MainActivityScraggle">
 
     <ImageView
         android:layout_width="match_parent"
@@ -17,19 +17,19 @@
         android:orientation="vertical">
 
         <fragment
-            android:id="@+id/fragment_game"
-            class="edu.neu.madcourse.dharabhavsar.ut3.GameFragment"
+            android:id="@+id/fragment_game_scraggle"
+            class="edu.neu.madcourse.dharabhavsar.scraggle.ScraggleGameFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_game" />
+            tools:layout="@layout/fragment_game_scraggle" />
         <!-- Control fragment goes here... -->
 
         <fragment
-            android:id="@+id/fragment_game_controls"
-            class="edu.neu.madcourse.dharabhavsar.ut3.ControlFragment"
+            android:id="@+id/fragment_control_scraggle"
+            class="edu.neu.madcourse.dharabhavsar.scraggle.ControlFragmentScraggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_control" />
+            tools:layout="@layout/fragment_control_scraggle" />
 
     </LinearLayout>
 
