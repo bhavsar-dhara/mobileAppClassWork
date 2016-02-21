@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import edu.neu.madcourse.dharabhavsar.about.MainActivityAbout;
 import edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict;
+import edu.neu.madcourse.dharabhavsar.scraggle.MainActivityScraggle;
 import edu.neu.madcourse.dharabhavsar.ut3.MainActivityUt3;
 
 /**
@@ -203,6 +204,21 @@ public class MainActivityFragment extends Fragment {
                 mMediaPlayer.start();
 
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityDict.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btn6 = (Button) rootView.findViewById(R.id.wordgame_button);
+        btn6.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.short_ping_freesound_org);
+                mMediaPlayer.setVolume(0.5f, 0.5f);
+                mMediaPlayer.start();
+
+                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle.class);
                 startActivity(intent);
             }
         });
