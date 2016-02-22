@@ -12,6 +12,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class ScraggleGameActivity extends Activity {
     private Handler mHandler = new Handler();
     private ScraggleGameFragment mGameFragment;
     List<String> nineWords = new ArrayList<>();
+    TextView mTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +49,11 @@ public class ScraggleGameActivity extends Activity {
 //        TEST
 
         try {
-            for (int i = 0; i < 9; i++) {
-                String word = new AsyncTaskRunner().execute().get();
+            /*for (int i = 0; i < 9; i++) {
+//                String word = new AsyncTaskRunner().execute().get();
                 nineWords.add(word);
-            }
+            }*/
+            new AsyncTaskRunner().execute().get();
             Log.e("nineWords ", String.valueOf(nineWords.size()));
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -58,10 +61,11 @@ public class ScraggleGameActivity extends Activity {
             e.printStackTrace();
         }
 
-        CountDownTimer countDownTimer = new CountDownTimer(30000, 1000) {
+        mTextField = (TextView) findViewById(R.id.textView4);
+        CountDownTimer countDownTimer = new CountDownTimer(90000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+                mTextField.setText("Seconds remaining: " + millisUntilFinished / 1000);
             }
 
             public void onFinish() {
@@ -147,8 +151,6 @@ public class ScraggleGameActivity extends Activity {
             String word = null;
             try {
                 for (int i = 0; i < 9; i++) {
-//                    String word = new AsyncTaskRunner().execute().get();
-
                     Random random = new Random();
                     char c = (char) (random.nextInt(26) + 'a');
                     Log.e("fetchNineWords", String.valueOf(c));
@@ -173,27 +175,13 @@ public class ScraggleGameActivity extends Activity {
                     Random yourRandom = new Random();
                     int index = yourRandom.nextInt(stringList.size());
                     word = stringList.get(index);
+                    Log.e("fetchNineWords", "random 9-letter word fetched : " + word);
 
-                /*List<String> stringList = Arrays.asList(strings);
-                Log.e("fetchNineWords", String.valueOf(stringList.size()));
-
-                Random yourRandom = new Random(stringList.size());
-//                Log.e("fetchNineWords", String.valueOf(yourRandom.nextInt()));
-                int index = yourRandom.nextInt();
-                Log.e("fetchNineWords", String.valueOf(index));
-                word = stringList.get(index);*/
-
-                /*Random yourRandom = new Random(strings.length);
-                int index = yourRandom.nextInt();
-                Log.e("fetchNineWords", String.valueOf(index));
-                word = strings[index];*/
                     nineWords.add(word);
                 }
             } catch (Exception e) {
                 Log.e("fetchNineWords", "Exception occurred");
             }
-            Log.e("fetchNineWords", "random 9-letter word fetched : " + word);
-//            return word;
             return null;
         }
     }
