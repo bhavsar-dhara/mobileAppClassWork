@@ -10,27 +10,40 @@ import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class ControlFragmentScraggle extends Fragment {
 
-   @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                            Bundle savedInstanceState) {
-      View rootView =
-            inflater.inflate(R.layout.fragment_control_scraggle, container, false);
-      View main = rootView.findViewById(R.id.button_main);
-      View restart = rootView.findViewById(R.id.button_restart);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView =
+                inflater.inflate(R.layout.fragment_control_scraggle, container, false);
+        final View pause = rootView.findViewById(R.id.button_pause);
+        View quit = rootView.findViewById(R.id.button_quit);
+        final View resume = rootView.findViewById(R.id.button_resume);
 
-      main.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View view) {
-            getActivity().finish();
-         }
-      });
-      restart.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View view) {
-            ((ScraggleGameActivity) getActivity()).restartGame();
-         }
-      });
-      return rootView;
-   }
+        quit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().finish();
+            }
+        });
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO saving game state & hiding the game grid & stopping the countdown timer
+                resume.setVisibility(View.VISIBLE);
+                pause.setVisibility(View.INVISIBLE);
+                ((ScraggleGameActivity) getActivity()).onPause();
+            }
+        });
+        resume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO restore game state & game grid & start the countdown timer
+                pause.setVisibility(View.VISIBLE);
+                resume.setVisibility(View.INVISIBLE);
+                ((ScraggleGameActivity) getActivity()).onResume();
+            }
+        });
+        return rootView;
+    }
 
 }

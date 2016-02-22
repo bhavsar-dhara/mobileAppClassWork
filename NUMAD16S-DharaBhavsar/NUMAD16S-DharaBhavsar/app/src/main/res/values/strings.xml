@@ -7,7 +7,6 @@
     <string name="tictactoe_label"> Tic Tac Toe </string>
     <string name="dictionary_label"> Dictionary </string>
     <string name="wordgame_label"> Word Game </string>
-    <string name="quit_label"> Quit </string>
 
     <string name="ut3_app_name">UT3</string>
     <string name="long_app_name">Ultimate Tic Tac Toe</string>
@@ -65,11 +64,19 @@ Scoring is based on the words prepared.
     <string name="ack_text">\
 Pictures: depositphotos\n\
         dreamstime\n\
+        lisamarieandjayscrabblepieces\n\
+        swipe to\n\
+        dasscontinental\n\
 \n\
 Code Snippets: \n\
+        http://stackoverflow.com/questions/20588736/how-can-i-shuffle-the-letters-of-a-word\n\
 \n\
-Sound: \n\
+Sound: freesound.org\n\
 \n\
 </string>
+
+    <string name="pause_label">Pause</string>
+    <string name="resume_label">Resume</string>
+    <string name="quit_label">Quit</string>
 
 </resources>

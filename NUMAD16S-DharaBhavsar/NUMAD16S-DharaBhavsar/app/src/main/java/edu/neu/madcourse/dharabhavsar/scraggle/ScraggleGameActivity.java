@@ -191,7 +191,7 @@ public class ScraggleGameActivity extends Activity {
                     word = stringList.get(index);
                     Log.e("fetchNineWords", "random 9-letter word fetched : " + word);
 
-                    // Create a random object
+                    // Create a random object to jumble up word
                     Random r = new Random();
                     word = scramble( r, word );
                     Log.e("fetchNineWords", "random 9-letter word jumbled : " + word);

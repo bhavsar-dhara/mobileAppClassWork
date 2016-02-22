@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -78,7 +78,7 @@ public class ScraggleGameFragment extends Fragment {
             mLargeTiles[large].setView(outer);
 
             for (int small = 0; small < 9; small++) {
-                ImageButton inner = (ImageButton) outer.findViewById
+                Button inner = (Button) outer.findViewById
                         (mSmallIdList[small]);
                 final int fLarge = large;
                 final int fSmall = small;
