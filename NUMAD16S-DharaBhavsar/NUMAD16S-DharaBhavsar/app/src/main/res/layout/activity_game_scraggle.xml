@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/sandy_beach" />
+        android:src="@drawable/triangle_background_weheartit" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_game_scraggle" />
-        <!-- Control fragment goes here... -->
 
         <fragment
             android:id="@+id/fragment_control_scraggle"
