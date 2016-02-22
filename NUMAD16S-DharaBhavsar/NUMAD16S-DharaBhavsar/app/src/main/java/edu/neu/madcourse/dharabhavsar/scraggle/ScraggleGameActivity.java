@@ -142,6 +142,21 @@ public class ScraggleGameActivity extends Activity {
         Log.d("Scraggle", "state = " + gameData);
     }
 
+//    http://stackoverflow.com/questions/20588736/how-can-i-shuffle-the-letters-of-a-word
+    private static String scramble( Random random, String inputString )
+    {
+        // Convert your string into a simple char array:
+        char a[] = inputString.toCharArray();
+        // Scramble the letters using the standard Fisher-Yates shuffle,
+        for( int i=0 ; i<a.length-1 ; i++ )
+        {
+            int j = random.nextInt(a.length-1);
+            // Swap letters
+            char temp = a[i]; a[i] = a[j];  a[j] = temp;
+        }
+        return new String( a );
+    }
+
     private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -175,6 +190,11 @@ public class ScraggleGameActivity extends Activity {
                     int index = yourRandom.nextInt(stringList.size());
                     word = stringList.get(index);
                     Log.e("fetchNineWords", "random 9-letter word fetched : " + word);
+
+                    // Create a random object
+                    Random r = new Random();
+                    word = scramble( r, word );
+                    Log.e("fetchNineWords", "random 9-letter word jumbled : " + word);
 
                     wordSet.add(word);
                     Log.e("fetchNineWords", "fetchNineWords" + wordSet.size());
