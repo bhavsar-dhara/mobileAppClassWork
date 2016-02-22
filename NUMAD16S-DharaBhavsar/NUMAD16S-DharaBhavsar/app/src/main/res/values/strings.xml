@@ -45,7 +45,7 @@ both sides in the larger game.
     <string name="test_dict_app_screen"> Test Dictionary </string>
     <string name="ack_app_screen"> Acknowledgements </string>
 
-    <string name="scraggle_app_name">Scraggle</string>
+    <string name="scraggle_app_name">Word Game</string>
     <string name="game_instructions_label">How To Play</string>
 
     <string name="help_text">\

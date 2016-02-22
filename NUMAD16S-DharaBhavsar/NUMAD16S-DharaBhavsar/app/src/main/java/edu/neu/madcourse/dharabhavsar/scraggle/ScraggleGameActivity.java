@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -49,10 +50,6 @@ public class ScraggleGameActivity extends Activity {
 //        TEST
 
         try {
-            /*for (int i = 0; i < 9; i++) {
-//                String word = new AsyncTaskRunner().execute().get();
-                nineWords.add(word);
-            }*/
             new AsyncTaskRunner().execute().get();
             Log.e("nineWords ", String.valueOf(nineWords.size()));
         } catch (InterruptedException e) {
@@ -125,7 +122,7 @@ public class ScraggleGameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mMediaPlayer = MediaPlayer.create(this, R.raw.cooltron_homemadepodracingcar_freesound_org);
+        mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
 
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
@@ -149,8 +146,10 @@ public class ScraggleGameActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
             String word = null;
+//            to handle or restrict word repetition
+            HashSet<String> wordSet = new HashSet<>();
             try {
-                for (int i = 0; i < 9; i++) {
+                while(wordSet.size() < 9) {
                     Random random = new Random();
                     char c = (char) (random.nextInt(26) + 'a');
                     Log.e("fetchNineWords", String.valueOf(c));
@@ -177,11 +176,13 @@ public class ScraggleGameActivity extends Activity {
                     word = stringList.get(index);
                     Log.e("fetchNineWords", "random 9-letter word fetched : " + word);
 
-                    nineWords.add(word);
+                    wordSet.add(word);
+                    Log.e("fetchNineWords", "fetchNineWords" + wordSet.size());
                 }
             } catch (Exception e) {
                 Log.e("fetchNineWords", "Exception occurred");
             }
+            nineWords = new ArrayList<String>(wordSet);
             return null;
         }
     }

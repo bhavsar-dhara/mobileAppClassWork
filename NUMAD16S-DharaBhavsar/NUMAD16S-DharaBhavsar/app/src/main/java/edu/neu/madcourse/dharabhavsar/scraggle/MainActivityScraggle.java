@@ -19,7 +19,7 @@ public class MainActivityScraggle extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mMediaPlayer = MediaPlayer.create(this, R.raw.snapper4298__credits2_freesound_org);
+        mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_piano_ambiance_1_freesound_org);
         mMediaPlayer.setVolume(0.5f, 0.5f);
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
