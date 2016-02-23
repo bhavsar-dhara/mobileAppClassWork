@@ -192,11 +192,11 @@ public class ScraggleGameActivity extends Activity {
         Log.d("Scraggle", "state = " + gameData);
     }
 
-    protected void onQuit(){
+    /*protected void onQuit(){
         mMediaPlayer.stop();
         mMediaPlayer.reset();
         mMediaPlayer.release();
-    }
+    }*/
 
     private class AsyncTaskRunner extends AsyncTask<Void, Void, List<String>> {
         @Override

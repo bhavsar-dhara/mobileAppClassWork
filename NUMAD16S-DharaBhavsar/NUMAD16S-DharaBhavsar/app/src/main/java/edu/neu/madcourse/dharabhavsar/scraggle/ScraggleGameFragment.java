@@ -1,10 +1,12 @@
 package edu.neu.madcourse.dharabhavsar.scraggle;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +41,7 @@ public class ScraggleGameFragment extends Fragment {
     private int mLastSmall;
     List<List<Integer>> resultList = new ArrayList<List<Integer>>();
     List<String> stringLst;
+    Vibrator v;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class ScraggleGameFragment extends Fragment {
         mSoundO = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
         mSoundMiss = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
         mSoundRewind = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
+        v = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     private void clearAvailable() {
@@ -122,6 +126,8 @@ public class ScraggleGameFragment extends Fragment {
                         if (isAvailable(smallTile)) {
                             ((ScraggleGameActivity) getActivity()).startThinking();
                             mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
+                            // Vibrate for 500 milliseconds
+                            v.vibrate(500);
 //                            makeMove(fLarge, fSmall);
                             think();
                         } else {

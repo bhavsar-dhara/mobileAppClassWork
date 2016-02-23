@@ -26,7 +26,7 @@ public class ControlFragmentScraggle extends Fragment {
             @Override
             public void onClick(View view) {
                 getActivity().finish();
-                ((ScraggleGameActivity) getActivity()).onQuit();
+//                ((ScraggleGameActivity) getActivity()).onQuit();
             }
         });
         pause.setOnClickListener(new View.OnClickListener() {
