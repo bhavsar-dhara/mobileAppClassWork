@@ -6,7 +6,7 @@
     android:padding="@dimen/control_padding"
     tools:context=".ScraggleGameActivity">
 
-    <Button
+    <!--<Button
         android:id="@+id/button_restart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,5 +20,42 @@
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/home"
         android:elevation="@dimen/elevation_low"
-        android:text="@string/main_menu_label" />
+        android:text="@string/main_menu_label" />-->
+
+    <Button
+        android:id="@+id/button_pause"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawableTop="@drawable/pause_swipe_to"
+        android:elevation="@dimen/elevation_low"
+        android:text="@string/pause_label"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/button_resume"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawableTop="@drawable/resume_swipe_to"
+        android:elevation="@dimen/elevation_low"
+        android:text="@string/resume_label"
+        android:visibility="invisible"
+        android:textColor="#ffffff" />
+
+    <!--<Button
+        android:id="@+id/button_restart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawableTop="@drawable/restart_small"
+        android:elevation="@dimen/elevation_low"
+        android:text="@string/restart_label" />-->
+
+    <Button
+        android:id="@+id/button_quit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawableTop="@drawable/quit_dasscontinental"
+        android:elevation="@dimen/elevation_low"
+        android:text="@string/quit_label"
+        android:textColor="#ffffff" />
+
 </LinearLayout>

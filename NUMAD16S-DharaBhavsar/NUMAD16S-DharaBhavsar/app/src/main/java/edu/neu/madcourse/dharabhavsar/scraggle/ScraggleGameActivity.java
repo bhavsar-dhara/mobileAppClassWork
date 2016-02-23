@@ -205,12 +205,22 @@ public class ScraggleGameActivity extends Activity {
                 Log.e("fetchNineWords", "Exception occurred");
             }
             nineWords = new ArrayList<String>(wordSet);
-            Log.e("nineWords ", String.valueOf(nineWords.size()));
+//            Log.e("nineWords ", String.valueOf(nineWords.size()));
 
             /*ScraggleGameFragment fragment = (ScraggleGameFragment) getFragmentManager().findFragmentById(R.id.fragment_game_scraggle);
             fragment.setLettersOnBoard(nineWords);*/
 
             return nineWords;
+        }
+    }
+
+    public void toogleMute() {
+        if(mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+        }
+        else {
+            mMediaPlayer.start();
+//            mMediaPlayer.setLooping(true);
         }
     }
 

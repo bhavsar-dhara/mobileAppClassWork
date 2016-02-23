@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -8,8 +8,10 @@
 
     <Button
         android:id="@+id/button_pause"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:drawableTop="@drawable/pause_swipe_to"
         android:elevation="@dimen/elevation_low"
         android:text="@string/pause_label"
@@ -17,8 +19,10 @@
 
     <Button
         android:id="@+id/button_resume"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:drawableTop="@drawable/resume_swipe_to"
         android:elevation="@dimen/elevation_low"
         android:text="@string/resume_label"
@@ -34,11 +38,33 @@
         android:text="@string/restart_label" />-->
 
     <Button
+        android:id="@+id/button_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableTop="@drawable/mute"
+        android:elevation="@dimen/elevation_low"
+        android:text="@string/mute_label"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/button_unmute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableTop="@drawable/unmute"
+        android:elevation="@dimen/elevation_low"
+        android:text="@string/unmute_label"
+        android:visibility="invisible"
+        android:textColor="#ffffff" />
+
+    <Button
         android:id="@+id/button_quit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:drawableTop="@drawable/quit_dasscontinental"
         android:elevation="@dimen/elevation_low"
         android:text="@string/quit_label"
         android:textColor="#ffffff" />
-</LinearLayout>
+</RelativeLayout>

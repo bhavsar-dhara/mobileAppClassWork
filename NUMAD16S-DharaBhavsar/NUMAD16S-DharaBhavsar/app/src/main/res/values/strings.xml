@@ -78,5 +78,7 @@ Sound: freesound.org\n\
     <string name="pause_label">Pause</string>
     <string name="resume_label">Resume</string>
     <string name="quit_label">Quit</string>
+    <string name="mute_label">Mute</string>
+    <string name="unmute_label">Unmute</string>
 
 </resources>

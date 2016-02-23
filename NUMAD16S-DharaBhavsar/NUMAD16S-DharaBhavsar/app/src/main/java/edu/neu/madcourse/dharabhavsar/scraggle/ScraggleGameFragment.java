@@ -89,13 +89,13 @@ public class ScraggleGameFragment extends Fragment {
 
             List<Integer> posnList = resultList.get(large);
             String str = stringLst.get(large);
-            Log.e("nineWords", str);
+//            Log.e("nineWords", str);
 
             for (int small = 0; small < 9; small++) {
                 int i = posnList.get(small);
                 Button inner = (Button) outer.findViewById
                         (mSmallIdList[i]);
-                Log.e("nineWords", String.valueOf(stringLst.get(small).charAt(small)));
+//                Log.e("nineWords", String.valueOf(stringLst.get(small).charAt(small)));
                 inner.setText(String.valueOf(str.charAt(small)));
             }
 

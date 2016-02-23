@@ -17,4 +17,8 @@
 
     <color name="about_title_bar_color">#cccccc</color>
     <color name="about_title_bar_font_color">#000000</color>
+
+    <color name="scraggle_btn_textColor">#3b3692</color>
+    <color name="scraggle_btn_backgroundColor">#86dfc2</color>
+    <color name="scraggle_title_textColor">#e98b60</color>
 </resources>

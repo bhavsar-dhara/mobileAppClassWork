@@ -19,6 +19,8 @@ public class ControlFragmentScraggle extends Fragment {
         View quit = rootView.findViewById(R.id.button_quit);
         final View resume = rootView.findViewById(R.id.button_resume);
         /*View restart = rootView.findViewById(R.id.button_restart);*/
+        final View muteToggle = rootView.findViewById(R.id.button_mute);
+        final View unmuteToggle = rootView.findViewById(R.id.button_unmute);
 
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +44,22 @@ public class ControlFragmentScraggle extends Fragment {
                 pause.setVisibility(View.VISIBLE);
                 resume.setVisibility(View.INVISIBLE);
                 ((ScraggleGameActivity) getActivity()).onResume();
+            }
+        });
+        muteToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ScraggleGameActivity) getActivity()).toogleMute();
+                muteToggle.setVisibility(View.INVISIBLE);
+                unmuteToggle.setVisibility(View.VISIBLE);
+            }
+        });
+        unmuteToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ScraggleGameActivity) getActivity()).toogleMute();
+                unmuteToggle.setVisibility(View.INVISIBLE);
+                muteToggle.setVisibility(View.VISIBLE);
             }
         });
         /*restart.setOnClickListener(new View.OnClickListener() {
