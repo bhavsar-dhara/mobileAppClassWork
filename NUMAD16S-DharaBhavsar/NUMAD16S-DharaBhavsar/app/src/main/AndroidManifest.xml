@@ -20,13 +20,17 @@
         </activity>
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.scraggle.MainActivityScraggle"
-            android:label="@string/wordgame_label" >
+            android:label="@string/wordgame_label"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.scraggle.MainActivityScraggle" />
         </activity>
         <activity
-            android:name="edu.neu.madcourse.dharabhavsar.scraggle.ScraggleGameActivity">
+            android:name="edu.neu.madcourse.dharabhavsar.scraggle.ScraggleGameActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ut3.MainActivityUt3"

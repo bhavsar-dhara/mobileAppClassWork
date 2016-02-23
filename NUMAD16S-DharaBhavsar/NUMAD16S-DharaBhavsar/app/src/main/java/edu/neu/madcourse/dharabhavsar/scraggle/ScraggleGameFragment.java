@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
@@ -36,6 +37,8 @@ public class ScraggleGameFragment extends Fragment {
     private float mVolume = 1f;
     private int mLastLarge;
     private int mLastSmall;
+    List<List<Integer>> resultList;
+    List<String> stringLst;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,14 @@ public class ScraggleGameFragment extends Fragment {
         for (int large = 0; large < 9; large++) {
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
+
+            /*List<Integer> posnList = resultList.get(large);
+
+            for (int small = 0; small < 9; small++) {
+                int i = posnList.get(small);
+                Button inner = (Button) outer.findViewById
+                        (mSmallIdList[i]);
+            }*/
 
             for (int small = 0; small < 9; small++) {
                 Button inner = (Button) outer.findViewById
@@ -238,7 +249,13 @@ public class ScraggleGameFragment extends Fragment {
                 Arrays.asList(2, 4, 6, 7, 8, 5, 1, 0, 3),
                 Arrays.asList(0, 4, 8, 7, 6, 3, 1, 2, 5)));
 
+        for (int i = 0; i < 9; i++) {
+            int rnd = new Random().nextInt(myList.size());
+            Log.e("Random position", String.valueOf(rnd));
+            resultList.add(myList.get(rnd));
+        }
 
+        stringLst = stringList;
     }
 
     public List<Integer> getNeighbors(Integer i) {

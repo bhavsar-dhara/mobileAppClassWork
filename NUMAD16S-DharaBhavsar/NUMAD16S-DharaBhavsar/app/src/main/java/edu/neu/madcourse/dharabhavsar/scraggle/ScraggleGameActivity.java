@@ -1,15 +1,13 @@
 package edu.neu.madcourse.dharabhavsar.scraggle;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -33,11 +31,13 @@ public class ScraggleGameActivity extends Activity {
     TextView mTextField;
     long mStartTime;
     private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
-//    CountDownTimer countDownTimer;
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//         The below code didn't work for this activity
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_game_scraggle);
         mGameFragment = (ScraggleGameFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
@@ -56,15 +56,13 @@ public class ScraggleGameActivity extends Activity {
         try {
             new AsyncTaskRunner().execute().get();
 //            Log.e("nineWords ", String.valueOf(nineWords.size()));
-            ScraggleGameFragment fragment = (ScraggleGameFragment) getFragmentManager().findFragmentById(R.id.fragment_game_scraggle);
-            fragment.setLettersOnBoard(nineWords);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-        /*mTextField = (TextView) findViewById(R.id.textView4);
+        mTextField = (TextView) findViewById(R.id.textView4);
         countDownTimer = new CountDownTimer(90000, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -74,7 +72,7 @@ public class ScraggleGameActivity extends Activity {
             public void onFinish() {
                 mTextField.setText("done!");
             }
-        }.start();*/
+        }.start();
     }
 
     public void restartGame() {
@@ -137,12 +135,12 @@ public class ScraggleGameActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-//        mHandler.removeCallbacks(null);
-        if (mStartTime == 0L) {
+        mHandler.removeCallbacks(null);
+        /*if (mStartTime == 0L) {
             mStartTime = System.currentTimeMillis();
             mHandler.removeCallbacks(mUpdateTimeTask);
             mHandler.postDelayed(mUpdateTimeTask, 100);
-        }
+        }*/
         mMediaPlayer.stop();
         mMediaPlayer.reset();
         mMediaPlayer.release();
@@ -214,12 +212,16 @@ public class ScraggleGameActivity extends Activity {
 //                Log.e("fetchNineWords", "Exception occurred");
             }
             nineWords = new ArrayList<String>(wordSet);
+
+            /*ScraggleGameFragment fragment = (ScraggleGameFragment) getFragmentManager().findFragmentById(R.id.fragment_game_scraggle);
+            fragment.setLettersOnBoard(nineWords);*/
+
             return null;
         }
     }
 
 //    http://stackoverflow.com/questions/1877417/how-to-set-a-timer-in-android
-    private Runnable mUpdateTimeTask = new Runnable() {
+    /*private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             final long start = mStartTime;
             long millis = SystemClock.uptimeMillis() - start;
@@ -238,5 +240,5 @@ public class ScraggleGameActivity extends Activity {
             mHandler.postAtTime(this,
                     start + (((minutes * 60) + seconds + 1) * 1000));
         }
-    };
+    };*/
 }
