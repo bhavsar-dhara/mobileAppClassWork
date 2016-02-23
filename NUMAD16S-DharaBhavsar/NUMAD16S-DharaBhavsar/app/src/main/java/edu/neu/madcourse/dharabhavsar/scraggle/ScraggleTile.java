@@ -13,6 +13,7 @@ public class ScraggleTile {
     private ScraggleTile mSubTiles[];
     private Boolean isSelected; // for both the phases
     private Boolean isBlank; // for phase 2
+    private String innerText;
 
     public ScraggleTile(ScraggleGameFragment game) {
         this.mGame = game;
@@ -60,5 +61,13 @@ public class ScraggleTile {
 
     public void setIsBlank(Boolean isBlank) {
         this.isBlank = isBlank;
+    }
+
+    public String getInnerText() {
+        return innerText;
+    }
+
+    public void setInnerText(String innerText) {
+        this.innerText = innerText;
     }
 }

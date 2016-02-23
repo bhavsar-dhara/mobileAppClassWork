@@ -31,7 +31,20 @@ public class ScraggleGameActivity extends Activity {
     TextView mTextField;
     long mStartTime;
     private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
-    CountDownTimer countDownTimer;
+    final CountDownTimer countDownTimer = new CountDownTimer(interval, 1000) {
+
+        public void onTick(long millisUntilFinished) {
+            savedRemainingInterval = millisUntilFinished;
+            mTextField.setText("Seconds remaining: " + millisUntilFinished / 1000);
+        }
+
+        public void onFinish() {
+            mTextField.setText("done!");
+        }
+    };
+    long savedRemainingInterval;
+    MyCount counter;
+    Boolean isGamePause = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +67,23 @@ public class ScraggleGameActivity extends Activity {
         Log.d("Scraggle", "restore = " + restore);
 
         mTextField = (TextView) findViewById(R.id.textView4);
-        countDownTimer = new CountDownTimer(90000, 1000) {
+        counter = new MyCount(interval, 1000);
+        counter.start();
+//        countDownTimer.start();
+        /*countDownTimer = new CountDownTimer(interval, 1000) {
 
             public void onTick(long millisUntilFinished) {
+                savedRemainingInterval = millisUntilFinished;
                 mTextField.setText("Seconds remaining: " + millisUntilFinished / 1000);
             }
 
             public void onFinish() {
                 mTextField.setText("done!");
             }
-        }.start();
+        }.start();*/
     }
 
-    public List<String> methodCallToAsyncTaskRunner(){
+    public List<String> methodCallToAsyncTaskRunner() {
         try {
             new AsyncTaskRunner().execute().get();
 //            Log.e("nineWords size", String.valueOf(nineWords.size()));
@@ -129,16 +146,37 @@ public class ScraggleGameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        isGamePause = false;
+
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
 
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
+
+        /*if(mMediaPlayer == null) {
+            Log.e("Mute TEST Resume", "inside null");
+            mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
+        }
+
+        if (!mMediaPlayer.isPlaying()) {
+            Log.e("Mute TEST Resume", "inside not playing");
+            mMediaPlayer.start();
+            mMediaPlayer.setLooping(true);
+        }*/
+
+        Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
+        counter = new MyCount(savedRemainingInterval, 1000);
+        counter.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        isGamePause = true;
         mHandler.removeCallbacks(null);
+        counter.cancel();
+        Log.e("Mute TEST Pause", "inside pause");
+        Log.e("Timer TEST Pause", String.valueOf(savedRemainingInterval));
         /*if (mStartTime == 0L) {
             mStartTime = System.currentTimeMillis();
             mHandler.removeCallbacks(mUpdateTimeTask);
@@ -154,19 +192,10 @@ public class ScraggleGameActivity extends Activity {
         Log.d("Scraggle", "state = " + gameData);
     }
 
-//    http://stackoverflow.com/questions/20588736/how-can-i-shuffle-the-letters-of-a-word
-    private static String scramble( Random random, String inputString )
-    {
-        // Convert your string into a simple char array:
-        char a[] = inputString.toCharArray();
-        // Scramble the letters using the standard Fisher-Yates shuffle,
-        for( int i=0 ; i<a.length-1 ; i++ )
-        {
-            int j = random.nextInt(a.length-1);
-            // Swap letters
-            char temp = a[i]; a[i] = a[j];  a[j] = temp;
-        }
-        return new String( a );
+    protected void onQuit(){
+        mMediaPlayer.stop();
+        mMediaPlayer.reset();
+        mMediaPlayer.release();
     }
 
     private class AsyncTaskRunner extends AsyncTask<Void, Void, List<String>> {
@@ -176,7 +205,7 @@ public class ScraggleGameActivity extends Activity {
 //            to handle or restrict word repetition
             HashSet<String> wordSet = new HashSet<>();
             try {
-                while(wordSet.size() < 9) {
+                while (wordSet.size() < 9) {
                     Random random = new Random();
                     char c = (char) (random.nextInt(26) + 'a');
                     Resources res = getResources();
@@ -215,34 +244,33 @@ public class ScraggleGameActivity extends Activity {
     }
 
     public void toogleMute() {
-        if(mMediaPlayer.isPlaying()) {
+        Log.e("Mute TEST toogleMute", "inside func");
+        if (mMediaPlayer.isPlaying()) {
+//        if (mMediaPlayer.isPlaying() && !isGamePause) {
+            Log.e("Mute TEST toogleMute", "inside for pause");
             mMediaPlayer.pause();
-        }
-        else {
+        } else {
+            Log.e("Mute TEST toogleMute", "inside for start");
             mMediaPlayer.start();
 //            mMediaPlayer.setLooping(true);
         }
     }
 
-//    http://stackoverflow.com/questions/1877417/how-to-set-a-timer-in-android
-    /*private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            final long start = mStartTime;
-            long millis = SystemClock.uptimeMillis() - start;
-            int seconds = (int) (millis / 1000);
-            int minutes = seconds / 60;
-            seconds     = seconds % 60;
-
-            if (seconds < 10) {
-                mTextField.setText("" + minutes + ":0" + seconds);
-            } else {
-                mTextField.setText("" + minutes + ":" + seconds);
-            }
-
-            Log.e("TIMER TEST", "" + minutes + ":" + seconds);
-
-            mHandler.postAtTime(this,
-                    start + (((minutes * 60) + seconds + 1) * 1000));
+    //    http://stackoverflow.com/questions/9630398/how-can-i-pause-the-timer-in-android/9663508#9663508
+    public class MyCount extends CountDownTimer {
+        public MyCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
         }
-    };*/
+
+        @Override
+        public void onFinish() {
+            mTextField.setText("DONE");
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            savedRemainingInterval = millisUntilFinished;
+            mTextField.setText("Seconds Remaining: " + millisUntilFinished / 1000);
+        }
+    }
 }

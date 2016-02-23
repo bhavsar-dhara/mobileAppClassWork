@@ -26,6 +26,7 @@ public class ControlFragmentScraggle extends Fragment {
             @Override
             public void onClick(View view) {
                 getActivity().finish();
+                ((ScraggleGameActivity) getActivity()).onQuit();
             }
         });
         pause.setOnClickListener(new View.OnClickListener() {
@@ -34,6 +35,8 @@ public class ControlFragmentScraggle extends Fragment {
                 //TODO saving game state & hiding the game grid & stopping the countdown timer
                 resume.setVisibility(View.VISIBLE);
                 pause.setVisibility(View.INVISIBLE);
+                muteToggle.setVisibility(View.INVISIBLE);
+                unmuteToggle.setVisibility(View.INVISIBLE);
                 ((ScraggleGameActivity) getActivity()).onPause();
             }
         });
@@ -43,6 +46,8 @@ public class ControlFragmentScraggle extends Fragment {
                 //TODO restore game state & game grid & start the countdown timer
                 pause.setVisibility(View.VISIBLE);
                 resume.setVisibility(View.INVISIBLE);
+                muteToggle.setVisibility(View.VISIBLE);
+                unmuteToggle.setVisibility(View.INVISIBLE);
                 ((ScraggleGameActivity) getActivity()).onResume();
             }
         });

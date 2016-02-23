@@ -91,15 +91,22 @@ public class ScraggleGameFragment extends Fragment {
             String str = stringLst.get(large);
 //            Log.e("nineWords", str);
 
-            for (int small = 0; small < 9; small++) {
+            /*for (int small = 0; small < 9; small++) {
                 int i = posnList.get(small);
-                Button inner = (Button) outer.findViewById
+                Button innerText = (Button) outer.findViewById
                         (mSmallIdList[i]);
-//                Log.e("nineWords", String.valueOf(stringLst.get(small).charAt(small)));
-                inner.setText(String.valueOf(str.charAt(small)));
-            }
+                innerText.setText(String.valueOf(str.charAt(small)));
+            }*/
 
             for (int small = 0; small < 9; small++) {
+                int i = posnList.get(small);
+                Button innerText = (Button) outer.findViewById
+                        (mSmallIdList[i]);
+                innerText.setText(String.valueOf(str.charAt(small)));
+
+                final ScraggleTile smallTileText = mSmallTiles[large][i];
+                smallTileText.setInnerText(String.valueOf(str.charAt(small)));
+
                 Button inner = (Button) outer.findViewById
                         (mSmallIdList[small]);
                 final int fLarge = large;
@@ -212,6 +219,8 @@ public class ScraggleGameFragment extends Fragment {
         builder.append(',');
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
+                builder.append(mSmallTiles[large][small].getInnerText());
+                builder.append(',');
                 builder.append(mSmallTiles[large][small].getIsSelected());
                 builder.append(',');
             }
@@ -229,6 +238,8 @@ public class ScraggleGameFragment extends Fragment {
         mLastSmall = Integer.parseInt(fields[index++]);
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
+                String innerText = (fields[index++]);
+                mSmallTiles[large][small].setInnerText(innerText);
                 Boolean isSelected = Boolean.valueOf(fields[index++]);
                 mSmallTiles[large][small].setIsSelected(isSelected);
             }
