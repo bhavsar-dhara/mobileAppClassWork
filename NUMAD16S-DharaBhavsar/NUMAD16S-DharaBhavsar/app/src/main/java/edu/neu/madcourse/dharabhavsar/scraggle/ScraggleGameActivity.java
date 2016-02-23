@@ -37,7 +37,8 @@ public class ScraggleGameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //         The below code didn't work for this activity
-        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
         setContentView(R.layout.activity_game_scraggle);
         mGameFragment = (ScraggleGameFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
@@ -51,16 +52,6 @@ public class ScraggleGameActivity extends Activity {
             }
         }
         Log.d("Scraggle", "restore = " + restore);
-//        TEST
-
-        try {
-            new AsyncTaskRunner().execute().get();
-//            Log.e("nineWords ", String.valueOf(nineWords.size()));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
 
         mTextField = (TextView) findViewById(R.id.textView4);
         countDownTimer = new CountDownTimer(90000, 1000) {
@@ -73,6 +64,18 @@ public class ScraggleGameActivity extends Activity {
                 mTextField.setText("done!");
             }
         }.start();
+    }
+
+    public List<String> methodCallToAsyncTaskRunner(){
+        try {
+            new AsyncTaskRunner().execute().get();
+//            Log.e("nineWords size", String.valueOf(nineWords.size()));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return nineWords;
     }
 
     public void restartGame() {
@@ -166,9 +169,9 @@ public class ScraggleGameActivity extends Activity {
         return new String( a );
     }
 
-    private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
+    private class AsyncTaskRunner extends AsyncTask<Void, Void, List<String>> {
         @Override
-        protected Void doInBackground(Void... params) {
+        protected List<String> doInBackground(Void... params) {
             String word = null;
 //            to handle or restrict word repetition
             HashSet<String> wordSet = new HashSet<>();
@@ -176,7 +179,6 @@ public class ScraggleGameActivity extends Activity {
                 while(wordSet.size() < 9) {
                     Random random = new Random();
                     char c = (char) (random.nextInt(26) + 'a');
-//                    Log.e("fetchNineWords", String.valueOf(c));
                     Resources res = getResources();
                     InputStream in_s = null;
 
@@ -187,36 +189,28 @@ public class ScraggleGameActivity extends Activity {
                     in_s.read(b);
                     String result = new String(b);
                     String[] strings = result.split("\\n");
-//                    Log.e("fetchNineWords", String.valueOf(strings.length));
 
                     List<String> stringList = new ArrayList<>();
                     for (String s : strings) {
-                        if (s.length() == 9)
+                        if (s.trim().length() == 9)
                             stringList.add(s.trim());
                     }
-//                    Log.e("fetchNineWords", String.valueOf(stringList.size()));
                     Random yourRandom = new Random();
                     int index = yourRandom.nextInt(stringList.size());
                     word = stringList.get(index);
-//                    Log.e("fetchNineWords", "random 9-letter word fetched : " + word);
-
-                    // Create a random object to jumble up word
-                   /* Random r = new Random();
-                    word = scramble( r, word );
-                    Log.e("fetchNineWords", "random 9-letter word jumbled : " + word);*/
-
+                    Log.e("nineLetter", word + " " + String.valueOf(word.length()));
                     wordSet.add(word);
-//                    Log.e("fetchNineWords", "fetchNineWords" + wordSet.size());
                 }
             } catch (Exception e) {
-//                Log.e("fetchNineWords", "Exception occurred");
+                Log.e("fetchNineWords", "Exception occurred");
             }
             nineWords = new ArrayList<String>(wordSet);
+            Log.e("nineWords ", String.valueOf(nineWords.size()));
 
             /*ScraggleGameFragment fragment = (ScraggleGameFragment) getFragmentManager().findFragmentById(R.id.fragment_game_scraggle);
             fragment.setLettersOnBoard(nineWords);*/
 
-            return null;
+            return nineWords;
         }
     }
 

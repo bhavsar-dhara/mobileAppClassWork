@@ -37,7 +37,7 @@ public class ScraggleGameFragment extends Fragment {
     private float mVolume = 1f;
     private int mLastLarge;
     private int mLastSmall;
-    List<List<Integer>> resultList;
+    List<List<Integer>> resultList = new ArrayList<List<Integer>>();
     List<String> stringLst;
 
     @Override
@@ -46,6 +46,11 @@ public class ScraggleGameFragment extends Fragment {
         // Retain this fragment across configuration changes.
         setRetainInstance(true);
         initGame();
+
+//        Method call to the asyncTaskRunner
+        stringLst = ((ScraggleGameActivity) getActivity()).methodCallToAsyncTaskRunner();
+        setLettersOnBoard(stringLst);
+
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         mSoundX = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
         mSoundO = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
@@ -82,13 +87,17 @@ public class ScraggleGameFragment extends Fragment {
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
 
-            /*List<Integer> posnList = resultList.get(large);
+            List<Integer> posnList = resultList.get(large);
+            String str = stringLst.get(large);
+            Log.e("nineWords", str);
 
             for (int small = 0; small < 9; small++) {
                 int i = posnList.get(small);
                 Button inner = (Button) outer.findViewById
                         (mSmallIdList[i]);
-            }*/
+                Log.e("nineWords", String.valueOf(stringLst.get(small).charAt(small)));
+                inner.setText(String.valueOf(str.charAt(small)));
+            }
 
             for (int small = 0; small < 9; small++) {
                 Button inner = (Button) outer.findViewById
@@ -251,11 +260,10 @@ public class ScraggleGameFragment extends Fragment {
 
         for (int i = 0; i < 9; i++) {
             int rnd = new Random().nextInt(myList.size());
-            Log.e("Random position", String.valueOf(rnd));
+//            Log.e("Random position", String.valueOf(rnd));
+//            Log.e("Random position", myList.get(rnd).toString());
             resultList.add(myList.get(rnd));
         }
-
-        stringLst = stringList;
     }
 
     public List<Integer> getNeighbors(Integer i) {
