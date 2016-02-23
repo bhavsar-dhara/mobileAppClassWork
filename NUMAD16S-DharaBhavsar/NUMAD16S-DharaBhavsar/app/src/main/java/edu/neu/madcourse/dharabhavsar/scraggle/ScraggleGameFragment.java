@@ -11,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
@@ -27,7 +30,6 @@ public class ScraggleGameFragment extends Fragment {
     private ScraggleTile mEntireBoard = new ScraggleTile(this);
     private ScraggleTile mLargeTiles[] = new ScraggleTile[9];
     private ScraggleTile mSmallTiles[][] = new ScraggleTile[9][9];
-    private ScraggleTile.Owner mPlayer = ScraggleTile.Owner.X;
     private Set<ScraggleTile> mAvailable = new HashSet<ScraggleTile>();
     private int mSoundX, mSoundO, mSoundMiss, mSoundRewind;
     private SoundPool mSoundPool;
@@ -42,10 +44,10 @@ public class ScraggleGameFragment extends Fragment {
         setRetainInstance(true);
         initGame();
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
-        mSoundX = mSoundPool.load(getActivity(), R.raw.click_freesound_org, 1);
-        mSoundO = mSoundPool.load(getActivity(), R.raw.click_freesound_org, 1);
-        mSoundMiss = mSoundPool.load(getActivity(), R.raw.click_freesound_org, 1);
-        mSoundRewind = mSoundPool.load(getActivity(), R.raw.click_freesound_org, 1);
+        mSoundX = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
+        mSoundO = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
+        mSoundMiss = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
+        mSoundRewind = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
     }
 
     private void clearAvailable() {
@@ -93,7 +95,7 @@ public class ScraggleGameFragment extends Fragment {
                         if (isAvailable(smallTile)) {
                             ((ScraggleGameActivity) getActivity()).startThinking();
                             mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
-                            makeMove(fLarge, fSmall);
+//                            makeMove(fLarge, fSmall);
                             think();
                         } else {
                             mSoundPool.play(mSoundMiss, mVolume, mVolume, 1, 0, 1f);
@@ -110,78 +112,10 @@ public class ScraggleGameFragment extends Fragment {
             @Override
             public void run() {
                 if (getActivity() == null) return;
-                if (mEntireBoard.getOwner() == ScraggleTile.Owner.NEITHER) {
-                    int move[] = new int[2];
-                    pickMove(move);
-                    if (move[0] != -1 && move[1] != -1) {
-                        switchTurns();
-                        mSoundPool.play(mSoundO, mVolume, mVolume,
-                                1, 0, 1f);
-                        makeMove(move[0], move[1]);
-                        switchTurns();
-                    }
-                }
+
                 ((ScraggleGameActivity) getActivity()).stopThinking();
             }
         }, 1000);
-    }
-
-    private void pickMove(int move[]) {
-        ScraggleTile.Owner opponent = mPlayer == ScraggleTile.Owner.X ? ScraggleTile.Owner.O : ScraggleTile
-                .Owner.X;
-        int bestLarge = -1;
-        int bestSmall = -1;
-        int bestValue = Integer.MAX_VALUE;
-        for (int large = 0; large < 9; large++) {
-            for (int small = 0; small < 9; small++) {
-                ScraggleTile smallTile = mSmallTiles[large][small];
-                if (isAvailable(smallTile)) {
-                    // Try the move and get the score
-                    ScraggleTile newBoard = mEntireBoard.deepCopy();
-                    newBoard.getSubTiles()[large].getSubTiles()[small]
-                            .setOwner(opponent);
-                    int value = newBoard.evaluate();
-                    Log.d("Scraggle",
-                            "Moving to " + large + ", " + small + " gives value " +
-                                    "" + value
-                    );
-                    if (value < bestValue) {
-                        bestLarge = large;
-                        bestSmall = small;
-                        bestValue = value;
-                    }
-                }
-            }
-        }
-        move[0] = bestLarge;
-        move[1] = bestSmall;
-        Log.d("Scraggle", "Best move is " + bestLarge + ", " + bestSmall);
-    }
-
-    private void switchTurns() {
-        mPlayer = mPlayer == ScraggleTile.Owner.X ? ScraggleTile.Owner.O : ScraggleTile
-                .Owner.X;
-    }
-
-    private void makeMove(int large, int small) {
-        mLastLarge = large;
-        mLastSmall = small;
-        ScraggleTile smallTile = mSmallTiles[large][small];
-        ScraggleTile largeTile = mLargeTiles[large];
-        smallTile.setOwner(mPlayer);
-        setAvailableFromLastMove(small);
-        ScraggleTile.Owner oldWinner = largeTile.getOwner();
-        ScraggleTile.Owner winner = largeTile.findWinner();
-        if (winner != oldWinner) {
-            largeTile.animate();
-            largeTile.setOwner(winner);
-        }
-        winner = mEntireBoard.findWinner();
-        mEntireBoard.setOwner(winner);
-        updateAllTiles();
-        if (winner != ScraggleTile.Owner.NEITHER) {
-            ((ScraggleGameActivity) getActivity()).reportWinner(winner);
-        }
     }
 
     public void restartGame() {
@@ -217,7 +151,7 @@ public class ScraggleGameFragment extends Fragment {
         if (small != -1) {
             for (int dest = 0; dest < 9; dest++) {
                 ScraggleTile tile = mSmallTiles[small][dest];
-                if (tile.getOwner() == ScraggleTile.Owner.NEITHER)
+//                if (tile.getOwner() == ScraggleTile.Owner.NEITHER)
                     addAvailable(tile);
             }
         }
@@ -231,18 +165,18 @@ public class ScraggleGameFragment extends Fragment {
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
                 ScraggleTile tile = mSmallTiles[large][small];
-                if (tile.getOwner() == ScraggleTile.Owner.NEITHER)
+//                if (tile.getOwner() == ScraggleTile.Owner.NEITHER)
                     addAvailable(tile);
             }
         }
     }
 
     private void updateAllTiles() {
-        mEntireBoard.updateDrawableState();
+//        mEntireBoard.updateDrawableState();
         for (int large = 0; large < 9; large++) {
-            mLargeTiles[large].updateDrawableState();
+//            mLargeTiles[large].updateDrawableState();
             for (int small = 0; small < 9; small++) {
-                mSmallTiles[large][small].updateDrawableState();
+//                mSmallTiles[large][small].updateDrawableState();
             }
         }
     }
@@ -258,7 +192,7 @@ public class ScraggleGameFragment extends Fragment {
         builder.append(',');
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
-                builder.append(mSmallTiles[large][small].getOwner().name());
+                builder.append(mSmallTiles[large][small].getIsSelected());
                 builder.append(',');
             }
         }
@@ -275,12 +209,70 @@ public class ScraggleGameFragment extends Fragment {
         mLastSmall = Integer.parseInt(fields[index++]);
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
-                ScraggleTile.Owner owner = ScraggleTile.Owner.valueOf(fields[index++]);
-                mSmallTiles[large][small].setOwner(owner);
+                Boolean isSelected = Boolean.valueOf(fields[index++]);
+                mSmallTiles[large][small].setIsSelected(isSelected);
             }
         }
         setAvailableFromLastMove(mLastSmall);
         updateAllTiles();
+    }
+
+    public void setLettersOnBoard(List<String> stringList) {
+        List<List<Integer>> myList = new ArrayList<List<Integer>>();
+        myList.addAll(Arrays.asList(Arrays.asList(0, 1, 4, 6, 3, 7, 8, 5, 2),
+                Arrays.asList(8, 4, 0, 3, 6, 7, 5, 2, 1),
+                Arrays.asList(8, 7, 6, 3, 0, 1, 5, 4, 2),
+                Arrays.asList(3, 7, 6, 4, 8, 5, 2, 1, 0),
+                Arrays.asList(5, 4, 8, 7, 6, 3, 0, 1, 2),
+                Arrays.asList(5, 7, 8, 4, 6, 3, 0, 2, 1),
+                Arrays.asList(7, 8, 5, 4, 6, 3, 0, 2, 1),
+                Arrays.asList(6, 7, 5, 8, 4, 2, 1, 0, 3),
+                Arrays.asList(7, 6, 4, 8, 5, 2, 1, 0, 3),
+                Arrays.asList(3, 6, 4, 0, 1, 2, 5, 8, 7),
+                Arrays.asList(4, 3, 0, 1, 2, 5, 8, 7, 6),
+                Arrays.asList(2, 5, 7, 8, 4, 1, 0, 3, 6),
+                Arrays.asList(1, 0, 4, 3, 6, 7, 8, 5, 2),
+                Arrays.asList(2, 4, 6, 3, 0, 1, 5, 8, 7),
+                Arrays.asList(5, 1, 2, 4, 8, 7, 6, 3, 0),
+                Arrays.asList(8, 4, 2, 5, 7, 6, 3, 0, 1),
+                Arrays.asList(2, 4, 6, 7, 8, 5, 1, 0, 3),
+                Arrays.asList(0, 4, 8, 7, 6, 3, 1, 2, 5)));
+
+
+    }
+
+    public List<Integer> getNeighbors(Integer i) {
+        List<Integer> intList = new ArrayList<Integer>();
+        switch (i) {
+            case 0:
+                intList.addAll(Arrays.asList(1, 3, 4));
+                break;
+            case 1:
+                intList.addAll(Arrays.asList(0, 2, 3, 4, 5));
+                break;
+            case 2:
+                intList.addAll(Arrays.asList(1, 4, 5));
+                break;
+            case 3:
+                intList.addAll(Arrays.asList(0, 1, 4, 6, 7));
+                break;
+            case 4:
+                intList.addAll(Arrays.asList(0, 1, 2, 3, 5, 6, 7, 8));
+                break;
+            case 5:
+                intList.addAll(Arrays.asList(1, 2, 4, 7, 8));
+                break;
+            case 6:
+                intList.addAll(Arrays.asList(3, 4, 7));
+                break;
+            case 7:
+                intList.addAll(Arrays.asList(3, 4, 5, 6, 8));
+                break;
+            case 8:
+                intList.addAll(Arrays.asList(4, 5, 7));
+                break;
+        }
+        return intList;
     }
 }
 

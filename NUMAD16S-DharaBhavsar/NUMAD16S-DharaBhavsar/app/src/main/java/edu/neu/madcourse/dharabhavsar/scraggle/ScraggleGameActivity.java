@@ -8,8 +8,8 @@ import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -31,6 +31,9 @@ public class ScraggleGameActivity extends Activity {
     private ScraggleGameFragment mGameFragment;
     List<String> nineWords = new ArrayList<>();
     TextView mTextField;
+    long mStartTime;
+    private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
+//    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class ScraggleGameActivity extends Activity {
         setContentView(R.layout.activity_game_scraggle);
         mGameFragment = (ScraggleGameFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
+        mTextField = (TextView) findViewById(R.id.textView4);
         boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {
             String gameData = getPreferences(MODE_PRIVATE)
@@ -51,15 +55,17 @@ public class ScraggleGameActivity extends Activity {
 
         try {
             new AsyncTaskRunner().execute().get();
-            Log.e("nineWords ", String.valueOf(nineWords.size()));
+//            Log.e("nineWords ", String.valueOf(nineWords.size()));
+            ScraggleGameFragment fragment = (ScraggleGameFragment) getFragmentManager().findFragmentById(R.id.fragment_game_scraggle);
+            fragment.setLettersOnBoard(nineWords);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-        mTextField = (TextView) findViewById(R.id.textView4);
-        CountDownTimer countDownTimer = new CountDownTimer(90000, 1000) {
+        /*mTextField = (TextView) findViewById(R.id.textView4);
+        countDownTimer = new CountDownTimer(90000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 mTextField.setText("Seconds remaining: " + millisUntilFinished / 1000);
@@ -68,14 +74,14 @@ public class ScraggleGameActivity extends Activity {
             public void onFinish() {
                 mTextField.setText("done!");
             }
-        }.start();
+        }.start();*/
     }
 
     public void restartGame() {
         mGameFragment.restartGame();
     }
 
-    public void reportWinner(final ScraggleTile.Owner winner) {
+    /*public void reportWinner(final ScraggleTile.Owner winner) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
@@ -107,7 +113,7 @@ public class ScraggleGameActivity extends Activity {
 
         // Reset the board to the initial position
         mGameFragment.initGame();
-    }
+    }*/
 
     public void startThinking() {
         View thinkView = findViewById(R.id.thinking_scraggle);
@@ -131,7 +137,12 @@ public class ScraggleGameActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        mHandler.removeCallbacks(null);
+//        mHandler.removeCallbacks(null);
+        if (mStartTime == 0L) {
+            mStartTime = System.currentTimeMillis();
+            mHandler.removeCallbacks(mUpdateTimeTask);
+            mHandler.postDelayed(mUpdateTimeTask, 100);
+        }
         mMediaPlayer.stop();
         mMediaPlayer.reset();
         mMediaPlayer.release();
@@ -167,7 +178,7 @@ public class ScraggleGameActivity extends Activity {
                 while(wordSet.size() < 9) {
                     Random random = new Random();
                     char c = (char) (random.nextInt(26) + 'a');
-                    Log.e("fetchNineWords", String.valueOf(c));
+//                    Log.e("fetchNineWords", String.valueOf(c));
                     Resources res = getResources();
                     InputStream in_s = null;
 
@@ -178,32 +189,54 @@ public class ScraggleGameActivity extends Activity {
                     in_s.read(b);
                     String result = new String(b);
                     String[] strings = result.split("\\n");
-                    Log.e("fetchNineWords", String.valueOf(strings.length));
+//                    Log.e("fetchNineWords", String.valueOf(strings.length));
 
                     List<String> stringList = new ArrayList<>();
                     for (String s : strings) {
                         if (s.length() == 9)
                             stringList.add(s.trim());
                     }
-                    Log.e("fetchNineWords", String.valueOf(stringList.size()));
+//                    Log.e("fetchNineWords", String.valueOf(stringList.size()));
                     Random yourRandom = new Random();
                     int index = yourRandom.nextInt(stringList.size());
                     word = stringList.get(index);
-                    Log.e("fetchNineWords", "random 9-letter word fetched : " + word);
+//                    Log.e("fetchNineWords", "random 9-letter word fetched : " + word);
 
                     // Create a random object to jumble up word
-                    Random r = new Random();
+                   /* Random r = new Random();
                     word = scramble( r, word );
-                    Log.e("fetchNineWords", "random 9-letter word jumbled : " + word);
+                    Log.e("fetchNineWords", "random 9-letter word jumbled : " + word);*/
 
                     wordSet.add(word);
-                    Log.e("fetchNineWords", "fetchNineWords" + wordSet.size());
+//                    Log.e("fetchNineWords", "fetchNineWords" + wordSet.size());
                 }
             } catch (Exception e) {
-                Log.e("fetchNineWords", "Exception occurred");
+//                Log.e("fetchNineWords", "Exception occurred");
             }
             nineWords = new ArrayList<String>(wordSet);
             return null;
         }
     }
+
+//    http://stackoverflow.com/questions/1877417/how-to-set-a-timer-in-android
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            final long start = mStartTime;
+            long millis = SystemClock.uptimeMillis() - start;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds     = seconds % 60;
+
+            if (seconds < 10) {
+                mTextField.setText("" + minutes + ":0" + seconds);
+            } else {
+                mTextField.setText("" + minutes + ":" + seconds);
+            }
+
+            Log.e("TIMER TEST", "" + minutes + ":" + seconds);
+
+            mHandler.postAtTime(this,
+                    start + (((minutes * 60) + seconds + 1) * 1000));
+        }
+    };
 }

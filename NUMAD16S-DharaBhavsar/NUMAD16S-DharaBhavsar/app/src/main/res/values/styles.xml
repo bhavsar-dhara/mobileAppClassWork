@@ -37,9 +37,8 @@
         <item name="android:layout_width">@dimen/tile_size</item>
         <item name="android:layout_height">@dimen/tile_size</item>
         <item name="android:layout_margin">@dimen/tile_margin</item>
-        <item name="android:background">#00000000</item>
+        <item name="android:background">@drawable/tile_not_selected_scraggle</item>
         <item name="android:padding">@dimen/tile_padding</item>
         <item name="android:scaleType">centerCrop</item>
-        <item name="android:src">@drawable/tile_scraggle</item>
     </style>
 </resources>

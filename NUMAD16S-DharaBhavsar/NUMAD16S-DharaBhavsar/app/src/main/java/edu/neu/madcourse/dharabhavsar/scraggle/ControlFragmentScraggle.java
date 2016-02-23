@@ -18,6 +18,7 @@ public class ControlFragmentScraggle extends Fragment {
         final View pause = rootView.findViewById(R.id.button_pause);
         View quit = rootView.findViewById(R.id.button_quit);
         final View resume = rootView.findViewById(R.id.button_resume);
+        /*View restart = rootView.findViewById(R.id.button_restart);*/
 
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +44,12 @@ public class ControlFragmentScraggle extends Fragment {
                 ((ScraggleGameActivity) getActivity()).onResume();
             }
         });
+        /*restart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((GameActivity) getActivity()).restartGame();
+            }
+        });*/
         return rootView;
     }
 
