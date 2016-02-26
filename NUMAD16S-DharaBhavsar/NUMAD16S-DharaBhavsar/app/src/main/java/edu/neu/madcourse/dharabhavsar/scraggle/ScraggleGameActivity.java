@@ -31,17 +31,6 @@ public class ScraggleGameActivity extends Activity {
     TextView mTextField;
     long mStartTime;
     private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
-    final CountDownTimer countDownTimer = new CountDownTimer(interval, 1000) {
-
-        public void onTick(long millisUntilFinished) {
-            savedRemainingInterval = millisUntilFinished;
-            mTextField.setText("Seconds remaining: " + millisUntilFinished / 1000);
-        }
-
-        public void onFinish() {
-            mTextField.setText("done!");
-        }
-    };
     long savedRemainingInterval;
     MyCount counter;
     Boolean isGamePause = false;
@@ -69,18 +58,6 @@ public class ScraggleGameActivity extends Activity {
         mTextField = (TextView) findViewById(R.id.textView4);
         counter = new MyCount(interval, 1000);
         counter.start();
-//        countDownTimer.start();
-        /*countDownTimer = new CountDownTimer(interval, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                savedRemainingInterval = millisUntilFinished;
-                mTextField.setText("Seconds remaining: " + millisUntilFinished / 1000);
-            }
-
-            public void onFinish() {
-                mTextField.setText("done!");
-            }
-        }.start();*/
     }
 
     public List<String> methodCallToAsyncTaskRunner() {
@@ -146,42 +123,28 @@ public class ScraggleGameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        isGamePause = false;
+//        isGamePause = false;
 
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
 
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
 
-        /*if(mMediaPlayer == null) {
-            Log.e("Mute TEST Resume", "inside null");
-            mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
-        }
-
-        if (!mMediaPlayer.isPlaying()) {
-            Log.e("Mute TEST Resume", "inside not playing");
-            mMediaPlayer.start();
-            mMediaPlayer.setLooping(true);
-        }*/
-
-        Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
+        /*Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
         counter = new MyCount(savedRemainingInterval, 1000);
-        counter.start();
+        counter.start();*/
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        isGamePause = true;
-        mHandler.removeCallbacks(null);
-        counter.cancel();
         Log.e("Mute TEST Pause", "inside pause");
-        Log.e("Timer TEST Pause", String.valueOf(savedRemainingInterval));
-        /*if (mStartTime == 0L) {
-            mStartTime = System.currentTimeMillis();
-            mHandler.removeCallbacks(mUpdateTimeTask);
-            mHandler.postDelayed(mUpdateTimeTask, 100);
-        }*/
+        mHandler.removeCallbacks(null);
+
+        /*isGamePause = true;
+        counter.cancel();
+        Log.e("Timer TEST Pause", String.valueOf(savedRemainingInterval));*/
+
         mMediaPlayer.stop();
         mMediaPlayer.reset();
         mMediaPlayer.release();
@@ -191,12 +154,6 @@ public class ScraggleGameActivity extends Activity {
                 .commit();
         Log.d("Scraggle", "state = " + gameData);
     }
-
-    /*protected void onQuit(){
-        mMediaPlayer.stop();
-        mMediaPlayer.reset();
-        mMediaPlayer.release();
-    }*/
 
     private class AsyncTaskRunner extends AsyncTask<Void, Void, List<String>> {
         @Override
@@ -234,10 +191,6 @@ public class ScraggleGameActivity extends Activity {
                 Log.e("fetchNineWords", "Exception occurred");
             }
             nineWords = new ArrayList<String>(wordSet);
-//            Log.e("nineWords ", String.valueOf(nineWords.size()));
-
-            /*ScraggleGameFragment fragment = (ScraggleGameFragment) getFragmentManager().findFragmentById(R.id.fragment_game_scraggle);
-            fragment.setLettersOnBoard(nineWords);*/
 
             return nineWords;
         }
@@ -246,13 +199,11 @@ public class ScraggleGameActivity extends Activity {
     public void toogleMute() {
         Log.e("Mute TEST toogleMute", "inside func");
         if (mMediaPlayer.isPlaying()) {
-//        if (mMediaPlayer.isPlaying() && !isGamePause) {
             Log.e("Mute TEST toogleMute", "inside for pause");
             mMediaPlayer.pause();
         } else {
             Log.e("Mute TEST toogleMute", "inside for start");
             mMediaPlayer.start();
-//            mMediaPlayer.setLooping(true);
         }
     }
 
@@ -269,8 +220,21 @@ public class ScraggleGameActivity extends Activity {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            savedRemainingInterval = millisUntilFinished;
             mTextField.setText("Seconds Remaining: " + millisUntilFinished / 1000);
+            savedRemainingInterval = millisUntilFinished;
         }
+    }
+
+    protected void onPauseGame() {
+        counter.cancel();
+        mMediaPlayer.pause();
+//        Log.e("Timer TEST Pause", String.valueOf(savedRemainingInterval));
+    }
+
+    protected void onResumeGame() {
+        counter = new MyCount(savedRemainingInterval, 1000);
+        counter.start();
+        mMediaPlayer.start();
+//        Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
     }
 }

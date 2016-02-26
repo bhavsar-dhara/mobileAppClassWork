@@ -37,7 +37,8 @@ public class ControlFragmentScraggle extends Fragment {
                 pause.setVisibility(View.INVISIBLE);
                 muteToggle.setVisibility(View.INVISIBLE);
                 unmuteToggle.setVisibility(View.INVISIBLE);
-                ((ScraggleGameActivity) getActivity()).onPause();
+                ((ScraggleGameActivity) getActivity()).onPauseGame();
+
             }
         });
         resume.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +49,7 @@ public class ControlFragmentScraggle extends Fragment {
                 resume.setVisibility(View.INVISIBLE);
                 muteToggle.setVisibility(View.VISIBLE);
                 unmuteToggle.setVisibility(View.INVISIBLE);
-                ((ScraggleGameActivity) getActivity()).onResume();
+                ((ScraggleGameActivity) getActivity()).onResumeGame();
             }
         });
         muteToggle.setOnClickListener(new View.OnClickListener() {

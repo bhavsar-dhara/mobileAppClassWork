@@ -52,12 +52,12 @@ public class ScraggleGameFragment extends Fragment {
 
 //        Method call to the asyncTaskRunner
         stringLst = ((ScraggleGameActivity) getActivity()).methodCallToAsyncTaskRunner();
-        setLettersOnBoard(stringLst);
+        setLettersOnBoard();
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         mSoundX = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
         mSoundO = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
-        mSoundMiss = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
+        mSoundMiss = mSoundPool.load(getActivity(), R.raw.bertrof_game_sound_wrong_freesound_org, 1);
         mSoundRewind = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
         v = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
     }
@@ -111,7 +111,7 @@ public class ScraggleGameFragment extends Fragment {
                 final ScraggleTile smallTileText = mSmallTiles[large][i];
                 smallTileText.setInnerText(String.valueOf(str.charAt(small)));
 
-                Button inner = (Button) outer.findViewById
+                final Button inner = (Button) outer.findViewById
                         (mSmallIdList[small]);
                 final int fLarge = large;
                 final int fSmall = small;
@@ -125,9 +125,16 @@ public class ScraggleGameFragment extends Fragment {
                         // ...
                         if (isAvailable(smallTile)) {
                             ((ScraggleGameActivity) getActivity()).startThinking();
+                            if (!smallTile.getIsSelected()) {
+                                smallTile.setIsSelected(true);
+                                inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
+                            } else {
+                                smallTile.setIsSelected(false);
+                                inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                            }
                             mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
-                            // Vibrate for 500 milliseconds
-                            v.vibrate(500);
+                            // Vibrate for 25 milliseconds
+                            v.vibrate(25);
 //                            makeMove(fLarge, fSmall);
                             think();
                         } else {
@@ -185,6 +192,7 @@ public class ScraggleGameFragment extends Fragment {
             for (int dest = 0; dest < 9; dest++) {
                 ScraggleTile tile = mSmallTiles[small][dest];
 //                if (tile.getOwner() == ScraggleTile.Owner.NEITHER)
+                if(!tile.getIsSelected())
                     addAvailable(tile);
             }
         }
@@ -198,18 +206,18 @@ public class ScraggleGameFragment extends Fragment {
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
                 ScraggleTile tile = mSmallTiles[large][small];
-//                if (tile.getOwner() == ScraggleTile.Owner.NEITHER)
+                if(!tile.getIsSelected())
                     addAvailable(tile);
             }
         }
     }
 
     private void updateAllTiles() {
-//        mEntireBoard.updateDrawableState();
+        mEntireBoard.updateDrawableState();
         for (int large = 0; large < 9; large++) {
-//            mLargeTiles[large].updateDrawableState();
+            mLargeTiles[large].updateDrawableState();
             for (int small = 0; small < 9; small++) {
-//                mSmallTiles[large][small].updateDrawableState();
+                mSmallTiles[large][small].updateDrawableState();
             }
         }
     }
@@ -218,6 +226,7 @@ public class ScraggleGameFragment extends Fragment {
      * Create a string containing the state of the game.
      */
     public String getState() {
+        Log.e("SAVING GAME STATE", "in");
         StringBuilder builder = new StringBuilder();
         builder.append(mLastLarge);
         builder.append(',');
@@ -231,6 +240,7 @@ public class ScraggleGameFragment extends Fragment {
                 builder.append(',');
             }
         }
+        Log.e("SAVING GAME STATE", "out");
         return builder.toString();
     }
 
@@ -238,6 +248,7 @@ public class ScraggleGameFragment extends Fragment {
      * Restore the state of the game from the given string.
      */
     public void putState(String gameData) {
+        Log.e("RESTORING GAME STATE", "in");
         String[] fields = gameData.split(",");
         int index = 0;
         mLastLarge = Integer.parseInt(fields[index++]);
@@ -252,9 +263,10 @@ public class ScraggleGameFragment extends Fragment {
         }
         setAvailableFromLastMove(mLastSmall);
         updateAllTiles();
+        Log.e("RESTORING GAME STATE", "out");
     }
 
-    public void setLettersOnBoard(List<String> stringList) {
+    public void setLettersOnBoard() {
         List<List<Integer>> myList = new ArrayList<List<Integer>>();
         myList.addAll(Arrays.asList(Arrays.asList(0, 1, 4, 6, 3, 7, 8, 5, 2),
                 Arrays.asList(8, 4, 0, 3, 6, 7, 5, 2, 1),

@@ -8,8 +8,8 @@ android {
         applicationId "edu.neu.madcourse.dharabhavsar.numad16s_dharabhavsar"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 13
-        versionName "2.4.3"
+        versionCode 14
+        versionName "2.4.4"
     }
     buildTypes {
         release {

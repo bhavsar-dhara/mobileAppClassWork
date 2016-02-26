@@ -3,6 +3,7 @@ package edu.neu.madcourse.dharabhavsar.scraggle;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.view.View;
+import android.widget.Button;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
 
@@ -36,6 +37,20 @@ public class ScraggleTile {
 
     public void setSubTiles(ScraggleTile[] subTiles) {
         this.mSubTiles = subTiles;
+    }
+
+    public void updateDrawableState() {
+        if (mView == null) return;
+        boolean isSelFlag = getIsSelected();
+        if (mView.getBackground() != null) {
+            if(isSelFlag)
+                mView.getBackground().setLevel(R.drawable.tile_selected_scraggle);
+            else
+                mView.getBackground().setLevel(R.drawable.tile_not_selected_scraggle);
+        }
+        if (mView instanceof Button) {
+            mView.getBackground().setLevel(R.drawable.tile_deselected_scraggle);
+        }
     }
 
     public void animate() {
