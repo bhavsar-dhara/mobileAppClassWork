@@ -29,6 +29,7 @@ public class ScraggleGameFragment extends Fragment {
     static private int mSmallIdList[] = {R.id.small1, R.id.small2, R.id.small3,
             R.id.small4, R.id.small5, R.id.small6, R.id.small7, R.id.small8,
             R.id.small9,};
+    static private String[] wordMadeList = new String[9];
     private Handler mHandler = new Handler();
     private ScraggleTile mEntireBoard = new ScraggleTile(this);
     private ScraggleTile mLargeTiles[] = new ScraggleTile[9];
@@ -39,9 +40,11 @@ public class ScraggleGameFragment extends Fragment {
     private float mVolume = 1f;
     private int mLastLarge;
     private int mLastSmall;
-    List<List<Integer>> resultList = new ArrayList<List<Integer>>();
-    List<String> stringLst;
-    Vibrator v;
+    private List<List<Integer>> resultList = new ArrayList<List<Integer>>();
+    private List<String> stringLst;
+    private Vibrator v;
+    private String word = "";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,29 +83,25 @@ public class ScraggleGameFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView =
                 inflater.inflate(R.layout.large_board_scraggle, container, false);
+        initAddLetters(rootView);
         initViews(rootView);
-        updateAllTiles();
+//        updateAllTiles();
         return rootView;
     }
 
-    private void initViews(View rootView) {
+    private void initAddLetters(View rootView) {
         mEntireBoard.setView(rootView);
         for (int large = 0; large < 9; large++) {
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
 
+//            to add letters of the words
             List<Integer> posnList = resultList.get(large);
             String str = stringLst.get(large);
 //            Log.e("nineWords", str);
 
-            /*for (int small = 0; small < 9; small++) {
-                int i = posnList.get(small);
-                Button innerText = (Button) outer.findViewById
-                        (mSmallIdList[i]);
-                innerText.setText(String.valueOf(str.charAt(small)));
-            }*/
-
             for (int small = 0; small < 9; small++) {
+//                to add letters of the words
                 int i = posnList.get(small);
                 Button innerText = (Button) outer.findViewById
                         (mSmallIdList[i]);
@@ -110,7 +109,17 @@ public class ScraggleGameFragment extends Fragment {
 
                 final ScraggleTile smallTileText = mSmallTiles[large][i];
                 smallTileText.setInnerText(String.valueOf(str.charAt(small)));
+//                to add letters of the words
+            }
+        }
+    }
 
+    private void initViews(View rootView) {
+        mEntireBoard.setView(rootView);
+        for (int large = 0; large < 9; large++) {
+            View outer = rootView.findViewById(mLargeIdList[large]);
+            mLargeTiles[large].setView(outer);
+            for (int small = 0; small < 9; small++) {
                 final Button inner = (Button) outer.findViewById
                         (mSmallIdList[small]);
                 final int fLarge = large;
@@ -121,15 +130,30 @@ public class ScraggleGameFragment extends Fragment {
                 inner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Log.e("WordTEST", "inOnCLick");
+
                         smallTile.animate();
                         // ...
+                        Log.e("WordTEST", String.valueOf(isAvailable(smallTile)));
                         if (isAvailable(smallTile)) {
                             ((ScraggleGameActivity) getActivity()).startThinking();
+                            Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
                             if (!smallTile.getIsSelected()) {
+                                Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
                                 smallTile.setIsSelected(true);
+                                makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
+                                word = word.concat(String.valueOf(smallTile.getInnerText()));
+                                Log.e("wordAddTestTest", word);
+                                wordMadeList[fLarge] = wordMadeList[fLarge].concat(word);
+                                Log.e("wordAddTestTest", wordMadeList[fLarge]);
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
                             } else {
+                                Log.e("WordTEST", "in isSel = true");
                                 smallTile.setIsSelected(false);
+                                String str = removeLastChar(wordMadeList[fLarge]);
+                                Log.e("wordRemoveTestTest", str);
+                                wordMadeList[fLarge] = str;
+                                Log.e("wordRemoveTestTest", wordMadeList[fLarge]);
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
                             }
                             mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
@@ -266,7 +290,7 @@ public class ScraggleGameFragment extends Fragment {
         Log.e("RESTORING GAME STATE", "out");
     }
 
-    public void setLettersOnBoard() {
+    private void setLettersOnBoard() {
         List<List<Integer>> myList = new ArrayList<List<Integer>>();
         myList.addAll(Arrays.asList(Arrays.asList(0, 1, 4, 6, 3, 7, 8, 5, 2),
                 Arrays.asList(8, 4, 0, 3, 6, 7, 5, 2, 1),
@@ -289,13 +313,11 @@ public class ScraggleGameFragment extends Fragment {
 
         for (int i = 0; i < 9; i++) {
             int rnd = new Random().nextInt(myList.size());
-//            Log.e("Random position", String.valueOf(rnd));
-//            Log.e("Random position", myList.get(rnd).toString());
             resultList.add(myList.get(rnd));
         }
     }
 
-    public List<Integer> getNeighbors(Integer i) {
+    private List<Integer> getNeighbors(Integer i) {
         List<Integer> intList = new ArrayList<Integer>();
         switch (i) {
             case 0:
@@ -328,5 +350,48 @@ public class ScraggleGameFragment extends Fragment {
         }
         return intList;
     }
+
+    private String removeLastChar(String str) {
+        if (str.length() > 0 && str.charAt(str.length()-1)=='x') {
+            str = str.substring(0, str.length()-1);
+        }
+        return str;
+    }
+
+    private int getScore(char c) {
+        int score = 0;
+        if(c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' || c == 'n' ||
+                c == 'l' || c == 'r' || c == 's' || c == 't'){
+            score += 1;
+        } else if(c == 'd' || c == 'g') {
+            score += 2;
+        } else if(c == 'b' || c == 'c' || c == 'm' || c == 'p') {
+            score += 3;
+        } else if(c == 'f' || c == 'h' || c == 'v' || c == 'w' || c == 'y') {
+            score += 4;
+        } else if(c == 'k') {
+            score += 5;
+        } else if(c == 'j' || c == 'x') {
+            score += 8;
+        } else if(c == 'q' || c == 'z') {
+            score += 10;
+        }
+        return score;
+    }
+
+    private Void makeWord(String str, int i) {
+//        word = word.concat(String.valueOf(smallTile.getInnerText()));
+        Log.e("wordAddTestTest", str);
+        if(wordMadeList[i] != null) {
+            wordMadeList[i] = wordMadeList[i].concat(word);
+            Log.e("wordAddTestTest", wordMadeList[i]);
+        } else {
+            wordMadeList[i] = "";
+            wordMadeList[i] = wordMadeList[i].concat(word);
+            Log.e("wordAddTestTest", wordMadeList[i]);
+        }
+        return null;
+    }
+
 }
 

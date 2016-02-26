@@ -76,40 +76,6 @@ public class ScraggleGameActivity extends Activity {
         mGameFragment.restartGame();
     }
 
-    /*public void reportWinner(final ScraggleTile.Owner winner) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-        }
-        builder.setMessage(getString(R.string.declare_winner, winner));
-        builder.setCancelable(false);
-        builder.setPositiveButton(R.string.ok_label,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                });
-        final Dialog dialog = builder.create();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mMediaPlayer = MediaPlayer.create(ScraggleGameActivity.this,
-                        winner == ScraggleTile.Owner.X ? R.raw.winner_sound_freesound_org
-                                : winner == ScraggleTile.Owner.O ? R.raw.loser_sound_freesound_org
-                                : R.raw.draw_sound_freesound_org
-                );
-                mMediaPlayer.start();
-                dialog.show();
-            }
-        }, 500);
-
-        // Reset the board to the initial position
-        mGameFragment.initGame();
-    }*/
-
     public void startThinking() {
         View thinkView = findViewById(R.id.thinking_scraggle);
         thinkView.setVisibility(View.VISIBLE);
@@ -123,16 +89,9 @@ public class ScraggleGameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-//        isGamePause = false;
-
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
-
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
-
-        /*Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
-        counter = new MyCount(savedRemainingInterval, 1000);
-        counter.start();*/
     }
 
     @Override
@@ -140,11 +99,6 @@ public class ScraggleGameActivity extends Activity {
         super.onPause();
         Log.e("Mute TEST Pause", "inside pause");
         mHandler.removeCallbacks(null);
-
-        /*isGamePause = true;
-        counter.cancel();
-        Log.e("Timer TEST Pause", String.valueOf(savedRemainingInterval));*/
-
         mMediaPlayer.stop();
         mMediaPlayer.reset();
         mMediaPlayer.release();
