@@ -19,6 +19,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict2"
+            android:label="@string/dictActivityLabelWordGame">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict2" />
+        </activity>
+        <activity
             android:name="edu.neu.madcourse.dharabhavsar.scraggle.MainActivityScraggle"
             android:label="@string/wordgame_label"
             android:screenOrientation="portrait"

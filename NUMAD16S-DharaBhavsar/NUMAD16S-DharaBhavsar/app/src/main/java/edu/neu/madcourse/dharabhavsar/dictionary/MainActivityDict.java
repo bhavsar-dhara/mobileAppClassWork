@@ -47,7 +47,7 @@ public class MainActivityDict extends Activity {
     String result = "";
     HashMap<String,String> vocabList = new HashMap<String, String>();
     String insertedText = "";
-
+    Boolean isWordGameFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,25 @@ public class MainActivityDict extends Activity {
                 putData(gameData);
             }
         }
+
+        /*Bundle bundle = getIntent().getExtras();
+        if(bundle != null) {
+            isWordGameFlag = bundle.getBoolean("isWordGameFlag");
+            String message = bundle.getString("message");
+            if (isWordGameFlag) {
+                try {
+                    new AsyncTaskRunner3().execute(message).get();
+                    Intent output = new Intent();
+                    output.putExtra("UNIQUE_WORD_LIST_STR", finalResult);
+                    setResult(RESULT_OK, output);
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }*/
 
         // Method to show the list of words found from the provided word list
         textViewWordList = (TextView) findViewById(R.id.textViewWordList);
@@ -278,7 +297,7 @@ public class MainActivityDict extends Activity {
     }
 
 //    method to be called in the asyncTask for the Word Game ever
-    private void searchWord(String str) {
+/*    private void searchWord(String str) {
         String result1 = "";
         String word = str;
         Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length()+" word = " + word);
@@ -332,6 +351,6 @@ public class MainActivityDict extends Activity {
             Log.e("AsyncTaskRunner3", "result = " + str);
             return null;
         }
-    }
+    }*/
 
 }

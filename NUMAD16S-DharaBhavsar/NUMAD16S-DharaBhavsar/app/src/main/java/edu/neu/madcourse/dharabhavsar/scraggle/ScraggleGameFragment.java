@@ -2,6 +2,7 @@ package edu.neu.madcourse.dharabhavsar.scraggle;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict2;
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class ScraggleGameFragment extends Fragment {
@@ -46,6 +48,7 @@ public class ScraggleGameFragment extends Fragment {
     private List<String> stringLst;
     private Vibrator v;
     private String word = "";
+    static final int DICT_REQUEST = 0;
 
 
     @Override
@@ -143,30 +146,6 @@ public class ScraggleGameFragment extends Fragment {
                                 Log.e("mLastLarge", String.valueOf(mLastLarge));
                                 Log.e("fLarge", String.valueOf(fLarge));
                                 makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
-                                /*if (fLarge == mLastLarge) {
-                                    word = word.concat(String.valueOf(smallTile.getInnerText()));
-                                    Log.e("wordAddTestTest out 1", word);
-                                    if (wordMadeList[fLarge] != null && wordMadeList[fLarge] != "") {
-                                        if (word.length() == 1) {
-                                            word = wordMadeList[fLarge].concat(word);
-                                            Log.e("wordAddTestTest out 3", word);
-                                        }
-                                        wordMadeList[fLarge] = word;
-                                    } else {
-                                        wordMadeList[fLarge] = word;
-                                    }
-                                    Log.e("wordAddTestTest out 2", wordMadeList[fLarge]);
-                                } else {
-                                    word = "".concat(String.valueOf(smallTile.getInnerText()));
-                                    Log.e("wordAddTestTest out 1", word);
-                                    if (wordMadeList[fLarge] != null && wordMadeList[fLarge] != "") {
-                                        word = wordMadeList[fLarge].concat(word);
-                                        wordMadeList[fLarge] = word;
-                                    } else {
-                                        wordMadeList[fLarge] = word;
-                                    }
-                                    Log.e("wordAddTestTest out 2", wordMadeList[fLarge]);
-                                }*/
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
                             } else {
                                 Log.e("WordTEST", "in isSel = true");
@@ -196,12 +175,33 @@ public class ScraggleGameFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        getActivity();
+        if (requestCode == DICT_REQUEST && resultCode == ScraggleGameActivity.RESULT_OK && data != null) {
+//            TODO
+            Log.e("onActivityResult", "SUCCESS");
+            String value = data.getExtras().getString("UNIQUE_WORD_LIST_STR");
+            Log.e("onActivityResult", value);
+        }
+    }
+
     private void think() {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (getActivity() == null) return;
-
+                for(int i = 0; i < 9; i++) {
+                    if (wordMadeList[i] != null) {
+                        if (wordMadeList[i].length() > 2) {
+                            Intent intent = new Intent(getActivity().getBaseContext(), MainActivityDict2.class);
+                            intent.putExtra("isWordGameFlag", true);
+                            intent.putExtra("message", wordMadeList[i]);
+//                            startActivityForResult(intent, DICT_REQUEST);
+                        }
+                    }
+                }
                 ((ScraggleGameActivity) getActivity()).stopThinking();
             }
         }, 1000);
@@ -387,9 +387,11 @@ public class ScraggleGameFragment extends Fragment {
     }
 
     private String removeLastChar(String str) {
+        Log.e("removeLastChar", "in method call" + String.valueOf(str.length()));
         if (str.length() > 0) {
             str = str.substring(0, str.length()-1);
         }
+        Log.e("removeLastChar", "exiting method call" + String.valueOf(str.length()));
         return str;
     }
 

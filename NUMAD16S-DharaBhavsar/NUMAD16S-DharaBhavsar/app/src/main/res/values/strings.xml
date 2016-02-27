@@ -47,18 +47,25 @@ both sides in the larger game.
     <string name="scraggle_app_name">Word Game</string>
     <string name="game_instructions_label">How To Play</string>
 
+    <string name="dictActivityLabelWordGame"> Test Dictionary for Word Game </string>
+
     <string name="help_text">\
 This game is played just like
-regular Boggle game. Except that it has two rounds.\n\
+regular Boggle and Scramble game. Except that it has two rounds.\n\
 \n\
 In the first round, you have to find 9 words from
-each of the 9 scrambled letters in 1.5minute\n\
+each of the 9 letters in 1.5minute like a Boggle Game. Such that
+each next letter should be horizontal, vertical or diagonal
+adjacent to the selected letter. \n\
+You cannot reuse the letter in the first phase of the game.\n\
 \n\
 Similarly in the second round, you have to make words
-from the remaining letters of the words made from the
-first round in 1.5minute\n\
+from the letters of the words which were made in the
+first round in another 1.5minute. \n\
+Here you can reuse the letter but one not consecutively.\n\
 \n\
-Scoring is based on the words prepared.
+Scoring is based on the words prepared. And weightage of each letters
+used to prepare that word.\n\
 </string>
 
     <string name="ack_text">\
@@ -72,6 +79,8 @@ Code Snippets: \n\
         http://stackoverflow.com/questions/20588736/how-can-i-shuffle-the-letters-of-a-word\n\
 \n\
 Sound: freesound.org\n\
+\n\
+Help from: Dharam and Deryl\n\
 \n\
 </string>
 
