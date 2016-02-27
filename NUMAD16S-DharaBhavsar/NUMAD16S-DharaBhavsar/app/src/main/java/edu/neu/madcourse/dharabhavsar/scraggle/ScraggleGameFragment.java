@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,19 +95,16 @@ public class ScraggleGameFragment extends Fragment {
         for (int large = 0; large < 9; large++) {
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
-
 //            to add letters of the words
             List<Integer> posnList = resultList.get(large);
             String str = stringLst.get(large);
 //            Log.e("nineWords", str);
-
             for (int small = 0; small < 9; small++) {
 //                to add letters of the words
                 int i = posnList.get(small);
                 Button innerText = (Button) outer.findViewById
                         (mSmallIdList[i]);
                 innerText.setText(String.valueOf(str.charAt(small)));
-
                 final ScraggleTile smallTileText = mSmallTiles[large][i];
                 smallTileText.setInnerText(String.valueOf(str.charAt(small)));
 //                to add letters of the words
@@ -141,15 +139,39 @@ public class ScraggleGameFragment extends Fragment {
                             if (!smallTile.getIsSelected()) {
                                 Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
                                 smallTile.setIsSelected(true);
+                                Log.e("mLastLarge", String.valueOf(mLastLarge));
+                                Log.e("fLarge", String.valueOf(fLarge));
                                 makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
-                                word = word.concat(String.valueOf(smallTile.getInnerText()));
-                                Log.e("wordAddTestTest", word);
-                                wordMadeList[fLarge] = wordMadeList[fLarge].concat(word);
-                                Log.e("wordAddTestTest", wordMadeList[fLarge]);
+                                /*if (fLarge == mLastLarge) {
+                                    word = word.concat(String.valueOf(smallTile.getInnerText()));
+                                    Log.e("wordAddTestTest out 1", word);
+                                    if (wordMadeList[fLarge] != null && wordMadeList[fLarge] != "") {
+                                        if (word.length() == 1) {
+                                            word = wordMadeList[fLarge].concat(word);
+                                            Log.e("wordAddTestTest out 3", word);
+                                        }
+                                        wordMadeList[fLarge] = word;
+                                    } else {
+                                        wordMadeList[fLarge] = word;
+                                    }
+                                    Log.e("wordAddTestTest out 2", wordMadeList[fLarge]);
+                                } else {
+                                    word = "".concat(String.valueOf(smallTile.getInnerText()));
+                                    Log.e("wordAddTestTest out 1", word);
+                                    if (wordMadeList[fLarge] != null && wordMadeList[fLarge] != "") {
+                                        word = wordMadeList[fLarge].concat(word);
+                                        wordMadeList[fLarge] = word;
+                                    } else {
+                                        wordMadeList[fLarge] = word;
+                                    }
+                                    Log.e("wordAddTestTest out 2", wordMadeList[fLarge]);
+                                }*/
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
                             } else {
                                 Log.e("WordTEST", "in isSel = true");
                                 smallTile.setIsSelected(false);
+                                /*String str = removeLastChar(wordMadeList[fLarge],
+                                        String.valueOf(smallTile.getIsSelected()).charAt(0));*/
                                 String str = removeLastChar(wordMadeList[fLarge]);
                                 Log.e("wordRemoveTestTest", str);
                                 wordMadeList[fLarge] = str;
@@ -164,6 +186,8 @@ public class ScraggleGameFragment extends Fragment {
                         } else {
                             mSoundPool.play(mSoundMiss, mVolume, mVolume, 1, 0, 1f);
                         }
+                        mLastLarge = fLarge;
+                        mLastSmall = fSmall;
                     }
                 });
                 // ...
@@ -351,8 +375,18 @@ public class ScraggleGameFragment extends Fragment {
         return intList;
     }
 
+    private String removeLastChar(String str, char chr) {
+        if (str.length() > 0 && str.charAt(str.length()-1) == chr) {
+            str = str.substring(0, str.length()-1);
+        } else {
+            Toast.makeText(getActivity(), "Error! Please delete the last selected letter only",
+                    Toast.LENGTH_LONG).show();
+        }
+        return str;
+    }
+
     private String removeLastChar(String str) {
-        if (str.length() > 0 && str.charAt(str.length()-1)=='x') {
+        if (str.length() > 0) {
             str = str.substring(0, str.length()-1);
         }
         return str;
@@ -381,14 +415,30 @@ public class ScraggleGameFragment extends Fragment {
 
     private Void makeWord(String str, int i) {
 //        word = word.concat(String.valueOf(smallTile.getInnerText()));
-        Log.e("wordAddTestTest", str);
-        if(wordMadeList[i] != null) {
-            wordMadeList[i] = wordMadeList[i].concat(word);
-            Log.e("wordAddTestTest", wordMadeList[i]);
+        Log.e("wordAddTestTest in 1", str);
+        if (i == mLastLarge) {
+            word = word.concat(str);
+            Log.e("wordAddTestTest out 1", word);
+            if (wordMadeList[i] != null && wordMadeList[i] != "") {
+                if (word.length() == 1) {
+                    word = wordMadeList[i].concat(word);
+                    Log.e("wordAddTestTest out 3", word);
+                }
+                wordMadeList[i] = word;
+            } else {
+                wordMadeList[i] = word;
+            }
+            Log.e("wordAddTestTest out 2", wordMadeList[i]);
         } else {
-            wordMadeList[i] = "";
-            wordMadeList[i] = wordMadeList[i].concat(word);
-            Log.e("wordAddTestTest", wordMadeList[i]);
+            word = "".concat(str);
+            Log.e("wordAddTestTest out 1", word);
+            if (wordMadeList[i] != null && wordMadeList[i] != "") {
+                word = wordMadeList[i].concat(word);
+                wordMadeList[i] = word;
+            } else {
+                wordMadeList[i] = word;
+            }
+            Log.e("wordAddTestTest out 2", wordMadeList[i]);
         }
         return null;
     }
