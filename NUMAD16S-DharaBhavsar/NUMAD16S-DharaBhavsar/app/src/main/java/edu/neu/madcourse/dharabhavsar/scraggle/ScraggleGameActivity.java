@@ -170,6 +170,8 @@ public class ScraggleGameActivity extends Activity {
         @Override
         public void onFinish() {
             mTextField.setText("DONE");
+//            TODO method to disable the whole grid
+//            mGameFragment.disableLetterGrid();
         }
 
         @Override

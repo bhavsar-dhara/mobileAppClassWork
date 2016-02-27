@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,12 +25,12 @@ import java.util.Set;
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class ScraggleGameFragment extends Fragment {
-    static private int mLargeIdList[] = {R.id.large1, R.id.large2, R.id.large3,
-            R.id.large4, R.id.large5, R.id.large6, R.id.large7, R.id.large8,
-            R.id.large9,};
-    static private int mSmallIdList[] = {R.id.small1, R.id.small2, R.id.small3,
-            R.id.small4, R.id.small5, R.id.small6, R.id.small7, R.id.small8,
-            R.id.small9,};
+    static private int mLargeIdList[] = {R.id.wglarge1, R.id.wglarge2, R.id.wglarge3,
+            R.id.wglarge4, R.id.wglarge5, R.id.wglarge6, R.id.wglarge7, R.id.wglarge8,
+            R.id.wglarge9,};
+    static private int mSmallIdList[] = {R.id.wgsmall1, R.id.wgsmall2, R.id.wgsmall3,
+            R.id.wgsmall4, R.id.wgsmall5, R.id.wgsmall6, R.id.wgsmall7, R.id.wgsmall8,
+            R.id.wgsmall9,};
     static private String[] wordMadeList = new String[9];
     private Handler mHandler = new Handler();
     private ScraggleTile mEntireBoard = new ScraggleTile(this);
@@ -443,5 +444,18 @@ public class ScraggleGameFragment extends Fragment {
         return null;
     }
 
+    protected void disableLetterGrid() {
+        GridLayout layout = (GridLayout) ScraggleGameFragment.this.getActivity().findViewById(R.id.wgboard_large);
+        Log.e("DisableGRIDTest", String.valueOf(layout.getChildCount()));
+        GridLayout innerLayout = (GridLayout) ScraggleGameFragment.this.getActivity().findViewById(R.id.wgboard_small);
+        Log.e("DisableGRIDTest", String.valueOf(innerLayout.getChildCount()));
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            for (int j = 0; j < innerLayout.getChildCount(); j++) {
+                View innerChild = innerLayout.getChildAt(j);
+                innerChild.setEnabled(false);
+            }
+        }
+    }
 }
 
