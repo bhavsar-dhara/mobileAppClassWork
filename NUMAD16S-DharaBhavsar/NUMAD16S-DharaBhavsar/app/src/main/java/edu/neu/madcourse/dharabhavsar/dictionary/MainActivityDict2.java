@@ -3,7 +3,6 @@ package edu.neu.madcourse.dharabhavsar.dictionary;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,7 +32,6 @@ public class MainActivityDict2 extends Activity {
     String finalResult = "";
     TextView textViewWordList;
     EditText editWordText;
-    MediaPlayer mMediaPlayer;
     String result = "";
     HashMap<String,String> vocabList = new HashMap<String, String>();
     String insertedText = "";
@@ -168,7 +166,6 @@ public class MainActivityDict2 extends Activity {
         String word = str;
         Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length()+" word = " + word);
         if(word.length() >= 3) {
-            insertedText = word;
             try {
                 new AsyncTaskRunner().execute(word).get();
                 String res = new AsyncTaskRunner2().execute().get();

@@ -1,0 +1,43 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScraggleActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/triangle_background_weheartit" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/textView4" />
+
+        <fragment
+            android:id="@+id/fragment_game_scraggle2"
+            class="edu.neu.madcourse.dharabhavsar.scraggle.ScraggleGameFragment2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_game_scraggle2" />
+
+        <fragment
+            android:id="@+id/fragment_control_scraggle"
+            class="edu.neu.madcourse.dharabhavsar.scraggle.ControlFragmentScraggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_control_scraggle" />
+
+    </LinearLayout>
+
+    <include layout="@layout/thinking_scraggle" />
+
+</FrameLayout>

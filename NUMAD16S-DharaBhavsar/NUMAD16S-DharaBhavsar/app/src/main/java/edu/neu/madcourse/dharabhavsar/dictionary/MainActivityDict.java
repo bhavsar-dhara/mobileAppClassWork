@@ -47,7 +47,6 @@ public class MainActivityDict extends Activity {
     String result = "";
     HashMap<String,String> vocabList = new HashMap<String, String>();
     String insertedText = "";
-    Boolean isWordGameFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,25 +62,6 @@ public class MainActivityDict extends Activity {
                 putData(gameData);
             }
         }
-
-        /*Bundle bundle = getIntent().getExtras();
-        if(bundle != null) {
-            isWordGameFlag = bundle.getBoolean("isWordGameFlag");
-            String message = bundle.getString("message");
-            if (isWordGameFlag) {
-                try {
-                    new AsyncTaskRunner3().execute(message).get();
-                    Intent output = new Intent();
-                    output.putExtra("UNIQUE_WORD_LIST_STR", finalResult);
-                    setResult(RESULT_OK, output);
-                    finish();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
 
         // Method to show the list of words found from the provided word list
         textViewWordList = (TextView) findViewById(R.id.textViewWordList);
@@ -167,6 +147,7 @@ public class MainActivityDict extends Activity {
                 editWordText.getText().clear();
                 Log.v("MainActivityDict", "onClick: " + editWordText.getText());
                 textViewWordList.setText("");
+                resultStr = "";
             }
         });
 
@@ -295,62 +276,5 @@ public class MainActivityDict extends Activity {
             return resp;
         }
     }
-
-//    method to be called in the asyncTask for the Word Game ever
-/*    private void searchWord(String str) {
-        String result1 = "";
-        String word = str;
-        Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length()+" word = " + word);
-        if(word.length() >= 3) {
-            insertedText = word;
-            try {
-                new AsyncTaskRunner().execute(word).get();
-                String res = new AsyncTaskRunner2().execute().get();
-                Log.e("searchWord", "res = "+res);
-                resultStr = resultStr + res + "\n";
-                List<String> list = Arrays.asList(resultStr.split("\n"));
-                Set<String> uniqueWords = new HashSet<String>(list);
-                finalResult = "";
-                for (String s1 : uniqueWords) {
-                    System.out.println(word + ": " + Collections.frequency(list, s1));
-                    finalResult = finalResult + s1 + "\n";
-                }
-                Log.e("searchWord", finalResult);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            result1 = resultStr;
-            Log.e("searchWord RESULT STR", "afterTextChanged: RESULT STRING = " + result1);
-        } else {
-            List<String> list = Arrays.asList(resultStr.split("\n"));
-            Set<String> uniqueWords = new HashSet<String>(list);
-            finalResult = "";
-            for (String s1 : uniqueWords) {
-                System.out.println(word + ": " + Collections.frequency(list, s1));
-                finalResult = finalResult + s1 + "\n";
-            }
-            Log.e("searchWord", finalResult);
-        }
-    }
-
-    private class AsyncTaskRunner3 extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... params) {
-            String str = params[0];
-            try {
-                Log.e("AsyncTaskRunner3", "insertedText = " + str);
-
-                searchWord(str);
-
-                Log.e("TEST HASHMAP resp", str);
-            } catch (Exception e) {
-                Log.e("AsyncTaskRunner3", "Error encountered");
-            }
-            Log.e("AsyncTaskRunner3", "result = " + str);
-            return null;
-        }
-    }*/
 
 }

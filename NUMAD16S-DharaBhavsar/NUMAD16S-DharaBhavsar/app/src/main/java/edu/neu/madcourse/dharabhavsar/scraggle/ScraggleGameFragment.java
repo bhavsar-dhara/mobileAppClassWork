@@ -152,10 +152,11 @@ public class ScraggleGameFragment extends Fragment {
                                 smallTile.setIsSelected(false);
                                 /*String str = removeLastChar(wordMadeList[fLarge],
                                         String.valueOf(smallTile.getIsSelected()).charAt(0));*/
-                                String str = removeLastChar(wordMadeList[fLarge]);
-                                Log.e("wordRemoveTestTest", str);
-                                wordMadeList[fLarge] = str;
+                                word = removeLastChar(wordMadeList[fLarge]);
+                                Log.e("wordRemoveTestTest", word);
+                                wordMadeList[fLarge] = word;
                                 Log.e("wordRemoveTestTest", wordMadeList[fLarge]);
+                                Log.e("wordRemoveTestTest", word);
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
                             }
                             mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
@@ -192,7 +193,7 @@ public class ScraggleGameFragment extends Fragment {
             @Override
             public void run() {
                 if (getActivity() == null) return;
-                for(int i = 0; i < 9; i++) {
+                for (int i = 0; i < 9; i++) {
                     if (wordMadeList[i] != null) {
                         if (wordMadeList[i].length() > 2) {
                             Intent intent = new Intent(getActivity().getBaseContext(), MainActivityDict2.class);
@@ -231,7 +232,8 @@ public class ScraggleGameFragment extends Fragment {
         // If the player moves first, set which spots are available
         mLastSmall = -1;
         mLastLarge = -1;
-        setAvailableFromLastMove(mLastSmall);
+//        setAvailableFromLastMove(mLastSmall);
+        setAvailableFromLastMove(mLastSmall, mLastLarge);
     }
 
     private void setAvailableFromLastMove(int small) {
@@ -245,6 +247,28 @@ public class ScraggleGameFragment extends Fragment {
                     addAvailable(tile);
             }
         }
+        // If there were none available, make all squares available
+        if (mAvailable.isEmpty()) {
+            setAllAvailable();
+        }
+    }
+
+    private void setAvailableFromLastMove(int small, int large) {
+        clearAvailable();
+        // Make all the neighboring tiles at the destination available
+        if (small != -1 && large != -1) {
+            ScraggleTile tile = mSmallTiles[small][large];
+            if(tile.getIsSelected()) {
+                List<Integer> intList = getNeighbors(small);
+                for (int i = 0; i < intList.size(); i++) {
+                    int j = intList.get(i);
+                    ScraggleTile neighborTile = mSmallTiles[j][large];
+                    addAvailable(neighborTile);
+                }
+            }
+        }/* else {
+            mAvailable.remove();
+        }*/
         // If there were none available, make all squares available
         if (mAvailable.isEmpty()) {
             setAllAvailable();
