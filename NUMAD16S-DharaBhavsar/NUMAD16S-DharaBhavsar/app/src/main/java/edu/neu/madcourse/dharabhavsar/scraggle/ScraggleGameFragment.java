@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict2;
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class ScraggleGameFragment extends Fragment {
@@ -181,7 +181,7 @@ public class ScraggleGameFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         getActivity();
         if (requestCode == DICT_REQUEST && resultCode == ScraggleGameActivity.RESULT_OK && data != null) {
-//            TODO
+//            TO-DO
             Log.e("onActivityResult", "SUCCESS");
             String value = data.getExtras().getString("UNIQUE_WORD_LIST_STR");
             Log.e("onActivityResult", value);
@@ -196,10 +196,22 @@ public class ScraggleGameFragment extends Fragment {
                 for (int i = 0; i < 9; i++) {
                     if (wordMadeList[i] != null) {
                         if (wordMadeList[i].length() > 2) {
-                            Intent intent = new Intent(getActivity().getBaseContext(), MainActivityDict2.class);
+                            /*Intent intent = new Intent(getActivity().getBaseContext(), MainActivityDict2.class);
                             intent.putExtra("isWordGameFlag", true);
                             intent.putExtra("message", wordMadeList[i]);
-//                            startActivityForResult(intent, DICT_REQUEST);
+                            startActivityForResult(intent, DICT_REQUEST);*/
+
+//                            ((ScraggleGameActivity) getActivity()).checkWordInDict(wordMadeList[i]);
+
+//                            Custom Toast on Successfully finding a Word
+                            View customToastroot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast, null);
+
+                            Toast customtoast = new Toast(getActivity().getApplicationContext());
+
+                            customtoast.setView(customToastroot);
+                            customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                            customtoast.setDuration(Toast.LENGTH_LONG);
+                            customtoast.show();
                         }
                     }
                 }
@@ -253,6 +265,8 @@ public class ScraggleGameFragment extends Fragment {
         }
     }
 
+//    method to set the next possible moves - selecting only the adjacent tiles
+//    of the selected tile as available
     private void setAvailableFromLastMove(int small, int large) {
         clearAvailable();
         // Make all the neighboring tiles at the destination available

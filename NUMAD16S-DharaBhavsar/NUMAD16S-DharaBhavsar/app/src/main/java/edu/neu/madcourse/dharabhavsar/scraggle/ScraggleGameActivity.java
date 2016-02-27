@@ -1,6 +1,8 @@
 package edu.neu.madcourse.dharabhavsar.scraggle;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -35,16 +37,15 @@ public class ScraggleGameActivity extends Activity {
     private ScraggleGameFragment mGameFragment;
     List<String> nineWords = new ArrayList<>();
     TextView mTextField;
-    long mStartTime;
     private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
     long savedRemainingInterval;
     MyCount counter;
-    //    Boolean isGamePause = false;
     String resultStr = "";
     String finalResult = "";
     String result = "";
     HashMap<String, String> vocabList = new HashMap<String, String>();
     String insertedText = "";
+    private AlertDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,8 +184,20 @@ public class ScraggleGameActivity extends Activity {
             mTextField.setText("DONE");
 //            TODO method to disable the whole grid and go to phase 2
 //            mGameFragment.disableLetterGrid();
-            Intent intent = new Intent(ScraggleGameActivity.this, ScraggleGameActivity2.class);
-            startActivity(intent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+            builder.setTitle(R.string.phase_change_title);
+            builder.setMessage(R.string.phase_change_text);
+            builder.setCancelable(false);
+            builder.setPositiveButton(R.string.ok_label,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // take to Phase 2
+                            Intent intent = new Intent(ScraggleGameActivity.this, ScraggleGameActivity2.class);
+                            startActivity(intent);
+                        }
+                    });
+            mDialog = builder.show();
         }
 
         @Override
@@ -205,6 +218,18 @@ public class ScraggleGameActivity extends Activity {
         counter.start();
         mMediaPlayer.start();
 //        Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
+    }
+
+//    METHOD to implement the dictionary word check - but I feel this is a wrong way to do it and
+//    taking too much time
+    public void checkWordInDict(String str) {
+        try {
+            new AsyncTaskRunner3().execute(str).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     private class AsyncTaskRunner0 extends AsyncTask<String, Void, HashMap> {

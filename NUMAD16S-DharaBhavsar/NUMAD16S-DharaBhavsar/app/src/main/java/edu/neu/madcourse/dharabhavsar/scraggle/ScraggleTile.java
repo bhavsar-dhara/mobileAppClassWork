@@ -9,7 +9,8 @@ import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class ScraggleTile {
 
-    private final ScraggleGameFragment mGame;
+    private ScraggleGameFragment mGame;
+    private ScraggleGameFragment2 mGame2;
     private View mView;
     private ScraggleTile mSubTiles[];
     private Boolean isSelected; // for both the phases
@@ -21,6 +22,13 @@ public class ScraggleTile {
         this.isSelected = false; // none of the tiles are selected initially
         this.isBlank = false; // none of the tiles are blank initially - required to drop
                               // unselected letters for phase 2
+    }
+
+    public ScraggleTile(ScraggleGameFragment2 game) {
+        this.mGame2 = game;
+        this.isSelected = false; // none of the tiles are selected initially
+        this.isBlank = false; // none of the tiles are blank initially - required to drop
+        // unselected letters for phase 2
     }
 
     public View getView() {
@@ -55,6 +63,15 @@ public class ScraggleTile {
 
     public void animate() {
         Animator anim = AnimatorInflater.loadAnimator(mGame.getActivity(),
+                R.animator.tictactoe);
+        if (getView() != null) {
+            anim.setTarget(getView());
+            anim.start();
+        }
+    }
+
+    public void animate2() {
+        Animator anim = AnimatorInflater.loadAnimator(mGame2.getActivity(),
                 R.animator.tictactoe);
         if (getView() != null) {
             anim.setTarget(getView());

@@ -51,9 +51,11 @@ public class MainActivityDict2 extends Activity {
                 try {
                     new AsyncTaskRunner3().execute(message).get();
                     Intent output = new Intent();
+                    Log.d("MainActivityDict2", "restore = " + finalResult);
                     output.putExtra("UNIQUE_WORD_LIST_STR", finalResult);
                     setResult(RESULT_OK, output);
-                    finish();
+//                    this.finish();
+                    finishActivity(0);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -61,8 +63,6 @@ public class MainActivityDict2 extends Activity {
                 }
             }
         }
-
-        Log.d("MainActivityDict", "restore = " + finalResult);
     }
 
     static{
@@ -83,7 +83,7 @@ public class MainActivityDict2 extends Activity {
         getPreferences(MODE_PRIVATE).edit()
                 .putString(PREF_RESTORE, gameData)
                 .commit();
-        Log.d("MainActivityDict", "state = " + gameData);
+        Log.d("MainActivityDict2", "state = " + gameData);
     }
 
     //    getData()

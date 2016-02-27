@@ -22,6 +22,10 @@
             android:name="edu.neu.madcourse.dharabhavsar.scraggle.ScraggleGameActivity2"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize">
+            <intent-filter>
+                <action android:name="edu.neu.madcourse.dharabhavsar.scraggle.ScraggleGameActivity2" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict2"
