@@ -103,7 +103,7 @@ public class ScraggleGameFragment2 extends Fragment {
         // If the player moves first, set which spots are available
         mLastSmall = -1;
         mLastLarge = -1;
-//        setAvailableFromLastMove(mLastSmall);
+        setAvailableFromLastMove(mLastSmall);
 //        setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
     }
 
@@ -124,9 +124,10 @@ public class ScraggleGameFragment2 extends Fragment {
                 inner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.e("WordTEST2", "inOnCLick");
+                        Log.e("WordTEST2", "inOnCLick ::: inner text : " + smallTile.getInnerText()
+                        + " isSelected " + smallTile.getIsSelected());
 
-                        smallTile.animate();
+//                        smallTile.animate();
                         // ...
                         Log.e("WordTEST2", String.valueOf(isAvailable(smallTile)));
 //                        Log.e("WordTEST NextMove", String.valueOf(isNextMove(smallTile)));
@@ -267,8 +268,9 @@ public class ScraggleGameFragment2 extends Fragment {
             String wordMade = (fields[index++]);
             wordMadeList[large] = wordMade;
         }
-//        setAvailableFromLastMove(mLastSmall);
+        setAvailableFromLastMove(mLastSmall);
         updateAllTiles();
+
         putPrevLetters(mView);
         Log.e("RESTORING GAME STATE 2", "out");
     }
@@ -300,7 +302,7 @@ public class ScraggleGameFragment2 extends Fragment {
     }
 
     private void addAvailable(ScraggleTile tile) {
-        tile.animate();
+//        tile.animate();
         mAvailable.add(tile);
     }
 
@@ -315,7 +317,7 @@ public class ScraggleGameFragment2 extends Fragment {
             for (int dest = 0; dest < 9; dest++) {
                 ScraggleTile tile = mSmallTiles[small][dest];
 //                if (tile.getOwner() == ScraggleTile.Owner.NEITHER)
-                if(!tile.getIsSelected())
+                if(tile.getIsSelected())
                     addAvailable(tile);
             }
         }
@@ -339,7 +341,7 @@ public class ScraggleGameFragment2 extends Fragment {
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
                 ScraggleTile tile = mSmallTiles[large][small];
-                if(!tile.getIsSelected())
+                if(tile.getIsSelected())
                     addAvailable(tile);
             }
         }
