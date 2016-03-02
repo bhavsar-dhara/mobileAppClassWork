@@ -20,7 +20,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:id="@+id/textView4" />
+            android:id="@+id/scoreView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/timerView" />
 
         <fragment
             android:id="@+id/fragment_game_scraggle"

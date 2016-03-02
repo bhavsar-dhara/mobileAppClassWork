@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScraggleActivity">
+    tools:context=".ScraggleActivity2">
 
     <ImageView
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
 
         <fragment
             android:id="@+id/fragment_control_scraggle"
-            class="edu.neu.madcourse.dharabhavsar.scraggle.ControlFragmentScraggle"
+            class="edu.neu.madcourse.dharabhavsar.scraggle.ControlFragmentScraggle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_control_scraggle" />

@@ -40,6 +40,7 @@ public class ScraggleGameFragment2 extends Fragment {
         super.onCreate(savedInstanceState);
         // Retain this fragment across configuration changes.
         setRetainInstance(true);
+        initGame();
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         mSoundX = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
@@ -56,6 +57,27 @@ public class ScraggleGameFragment2 extends Fragment {
                 inflater.inflate(R.layout.large_board_scraggle, container, false);
 
         return rootView;
+    }
+
+    public void initGame() {
+        Log.e("initGame", "inside");
+        Log.d("Scraggle", "init game");
+        mEntireBoard = new ScraggleTile(this);
+        // Create all the tiles
+        for (int large = 0; large < 9; large++) {
+            mLargeTiles[large] = new ScraggleTile(this);
+            for (int small = 0; small < 9; small++) {
+                mSmallTiles[large][small] = new ScraggleTile(this);
+            }
+            mLargeTiles[large].setSubTiles(mSmallTiles[large]);
+        }
+        mEntireBoard.setSubTiles(mLargeTiles);
+
+        // If the player moves first, set which spots are available
+        mLastSmall = -1;
+        mLastLarge = -1;
+//        setAvailableFromLastMove(mLastSmall);
+//        setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
     }
 
     /**

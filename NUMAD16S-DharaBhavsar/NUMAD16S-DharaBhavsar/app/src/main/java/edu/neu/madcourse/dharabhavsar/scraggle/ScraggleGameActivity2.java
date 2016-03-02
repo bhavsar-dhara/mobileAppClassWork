@@ -2,7 +2,7 @@ package edu.neu.madcourse.dharabhavsar.scraggle;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -62,6 +62,24 @@ public class ScraggleGameActivity2 extends Activity {
         Log.d("Scraggle", "state = " + gameData);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        this.finish();
+    }
+
+    public void toogleMute() {
+        Log.e("Mute TEST toogleMute", "inside func");
+        if (mMediaPlayer.isPlaying()) {
+            Log.e("Mute TEST toogleMute", "inside for pause");
+            mMediaPlayer.pause();
+        } else {
+            Log.e("Mute TEST toogleMute", "inside for start");
+            mMediaPlayer.start();
+        }
+    }
+
     public class MyCount extends CountDownTimer {
         public MyCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
@@ -69,21 +87,7 @@ public class ScraggleGameActivity2 extends Activity {
 
         @Override
         public void onFinish() {
-            mTextField.setText("DONE");
-//            TODO method to disable the whole grid and go to phase 2
-//            mGameFragment.disableLetterGrid();
-            AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity2.this);
-            builder.setTitle(R.string.phase_change_title);
-            builder.setMessage(R.string.phase_change_text);
-            builder.setCancelable(false);
-            builder.setPositiveButton(R.string.ok_label,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            // TODO - Display final score
-                        }
-                    });
-            mDialog = builder.show();
+            mTextField.setText("Game Over");
         }
 
         @Override

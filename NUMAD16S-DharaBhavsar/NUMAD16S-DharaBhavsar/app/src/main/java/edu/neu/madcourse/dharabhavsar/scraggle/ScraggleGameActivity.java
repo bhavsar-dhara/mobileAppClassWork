@@ -48,6 +48,8 @@ public class ScraggleGameActivity extends Activity {
     private AlertDialog mDialog;
     TrieLookup trie;
     Boolean resFlag = false;
+    TextView mScoreTextField;
+    int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,7 @@ public class ScraggleGameActivity extends Activity {
         setContentView(R.layout.activity_game_scraggle);
         mGameFragment = (ScraggleGameFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
-        mTextField = (TextView) findViewById(R.id.textView4);
+        mTextField = (TextView) findViewById(R.id.timerView);
         boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {
             String gameData = getPreferences(MODE_PRIVATE)
@@ -69,9 +71,12 @@ public class ScraggleGameActivity extends Activity {
         }
         Log.d("Scraggle", "restore = " + restore);
 
-        mTextField = (TextView) findViewById(R.id.textView4);
+        mTextField = (TextView) findViewById(R.id.timerView);
         counter = new MyCount(interval, 1000);
         counter.start();
+
+        mScoreTextField = (TextView) findViewById(R.id.scoreView);
+        mScoreTextField.setText("Score = " + String.valueOf(score));
     }
 
     public List<String> methodCallToAsyncTaskRunner() {
@@ -366,5 +371,21 @@ public class ScraggleGameActivity extends Activity {
             Log.e("AsyncTaskRunner3", "result = " + str);
             return null;
         }
+    }
+
+    public long getSavedRemainingInterval(){
+        return this.savedRemainingInterval;
+    }
+
+    public void setSavedRemainingInterval(long savedInterval){
+        savedRemainingInterval = savedInterval;
+    }
+
+    public int getScore(){
+        return this.score;
+    }
+
+    public void setScore(int savedScore){
+        score = savedScore;
     }
 }

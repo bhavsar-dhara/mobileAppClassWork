@@ -50,6 +50,8 @@ public class ScraggleGameFragment extends Fragment {
     static final int DICT_REQUEST = 0;
     private Set<ScraggleTile> mNextMove = new HashSet<ScraggleTile>();
     private View mView;
+    private long savedInterval;
+    private int gameScore = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,6 +174,7 @@ public class ScraggleGameFragment extends Fragment {
                                 Log.e("fLarge", String.valueOf(fLarge));
                                 makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
+                                gameScore += getScore(smallTile.getInnerText().charAt(0));
                             } else {
                                 Log.e("WordTEST", "in isSel = true");
                                 smallTile.setIsSelected(false);
@@ -183,6 +186,7 @@ public class ScraggleGameFragment extends Fragment {
                                 Log.e("wordRemoveTestTest", wordMadeList[fLarge]);
                                 Log.e("wordRemoveTestTest", word);
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                                gameScore -= getScore(smallTile.getInnerText().charAt(0));
                             }
                             mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
                             // Vibrate for 25 milliseconds
@@ -354,6 +358,8 @@ public class ScraggleGameFragment extends Fragment {
     public String getState() {
         Log.e("SAVING GAME STATE", "in");
         StringBuilder builder = new StringBuilder();
+        builder.append(((ScraggleGameActivity) this.getActivity()).getSavedRemainingInterval());
+        builder.append(',');
         builder.append(mLastLarge);
         builder.append(',');
         builder.append(mLastSmall);
@@ -379,8 +385,11 @@ public class ScraggleGameFragment extends Fragment {
         Log.e("RESTORING GAME STATE", "in");
         String[] fields = gameData.split(",");
         int index = 0;
+        savedInterval = Long.parseLong(fields[index++]);
+        ((ScraggleGameActivity) this.getActivity()).setSavedRemainingInterval(savedInterval);
         mLastLarge = Integer.parseInt(fields[index++]);
         mLastSmall = Integer.parseInt(fields[index++]);
+
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
                 String innerText = (fields[index++]);
