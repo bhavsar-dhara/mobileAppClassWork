@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -174,7 +173,7 @@ public class ScraggleGameFragment extends Fragment {
                                 Log.e("fLarge", String.valueOf(fLarge));
                                 makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
-                                gameScore += getScore(smallTile.getInnerText().charAt(0));
+//                                gameScore += getScore(smallTile.getInnerText().charAt(0));
                             } else {
                                 Log.e("WordTEST", "in isSel = true");
                                 smallTile.setIsSelected(false);
@@ -186,7 +185,7 @@ public class ScraggleGameFragment extends Fragment {
                                 Log.e("wordRemoveTestTest", wordMadeList[fLarge]);
                                 Log.e("wordRemoveTestTest", word);
                                 inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
-                                gameScore -= getScore(smallTile.getInnerText().charAt(0));
+//                                gameScore -= getScore(smallTile.getInnerText().charAt(0));
                             }
                             mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
                             // Vibrate for 25 milliseconds
@@ -220,6 +219,12 @@ public class ScraggleGameFragment extends Fragment {
                         Boolean isThereFlag = ((ScraggleGameActivity) getActivity()).searchWord(wordMadeList[mLastLarge]);
 
                         if (isThereFlag) {
+
+                            for (int i = 0; i < wordMadeList[mLastLarge].length(); i++) {
+                                gameScore += getScore(wordMadeList[mLastLarge].charAt(i));
+                            }
+                            Log.e("DICT TEST Score", String.valueOf(gameScore));
+
 //                            Custom Toast on Successfully finding a Word
                             View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast, null);
 
@@ -242,6 +247,7 @@ public class ScraggleGameFragment extends Fragment {
                     }
                 }
 //                }
+                ((ScraggleGameActivity) getActivity()).setScore(gameScore);
                 ((ScraggleGameActivity) getActivity()).stopThinking();
             }
         }, 1000);
@@ -562,17 +568,11 @@ public class ScraggleGameFragment extends Fragment {
     }
 
     protected void disableLetterGrid() {
-        GridLayout layout = (GridLayout) ScraggleGameFragment.this.getActivity().findViewById(R.id.wgboard_large);
-        Log.e("DisableGRIDTest", String.valueOf(layout.getChildCount()));
-        GridLayout innerLayout = (GridLayout) ScraggleGameFragment.this.getActivity().findViewById(R.id.wgboard_small);
-        Log.e("DisableGRIDTest", String.valueOf(innerLayout.getChildCount()));
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            View child = layout.getChildAt(i);
-            for (int j = 0; j < innerLayout.getChildCount(); j++) {
-                View innerChild = innerLayout.getChildAt(j);
-                innerChild.setEnabled(false);
-            }
-        }
+        mEntireBoard.getView().setVisibility(View.INVISIBLE);
+    }
+
+    protected void enableLetterGrid() {
+        mEntireBoard.getView().setVisibility(View.VISIBLE);
     }
 }
 

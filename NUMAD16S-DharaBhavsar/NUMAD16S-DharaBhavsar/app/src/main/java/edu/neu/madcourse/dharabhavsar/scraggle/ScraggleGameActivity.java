@@ -101,6 +101,7 @@ public class ScraggleGameActivity extends Activity {
     }
 
     public void stopThinking() {
+        mScoreTextField.setText("Score = " + String.valueOf(score));
         View thinkView = findViewById(R.id.thinking_scraggle);
         thinkView.setVisibility(View.GONE);
     }
@@ -223,6 +224,7 @@ public class ScraggleGameActivity extends Activity {
     protected void onPauseGame() {
         counter.cancel();
         mMediaPlayer.pause();
+        mGameFragment.disableLetterGrid();
 //        Log.e("Timer TEST Pause", String.valueOf(savedRemainingInterval));
     }
 
@@ -230,6 +232,7 @@ public class ScraggleGameActivity extends Activity {
         counter = new MyCount(savedRemainingInterval, 1000);
         counter.start();
         mMediaPlayer.start();
+        mGameFragment.enableLetterGrid();
 //        Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
     }
 
