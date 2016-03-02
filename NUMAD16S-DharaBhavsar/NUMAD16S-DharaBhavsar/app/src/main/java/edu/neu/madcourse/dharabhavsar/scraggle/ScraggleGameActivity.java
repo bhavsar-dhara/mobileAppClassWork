@@ -20,13 +20,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import edu.neu.madcourse.dharabhavsar.dictionary.TrieLookup;
 import edu.neu.madcourse.dharabhavsar.main.R;
 
 public class ScraggleGameActivity extends Activity {
@@ -38,14 +38,16 @@ public class ScraggleGameActivity extends Activity {
     List<String> nineWords = new ArrayList<>();
     TextView mTextField;
     private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
-    long savedRemainingInterval;
+    long savedRemainingInterval = 0;
     MyCount counter;
     String resultStr = "";
     String finalResult = "";
     String result = "";
-    HashMap<String, String> vocabList = new HashMap<String, String>();
+    ArrayList<String> vocabList = new ArrayList<String>();
     String insertedText = "";
     private AlertDialog mDialog;
+    TrieLookup trie;
+    Boolean resFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,10 @@ public class ScraggleGameActivity extends Activity {
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
+        if(savedRemainingInterval > 0) {
+            counter = new MyCount(savedRemainingInterval, 1000);
+            counter.start();
+        }
     }
 
     @Override
@@ -114,6 +120,7 @@ public class ScraggleGameActivity extends Activity {
         mMediaPlayer.stop();
         mMediaPlayer.reset();
         mMediaPlayer.release();
+        counter.cancel();
         String gameData = mGameFragment.getState();
         getPreferences(MODE_PRIVATE).edit()
                 .putString(PREF_RESTORE, gameData)
@@ -222,7 +229,8 @@ public class ScraggleGameActivity extends Activity {
 
 //    METHOD to implement the dictionary word check - but I feel this is a wrong way to do it and
 //    taking too much time
-    public void checkWordInDict(String str) {
+    public Boolean checkWordInDict(String str) {
+        Log.e("DICT TEST", str);
         try {
             new AsyncTaskRunner3().execute(str).get();
         } catch (InterruptedException e) {
@@ -230,14 +238,17 @@ public class ScraggleGameActivity extends Activity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        return resFlag;
     }
 
-    private class AsyncTaskRunner0 extends AsyncTask<String, Void, HashMap> {
+    private class AsyncTaskRunner0 extends AsyncTask<String, Void, List<String>> {
         @Override
-        protected HashMap doInBackground(String... params) {
+        protected List<String> doInBackground(String... params) {
             String word = params[0];
             try {
                 try {
+                    Log.e("Inside AS0","Inside AS0");
+
                     Resources res = getResources();
                     InputStream in_s = null;
                     String fileName = String.valueOf(word.charAt(0));
@@ -250,61 +261,74 @@ public class ScraggleGameActivity extends Activity {
                     String[] strings = result.split("\\n");
                     Log.e("INSERT", "inserting count = " + strings.length);
                     for (String s : strings) {
-                        vocabList.put(s, s);
+//                        vocabList.put(s, s);
+                        vocabList.add(s);
                     }
+//                    trie = new TrieLookup(Arrays.asList(strings));
                     Log.e("INSERT", "inserted");
                 } catch (IOException e) {
                     Log.e("ERROR", "not inserted");
                 }
             } catch (Exception e) {
-                Thread.interrupted();
+//                Thread.interrupted();
                 Log.e("AsyncTaskRunner", "Exception occurred");
+                Log.e("AsyncTaskRunner Error", e.getMessage().toString());
             }
             return vocabList;
         }
     }
 
-    private class AsyncTaskRunner2 extends AsyncTask<Void, Void, String> {
+    private class AsyncTaskRunner2 extends AsyncTask<String, Void, Boolean> {
         @Override
-        protected String doInBackground(Void... params) {
-//            HashMap<String, String> wordList = params[0];
+        protected Boolean doInBackground(String... params) {
+            insertedText = params[0];
             String resp = "";
+            boolean isThereInDict = false;
             try {
                 Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
 //                Log.e("AsyncTaskRunner2", "vocabList = " + String.valueOf(vocabList.size()));
 
-                for (String s : vocabList.values()) {
+//                isThereInDict = trie.contains(resp);
+//                isThereInDict = trie.contains(insertedText);
+
+                for (String s : vocabList) {
                     if (insertedText.equals(s.trim())) {
                         resp = insertedText;
                     }
                 }
+
+                if(!resp.equals("")) {
+                    isThereInDict = true;
+                }
+
                 Log.e("TEST HASHMAP resp", resp);
+
             } catch (Exception e) {
                 Log.e("AsyncTaskRunner2", "Error encountered");
             }
             Log.e("AsyncTaskRunner2", "result = " + resp);
-            return resp;
+            return isThereInDict;
         }
     }
 
     //    method to be called in the asyncTask for the Word Game ever
-    private void searchWord(String str) {
+    public Boolean searchWord(String str) {
         String result1 = "";
         String word = str;
         Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length() + " word = " + word);
         if (word.length() >= 3) {
             try {
                 new AsyncTaskRunner0().execute(word).get();
-                String res = new AsyncTaskRunner2().execute().get();
-                Log.e("searchWord", "res = " + res);
-                resultStr = resultStr + res + "\n";
+                resFlag = new AsyncTaskRunner2().execute(word).get();
+                Log.e("searchWord", "resFlag = " + resFlag);
+                /*resultStr = resultStr + word + "\n";
                 List<String> list = Arrays.asList(resultStr.split("\n"));
                 Set<String> uniqueWords = new HashSet<String>(list);
                 finalResult = "";
                 for (String s1 : uniqueWords) {
                     System.out.println(word + ": " + Collections.frequency(list, s1));
                     finalResult = finalResult + s1 + "\n";
-                }
+                }*/
                 Log.e("searchWord", finalResult);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -323,6 +347,7 @@ public class ScraggleGameActivity extends Activity {
             }
             Log.e("searchWord", finalResult);
         }
+        return resFlag;
     }
 
     private class AsyncTaskRunner3 extends AsyncTask<String, Void, Void> {

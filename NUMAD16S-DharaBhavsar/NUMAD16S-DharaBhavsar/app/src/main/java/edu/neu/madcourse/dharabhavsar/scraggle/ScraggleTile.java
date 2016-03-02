@@ -58,6 +58,10 @@ public class ScraggleTile {
         }
         if (mView instanceof Button) {
             mView.getBackground().setLevel(R.drawable.tile_deselected_scraggle);
+            /*if (isSelFlag)
+                mView.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
+            else
+                mView.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));*/
         }
     }
 
