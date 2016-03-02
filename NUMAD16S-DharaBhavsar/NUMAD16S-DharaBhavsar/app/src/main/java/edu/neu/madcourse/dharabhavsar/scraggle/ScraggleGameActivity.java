@@ -206,6 +206,7 @@ public class ScraggleGameActivity extends Activity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // take to Phase 2
                             Intent intent = new Intent(ScraggleGameActivity.this, ScraggleGameActivity2.class);
+                            intent.putExtra("gameData", mGameFragment.getState());
                             startActivity(intent);
                         }
                     });

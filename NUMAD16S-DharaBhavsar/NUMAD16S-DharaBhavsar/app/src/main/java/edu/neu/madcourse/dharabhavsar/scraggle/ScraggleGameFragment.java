@@ -360,6 +360,8 @@ public class ScraggleGameFragment extends Fragment {
         StringBuilder builder = new StringBuilder();
         builder.append(((ScraggleGameActivity) this.getActivity()).getSavedRemainingInterval());
         builder.append(',');
+        builder.append(((ScraggleGameActivity) this.getActivity()).getScore());
+        builder.append(',');
         builder.append(mLastLarge);
         builder.append(',');
         builder.append(mLastSmall);
@@ -387,6 +389,8 @@ public class ScraggleGameFragment extends Fragment {
         int index = 0;
         savedInterval = Long.parseLong(fields[index++]);
         ((ScraggleGameActivity) this.getActivity()).setSavedRemainingInterval(savedInterval);
+        gameScore = Integer.parseInt(fields[index++]);
+        ((ScraggleGameActivity) this.getActivity()).setScore(gameScore);
         mLastLarge = Integer.parseInt(fields[index++]);
         mLastSmall = Integer.parseInt(fields[index++]);
 
@@ -433,8 +437,8 @@ public class ScraggleGameFragment extends Fragment {
                 Arrays.asList(8, 7, 6, 3, 0, 1, 5, 4, 2),
                 Arrays.asList(3, 7, 6, 4, 8, 5, 2, 1, 0),
                 Arrays.asList(5, 4, 8, 7, 6, 3, 0, 1, 2),
-                Arrays.asList(5, 7, 8, 4, 6, 3, 0, 2, 1),
-                Arrays.asList(7, 8, 5, 4, 6, 3, 0, 2, 1),
+                Arrays.asList(5, 7, 8, 4, 6, 3, 0, 1, 2),
+                Arrays.asList(7, 8, 5, 4, 6, 3, 0, 1, 2),
                 Arrays.asList(6, 7, 5, 8, 4, 2, 1, 0, 3),
                 Arrays.asList(7, 6, 4, 8, 5, 2, 1, 0, 3),
                 Arrays.asList(3, 6, 4, 0, 1, 2, 5, 8, 7),

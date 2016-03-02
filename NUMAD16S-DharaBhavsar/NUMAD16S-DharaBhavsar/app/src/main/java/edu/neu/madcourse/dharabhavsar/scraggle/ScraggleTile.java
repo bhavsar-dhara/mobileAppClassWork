@@ -47,6 +47,15 @@ public class ScraggleTile {
         this.mSubTiles = subTiles;
     }
 
+    public void animate() {
+        Animator anim = AnimatorInflater.loadAnimator(mGame.getActivity(),
+                R.animator.tictactoe);
+        if (getView() != null) {
+            anim.setTarget(getView());
+            anim.start();
+        }
+    }
+
     public void updateDrawableState() {
         if (mView == null) return;
         boolean isSelFlag = getIsSelected();
@@ -62,15 +71,6 @@ public class ScraggleTile {
                 mView.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
             else
                 mView.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));*/
-        }
-    }
-
-    public void animate() {
-        Animator anim = AnimatorInflater.loadAnimator(mGame.getActivity(),
-                R.animator.tictactoe);
-        if (getView() != null) {
-            anim.setTarget(getView());
-            anim.start();
         }
     }
 
