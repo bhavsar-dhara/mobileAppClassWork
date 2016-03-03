@@ -62,7 +62,8 @@
                 android:value="edu.neu.madcourse.dharabhavsar.ut3.MainActivityUt3" />
         </activity>
         <activity
-            android:name="edu.neu.madcourse.dharabhavsar.ut3.GameActivity">
+            android:name="edu.neu.madcourse.dharabhavsar.ut3.GameActivity"
+            android:noHistory="true">
         </activity>
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.about.MainActivityAbout"

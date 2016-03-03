@@ -50,6 +50,8 @@ public class ScraggleGameActivity extends Activity {
     Boolean resFlag = false;
     TextView mScoreTextField;
     int score = 0;
+    boolean restore;
+    boolean isResumeFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class ScraggleGameActivity extends Activity {
         mGameFragment = (ScraggleGameFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
         mTextField = (TextView) findViewById(R.id.timerView);
-        boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
+        restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {
             String gameData = getPreferences(MODE_PRIVATE)
                     .getString(PREF_RESTORE, null);
@@ -72,9 +74,13 @@ public class ScraggleGameActivity extends Activity {
         Log.d("Scraggle", "restore = " + restore);
 
         mTextField = (TextView) findViewById(R.id.timerView);
-        counter = new MyCount(interval, 1000);
+        if (savedRemainingInterval > 0) {
+            counter = new MyCount(savedRemainingInterval, 1000);
+        }
+        else {
+            counter = new MyCount(interval, 1000);
+        }
         counter.start();
-
         mScoreTextField = (TextView) findViewById(R.id.scoreView);
         mScoreTextField.setText("Score = " + String.valueOf(score));
     }
@@ -112,7 +118,7 @@ public class ScraggleGameActivity extends Activity {
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
-        if(savedRemainingInterval > 0) {
+        if(savedRemainingInterval > 0 && isResumeFlag) {
             counter = new MyCount(savedRemainingInterval, 1000);
             counter.start();
         }
@@ -225,6 +231,7 @@ public class ScraggleGameActivity extends Activity {
         counter.cancel();
         mMediaPlayer.pause();
         mGameFragment.disableLetterGrid();
+        isResumeFlag = false;
 //        Log.e("Timer TEST Pause", String.valueOf(savedRemainingInterval));
     }
 
@@ -233,6 +240,7 @@ public class ScraggleGameActivity extends Activity {
         counter.start();
         mMediaPlayer.start();
         mGameFragment.enableLetterGrid();
+        isResumeFlag = true;
 //        Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
     }
 
@@ -392,4 +400,13 @@ public class ScraggleGameActivity extends Activity {
     public void setScore(int savedScore){
         score = savedScore;
     }
+
+    public boolean isRestore(){
+        return this.restore;
+    }
+
+    public void setRestore(boolean savedRestore){
+        restore = savedRestore;
+    }
+
 }

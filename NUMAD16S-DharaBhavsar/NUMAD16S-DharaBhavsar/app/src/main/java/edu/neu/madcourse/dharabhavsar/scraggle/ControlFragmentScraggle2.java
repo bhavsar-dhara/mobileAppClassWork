@@ -26,10 +26,12 @@ public class ControlFragmentScraggle2 extends Fragment {
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //                this.finish();
-                getActivity().finish();
+//                getActivity().finish();
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 //                ((ScraggleGameActivity2) getActivity()).onQuit();
             }
         });

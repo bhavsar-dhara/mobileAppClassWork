@@ -51,6 +51,11 @@ public class ScraggleGameFragment extends Fragment {
     private View mView;
     private long savedInterval;
     private int gameScore = 0;
+    private boolean isPhaseTwo = false;
+    private char[][] gameLetterState = new char[9][9];
+    private boolean[] isWord = new boolean[9];
+    private int wordScore;
+    private int[] wordScores = {0,0,0,0,0,0,0,0,0};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,9 +65,11 @@ public class ScraggleGameFragment extends Fragment {
         Log.e("onCreate", "inside");
         initGame();
 
+        if(!((ScraggleGameActivity) this.getActivity()).isRestore()) {
 //        Method call to the asyncTaskRunner
-        stringLst = ((ScraggleGameActivity) getActivity()).methodCallToAsyncTaskRunner();
-        setLettersOnBoard();
+            stringLst = ((ScraggleGameActivity) getActivity()).methodCallToAsyncTaskRunner();
+            setLettersOnBoard();
+        }
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         mSoundX = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
@@ -129,7 +136,7 @@ public class ScraggleGameFragment extends Fragment {
                         (mSmallIdList[i]);
                 innerText.setText(String.valueOf(str.charAt(small)));
                 final ScraggleTile smallTileText = mSmallTiles[large][i];
-
+                gameLetterState[large][i] = str.charAt(small);
 //                if(smallTileText.getInnerText != null) {
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
 //                to add letters of the words
@@ -142,7 +149,7 @@ public class ScraggleGameFragment extends Fragment {
         Log.e("initViews", "inside");
         mEntireBoard.setView(rootView);
         for (int large = 0; large < 9; large++) {
-            View outer = rootView.findViewById(mLargeIdList[large]);
+            final View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
             for (int small = 0; small < 9; small++) {
                 final Button inner = (Button) outer.findViewById
@@ -161,10 +168,9 @@ public class ScraggleGameFragment extends Fragment {
                         // ...
                         Log.e("WordTEST", String.valueOf(isAvailable(smallTile)));
                         Log.e("WordTEST NextMove", String.valueOf(isNextMove(smallTile)));
-                        if (isAvailable(smallTile)) {
-//                        if (isNextMove(smallTile)) {
+//                        if (isAvailable(smallTile)) {
+                        if (isNextMove(smallTile)) {
                             ((ScraggleGameActivity) getActivity()).startThinking();
-//                            setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
                             Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
                             if (!smallTile.getIsSelected()) {
                                 Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
@@ -200,6 +206,28 @@ public class ScraggleGameFragment extends Fragment {
                     }
                 });
                 // ...
+                inner.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Log.e("Long PRESS", String.valueOf(fLarge));
+                        isWord[fLarge] = false;
+                        wordMadeList[fLarge] = "";
+                        wordScores[fLarge] = 0;
+                        setAllNextMoves();
+                        for (int small = 0; small < 9; small++) {
+                            final Button inner = (Button) outer.findViewById
+                                    (mSmallIdList[small]);
+                            final ScraggleTile smallTile = mSmallTiles[fLarge][small];
+                            smallTile.setView(inner);
+                            inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                            smallTile.animate();
+                            smallTile.setIsSelected(false);
+                        }
+                        calcGameScore();
+                        return true;
+                    }
+                });
+//                ((ScraggleGameActivity) getActivity()).startThinking();
             }
         }
     }
@@ -209,22 +237,14 @@ public class ScraggleGameFragment extends Fragment {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
                 if (getActivity() == null) return;
-//                optimized by removing the unnecessary looping
-//                for (int i = 0; i < 9; i++) {
                 if (wordMadeList[mLastLarge] != null) {
+                    Log.e("DICT TEST", wordMadeList[mLastLarge]);
                     if (wordMadeList[mLastLarge].length() > 2) {
-                        Log.e("DICT TEST", wordMadeList[mLastLarge]);
-
                         Boolean isThereFlag = ((ScraggleGameActivity) getActivity()).searchWord(wordMadeList[mLastLarge]);
 
                         if (isThereFlag) {
-
-                            for (int i = 0; i < wordMadeList[mLastLarge].length(); i++) {
-                                gameScore += getScore(wordMadeList[mLastLarge].charAt(i));
-                            }
-                            Log.e("DICT TEST Score", String.valueOf(gameScore));
-
 //                            Custom Toast on Successfully finding a Word
                             View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast, null);
 
@@ -233,17 +253,19 @@ public class ScraggleGameFragment extends Fragment {
                             customtoast.setView(customToastRoot);
                             customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
                             customtoast.setDuration(Toast.LENGTH_SHORT);
-//                                Throws error
-//                                customtoast.setText("Word Found in Small 3x3 Grid " + i);
                             customtoast.show();
 
-                                /*Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                                        "message", Toast.LENGTH_SHORT);
-                                toast.setText("Word Found in Small 3x3 Grid " + String.valueOf(i));
-                                toast.setView(customToastRoot);
-                                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-                                toast.show();*/
+                            wordScore = 0;
+                            for (int i = 0; i < wordMadeList[mLastLarge].length(); i++) {
+                                wordScore += getScore(wordMadeList[mLastLarge].charAt(i));
+                            }
+                            wordScores[mLastLarge] = wordScore;
+                        } else {
+                            wordScores[mLastLarge] = 0;
                         }
+                        isWord[mLastLarge] = isThereFlag;
+
+                        calcGameScore();
                     }
                 }
 //                }
@@ -251,6 +273,18 @@ public class ScraggleGameFragment extends Fragment {
                 ((ScraggleGameActivity) getActivity()).stopThinking();
             }
         }, 1000);
+    }
+
+    private void calcGameScore() {
+        gameScore = 0;
+        for(int i = 0; i < 9; i++) {
+            if(isWord[i]) {
+                Log.e("SCORES", String.valueOf(i)+" : "+String.valueOf(wordScores[i]));
+                gameScore += wordScores[i];
+                Log.e("Game SCORES", String.valueOf(gameScore));
+            }
+        }
+        Log.e("DICT TEST Score", String.valueOf(gameScore));
     }
 
     public void restartGame() {
@@ -280,7 +314,7 @@ public class ScraggleGameFragment extends Fragment {
         mLastSmall = -1;
         mLastLarge = -1;
         setAvailableFromLastMove(mLastSmall);
-//        setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
+        setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
     }
 
     private void setAvailableFromLastMove(int small) {
@@ -288,7 +322,7 @@ public class ScraggleGameFragment extends Fragment {
         // Make all the tiles at the destination available
         if (small != -1) {
             for (int dest = 0; dest < 9; dest++) {
-                ScraggleTile tile = mSmallTiles[small][dest];
+                ScraggleTile tile = mSmallTiles[dest][small];
 //                if (tile.getOwner() == ScraggleTile.Owner.NEITHER)
                 if(!tile.getIsSelected())
                     addAvailable(tile);
@@ -304,36 +338,50 @@ public class ScraggleGameFragment extends Fragment {
 //    of the selected tile as available
     private void setNextPossibleMoveFromLastMove(int small, int large) {
         clearNextMove();
+        Log.e("WordTEST", "small: " + String.valueOf(small) + " large: " + String.valueOf(large));
         // Make all the neighboring tiles at the destination available
         if (small != -1 && large != -1) {
-            ScraggleTile tile = mSmallTiles[small][large];
-            Log.e("WordTEST", "small: "+String.valueOf(small) + " large: " + String.valueOf(large));
+//            ScraggleTile tile = mSmallTiles[large][small];
 //            mNextMove.clear();
-            if(tile.getIsSelected()) {
+//            if(tile.getIsSelected()) {
                 List<Integer> intList = getNeighbors(small);
                 Log.e("WordTEST neighbors : ", String.valueOf(intList.size()));
                 for (int i = 0; i < intList.size(); i++) {
                     int j = intList.get(i);
                     Log.e("WordTEST neighbor : ", String.valueOf(j));
-                    ScraggleTile neighborTile = mSmallTiles[j][large];
-                    addNextMove(neighborTile);
+                    ScraggleTile neighborTile = mSmallTiles[large][j];
+                    if(!neighborTile.getIsSelected()) {
+                        addNextMove(neighborTile);
+                    }
+                }
+            for(int j = 0; j < 9; j++) {
+                Log.e("WordTEST", "j: " + String.valueOf(j) + " large: " + String.valueOf(large));
+                for (int k = 0; k < 9; k++) {
+                    if (j != large) {
+                        ScraggleTile neighborTile = mSmallTiles[j][k];
+                        addNextMove(neighborTile);
+                    } else {
+                        continue;
+                    }
                 }
             }
+//            }
         }
 
         // If there were none available, make all squares available
         if (mNextMove.isEmpty()) {
 //            Log.e("WordTEST", "Set All initially");
-            setAll();
+            setAllNextMoves();
         }
     }
 
-    private void setAll() {
+    private void setAllNextMoves() {
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
                 ScraggleTile tile = mSmallTiles[large][small];
-                if(!tile.getIsSelected())
+//                if(!tile.getIsSelected()) {
                     addNextMove(tile);
+//                }
             }
         }
     }

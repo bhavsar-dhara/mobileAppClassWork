@@ -327,22 +327,14 @@ public class ScraggleGameFragment2 extends Fragment {
         }
     }
 
-    private void setAll() {
-        for (int large = 0; large < 9; large++) {
-            for (int small = 0; small < 9; small++) {
-                ScraggleTile tile = mSmallTiles[large][small];
-                if(!tile.getIsSelected())
-                    addAvailable(tile);
-            }
-        }
-    }
-
     private void setAllAvailable() {
         for (int large = 0; large < 9; large++) {
             for (int small = 0; small < 9; small++) {
                 ScraggleTile tile = mSmallTiles[large][small];
                 if(tile.getIsSelected())
                     addAvailable(tile);
+                else
+                    tile.setIsBlank(true);
             }
         }
     }
