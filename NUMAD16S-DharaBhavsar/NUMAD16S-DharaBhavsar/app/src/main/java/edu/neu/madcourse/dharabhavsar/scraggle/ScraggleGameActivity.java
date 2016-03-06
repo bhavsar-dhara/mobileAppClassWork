@@ -50,8 +50,11 @@ public class ScraggleGameActivity extends Activity {
     Boolean resFlag = false;
     TextView mScoreTextField;
     int score = 0;
+    int score2 = 0;
     boolean restore;
     boolean isResumeFlag = false;
+    private boolean isPhaseTwo = false;
+    private String gameData = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +74,23 @@ public class ScraggleGameActivity extends Activity {
                 mGameFragment.putState(gameData);
             }
         }
-        Log.d("Scraggle", "restore = " + restore);
+        Log.e("Scraggle", "restore = " + restore);
+        Bundle b = this.getIntent().getExtras();
+        if (b != null) {
+            isPhaseTwo = b.getBoolean("isTwoFlag");
+            gameData = b.getString("gameData");
+        }
+        Log.e("ScraggleActivity", "isPhaseTwo = " + isPhaseTwo);
 
         mTextField = (TextView) findViewById(R.id.timerView);
-        if (savedRemainingInterval > 0) {
+        if(isPhaseTwo && savedRemainingInterval == 1) {
+            counter = new MyCount(interval, 1000);
+        } else {
             counter = new MyCount(savedRemainingInterval, 1000);
         }
-        else {
+        if (savedRemainingInterval > 1) {
+            counter = new MyCount(savedRemainingInterval, 1000);
+        } else {
             counter = new MyCount(interval, 1000);
         }
         counter.start();
@@ -87,7 +100,9 @@ public class ScraggleGameActivity extends Activity {
 
     public List<String> methodCallToAsyncTaskRunner() {
         try {
-            new AsyncTaskRunner().execute().get();
+            if(!isPhaseTwo) {
+                new AsyncTaskRunner().execute().get();
+            }
 //            Log.e("nineWords size", String.valueOf(nineWords.size()));
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -107,7 +122,11 @@ public class ScraggleGameActivity extends Activity {
     }
 
     public void stopThinking() {
-        mScoreTextField.setText("Score = " + String.valueOf(score));
+        if(!isPhaseTwo) {
+            mScoreTextField.setText("Score = " + String.valueOf(score));
+        } else {
+            mScoreTextField.setText("Score = " + String.valueOf(score+score2));
+        }
         View thinkView = findViewById(R.id.thinking_scraggle);
         thinkView.setVisibility(View.GONE);
     }
@@ -118,7 +137,7 @@ public class ScraggleGameActivity extends Activity {
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
-        if(savedRemainingInterval > 0 && isResumeFlag) {
+        if (savedRemainingInterval > 0 && isResumeFlag) {
             counter = new MyCount(savedRemainingInterval, 1000);
             counter.start();
         }
@@ -176,7 +195,6 @@ public class ScraggleGameActivity extends Activity {
                 Log.e("fetchNineWords", "Exception occurred");
             }
             nineWords = new ArrayList<String>(wordSet);
-
             return nineWords;
         }
     }
@@ -200,24 +218,34 @@ public class ScraggleGameActivity extends Activity {
 
         @Override
         public void onFinish() {
-            mTextField.setText("DONE");
+            if(!isPhaseTwo) {
+                mTextField.setText("DONE");
 //            TODO method to disable the whole grid and go to phase 2
 //            mGameFragment.disableLetterGrid();
-            AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
-            builder.setTitle(R.string.phase_change_title);
-            builder.setMessage(R.string.phase_change_text);
-            builder.setCancelable(false);
-            builder.setPositiveButton(R.string.ok_label,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            // take to Phase 2
-                            Intent intent = new Intent(ScraggleGameActivity.this, ScraggleGameActivity2.class);
-                            intent.putExtra("gameData", mGameFragment.getState());
-                            startActivity(intent);
-                        }
-                    });
-            mDialog = builder.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+                builder.setTitle(R.string.phase_change_title);
+                builder.setMessage(R.string.phase_change_text);
+                builder.setCancelable(false);
+                builder.setPositiveButton(R.string.ok_label,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // take to Phase 2
+                                isPhaseTwo = true;
+//                                mGameFragment.setIsPhaseTwo(true);
+//                                startActivity(new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class));
+                                Intent intent = new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class);
+                                intent.putExtra("gameData", mGameFragment.getState());
+                                intent.putExtra("isTwoFlag", isPhaseTwo);
+//                                intent.putExtra("isTwoFlagFrag", isPhaseTwo);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                mDialog = builder.show();
+            } else {
+                mTextField.setText("Game Over");
+            }
         }
 
         @Override
@@ -232,7 +260,6 @@ public class ScraggleGameActivity extends Activity {
         mMediaPlayer.pause();
         mGameFragment.disableLetterGrid();
         isResumeFlag = false;
-//        Log.e("Timer TEST Pause", String.valueOf(savedRemainingInterval));
     }
 
     protected void onResumeGame() {
@@ -241,21 +268,13 @@ public class ScraggleGameActivity extends Activity {
         mMediaPlayer.start();
         mGameFragment.enableLetterGrid();
         isResumeFlag = true;
-//        Log.e("Timer TEST Resume", String.valueOf(savedRemainingInterval));
     }
 
-//    METHOD to implement the dictionary word check - but I feel this is a wrong way to do it and
-//    taking too much time
-    public Boolean checkWordInDict(String str) {
-        Log.e("DICT TEST", str);
-        try {
-            new AsyncTaskRunner3().execute(str).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resFlag;
+    protected void onQuitGame() {
+        String gameData = mGameFragment.getState();
+        getPreferences(MODE_PRIVATE).edit()
+                .putString(PREF_RESTORE, gameData)
+                .commit();
     }
 
     private class AsyncTaskRunner0 extends AsyncTask<String, Void, List<String>> {
@@ -264,30 +283,25 @@ public class ScraggleGameActivity extends Activity {
             String word = params[0];
             try {
                 try {
-                    Log.e("Inside AS0","Inside AS0");
-
+                    Log.e("Inside AS0", "Inside AS0");
                     Resources res = getResources();
                     InputStream in_s = null;
                     String fileName = String.valueOf(word.charAt(0));
                     int resID = getResources().getIdentifier(fileName, "raw", getPackageName());
                     in_s = res.openRawResource(resID);
-
                     byte[] b = new byte[in_s.available()];
                     in_s.read(b);
                     result = new String(b);
                     String[] strings = result.split("\\n");
                     Log.e("INSERT", "inserting count = " + strings.length);
                     for (String s : strings) {
-//                        vocabList.put(s, s);
                         vocabList.add(s);
                     }
-//                    trie = new TrieLookup(Arrays.asList(strings));
                     Log.e("INSERT", "inserted");
                 } catch (IOException e) {
                     Log.e("ERROR", "not inserted");
                 }
             } catch (Exception e) {
-//                Thread.interrupted();
                 Log.e("AsyncTaskRunner", "Exception occurred");
                 Log.e("AsyncTaskRunner Error", e.getMessage().toString());
             }
@@ -303,23 +317,15 @@ public class ScraggleGameActivity extends Activity {
             boolean isThereInDict = false;
             try {
                 Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
-//                Log.e("AsyncTaskRunner2", "vocabList = " + String.valueOf(vocabList.size()));
-
-//                isThereInDict = trie.contains(resp);
-//                isThereInDict = trie.contains(insertedText);
-
                 for (String s : vocabList) {
                     if (insertedText.equals(s.trim())) {
                         resp = insertedText;
                     }
                 }
-
-                if(!resp.equals("")) {
+                if (!resp.equals("")) {
                     isThereInDict = true;
                 }
-
                 Log.e("TEST HASHMAP resp", resp);
-
             } catch (Exception e) {
                 Log.e("AsyncTaskRunner2", "Error encountered");
             }
@@ -338,14 +344,6 @@ public class ScraggleGameActivity extends Activity {
                 new AsyncTaskRunner0().execute(word).get();
                 resFlag = new AsyncTaskRunner2().execute(word).get();
                 Log.e("searchWord", "resFlag = " + resFlag);
-                /*resultStr = resultStr + word + "\n";
-                List<String> list = Arrays.asList(resultStr.split("\n"));
-                Set<String> uniqueWords = new HashSet<String>(list);
-                finalResult = "";
-                for (String s1 : uniqueWords) {
-                    System.out.println(word + ": " + Collections.frequency(list, s1));
-                    finalResult = finalResult + s1 + "\n";
-                }*/
                 Log.e("searchWord", finalResult);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -367,46 +365,35 @@ public class ScraggleGameActivity extends Activity {
         return resFlag;
     }
 
-    private class AsyncTaskRunner3 extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... params) {
-            String str = params[0];
-            try {
-                Log.e("AsyncTaskRunner3", "insertedText = " + str);
-
-                searchWord(str);
-
-                Log.e("TEST HASHMAP resp", str);
-            } catch (Exception e) {
-                Log.e("AsyncTaskRunner3", "Error encountered");
-            }
-            Log.e("AsyncTaskRunner3", "result = " + str);
-            return null;
-        }
-    }
-
-    public long getSavedRemainingInterval(){
+    public long getSavedRemainingInterval() {
         return this.savedRemainingInterval;
     }
 
-    public void setSavedRemainingInterval(long savedInterval){
+    public void setSavedRemainingInterval(long savedInterval) {
         savedRemainingInterval = savedInterval;
     }
 
-    public int getScore(){
+    public int getScore() {
         return this.score;
     }
 
-    public void setScore(int savedScore){
+    public void setScore(int savedScore) {
         score = savedScore;
     }
 
-    public boolean isRestore(){
+    public boolean isRestore() {
         return this.restore;
     }
 
-    public void setRestore(boolean savedRestore){
+    public void setRestore(boolean savedRestore) {
         restore = savedRestore;
     }
 
+    public boolean isPhaseTwo() {
+        return this.isPhaseTwo;
+    }
+
+    public void setIsPhaseTwo(boolean isPhaseTwoFlag) {
+        isPhaseTwo = isPhaseTwoFlag;
+    }
 }
