@@ -57,6 +57,9 @@ public class ScraggleGameFragment extends Fragment {
     private int[] wordScores = {0,0,0,0,0,0,0,0,0};
     private String[] wordsMadePhase2 = new String[100];
     private String gameData = "";
+    private String word2 = "";
+    private String wordCheck2 = "";
+    private int countWordFound = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -189,69 +192,88 @@ public class ScraggleGameFragment extends Fragment {
 
                         smallTile.animate();
                         // ...
+                        Log.e("think", "isPhaseTwo = " + isPhaseTwo);
                         Log.e("WordTEST", String.valueOf(isAvailable(smallTile)));
                         Log.e("WordTEST NextMove", String.valueOf(isNextMove(smallTile)));
+                        if (!isPhaseTwo) {
 //                        if (isAvailable(smallTile)) {
-                        if (isNextMove(smallTile)) {
-                            ((ScraggleGameActivity) getActivity()).startThinking();
-                            Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
-                            if (!smallTile.getIsSelected()) {
-                                Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
-                                smallTile.setIsSelected(true);
-                                Log.e("mLastLarge", String.valueOf(mLastLarge));
-                                Log.e("fLarge", String.valueOf(fLarge));
-                                makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
-                                inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
+                            if (isNextMove(smallTile)) {
+                                ((ScraggleGameActivity) getActivity()).startThinking();
+                                Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
+                                if (!smallTile.getIsSelected()) {
+                                    Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
+                                    smallTile.setIsSelected(true);
+                                    Log.e("mLastLarge", String.valueOf(mLastLarge));
+                                    Log.e("fLarge", String.valueOf(fLarge));
+                                    makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
+                                    inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
 //                                gameScore += getScore(smallTile.getInnerText().charAt(0));
-                            } else {
-                                Log.e("WordTEST", "in isSel = true");
-                                smallTile.setIsSelected(false);
+                                } else {
+                                    Log.e("WordTEST", "in isSel = true");
+                                    smallTile.setIsSelected(false);
                                 /*String str = removeLastChar(wordMadeList[fLarge],
                                         String.valueOf(smallTile.getIsSelected()).charAt(0));*/
-                                word = removeLastChar(wordMadeList[fLarge]);
-                                Log.e("wordRemoveTestTest", word);
-                                wordMadeList[fLarge] = word;
-                                Log.e("wordRemoveTestTest", wordMadeList[fLarge]);
-                                Log.e("wordRemoveTestTest", word);
-                                inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                                    word = removeLastChar(wordMadeList[fLarge]);
+                                    Log.e("wordRemoveTestTest", word);
+                                    wordMadeList[fLarge] = word;
+                                    Log.e("wordRemoveTestTest", wordMadeList[fLarge]);
+                                    Log.e("wordRemoveTestTest", word);
+                                    inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
 //                                gameScore -= getScore(smallTile.getInnerText().charAt(0));
+                                }
+                                mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
+                                // Vibrate for 25 milliseconds
+                                v.vibrate(25);
+                                think();
+                            } else {
+                                mSoundPool.play(mSoundMiss, mVolume, mVolume, 1, 0, 1f);
                             }
-                            mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
-                            // Vibrate for 25 milliseconds
-                            v.vibrate(25);
-//                            makeMove(fLarge, fSmall);
-                            think();
+                            mLastLarge = fLarge;
+                            mLastSmall = fSmall;
                         } else {
-                            mSoundPool.play(mSoundMiss, mVolume, mVolume, 1, 0, 1f);
+                            Log.e("think", "inside PhaseTwo code");
+                            ((ScraggleGameActivity) getActivity()).startThinking();
+                            if (!smallTile.getIsSelected()) {
+                                Log.e("think", "inside is selected code");
+                                smallTile.setIsSelected(true);
+//                                wordsMadePhase2 =
+                                wordCheck2 = makeWord(String.valueOf(smallTile.getInnerText()));
+                                inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
+                                mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
+                                v.vibrate(25);
+                                think();
+                            } else {
+                                mSoundPool.play(mSoundMiss, mVolume, mVolume, 1, 0, 1f);
+                            }
                         }
-                        mLastLarge = fLarge;
-                        mLastSmall = fSmall;
                     }
                 });
                 // ...
                 inner.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        Log.e("Long PRESS largeGrid", String.valueOf(fLarge));
-                        isWord[fLarge] = false;
-                        Log.e("Long PRESS isWord", String.valueOf(isWord[fLarge]));
-                        word = "";
-                        wordMadeList[fLarge] = "";
+                        if(!isPhaseTwo) {
+                            Log.e("Long PRESS largeGrid", String.valueOf(fLarge));
+                            isWord[fLarge] = false;
+                            Log.e("Long PRESS isWord", String.valueOf(isWord[fLarge]));
+                            word = "";
+                            wordMadeList[fLarge] = "";
 //                        Log.e("Long PRESS word ", wordMadeList[fLarge]);
-                        wordScores[fLarge] = 0;
-                        Log.e("Long PRESS wordScore", String.valueOf(wordScores[fLarge]));
-                        setAllNextMoves();
-                        for (int small = 0; small < 9; small++) {
-                            final Button inner = (Button) outer.findViewById
-                                    (mSmallIdList[small]);
-                            final ScraggleTile smallTile = mSmallTiles[fLarge][small];
-                            smallTile.setView(inner);
-                            inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
-                            smallTile.animate();
-                            smallTile.setIsSelected(false);
+                            wordScores[fLarge] = 0;
+                            Log.e("Long PRESS wordScore", String.valueOf(wordScores[fLarge]));
+                            setAllNextMoves();
+                            for (int small = 0; small < 9; small++) {
+                                final Button inner = (Button) outer.findViewById
+                                        (mSmallIdList[small]);
+                                final ScraggleTile smallTile = mSmallTiles[fLarge][small];
+                                smallTile.setView(inner);
+                                inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                                smallTile.animate();
+                                smallTile.setIsSelected(false);
+                            }
+                            v.vibrate(50);
+                            calcGameScore();
                         }
-                        v.vibrate(50);
-                        calcGameScore();
                         return true;
                     }
                 });
@@ -264,40 +286,60 @@ public class ScraggleGameFragment extends Fragment {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
-                if (getActivity() == null) return;
-                if (wordMadeList[mLastLarge] != null) {
-                    Log.e("DICT TEST", wordMadeList[mLastLarge]);
-                    if (wordMadeList[mLastLarge].length() > 2) {
-                        Boolean isThereFlag = ((ScraggleGameActivity) getActivity()).searchWord(wordMadeList[mLastLarge]);
+                Log.e("think", "isPhaseTwo = " + isPhaseTwo);
+                if (!isPhaseTwo) {
+                    setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
+                    if (getActivity() == null) return;
+                    if (wordMadeList[mLastLarge] != null) {
+                        Log.e("DICT TEST", wordMadeList[mLastLarge]);
+                        if (wordMadeList[mLastLarge].length() > 2) {
+                            Boolean isThereFlag = ((ScraggleGameActivity) getActivity()).searchWord(wordMadeList[mLastLarge]);
 
-                        if (isThereFlag) {
+                            if (isThereFlag) {
 //                            Custom Toast on Successfully finding a Word
+                                View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast, null);
+                                Toast customtoast = new Toast(getActivity().getApplicationContext());
+                                customtoast.setView(customToastRoot);
+                                customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                                customtoast.setDuration(Toast.LENGTH_SHORT);
+                                customtoast.show();
+
+                                wordScore = 0;
+                                for (int i = 0; i < wordMadeList[mLastLarge].length(); i++) {
+                                    wordScore += getScore(wordMadeList[mLastLarge].charAt(i));
+                                }
+                                wordScores[mLastLarge] = wordScore;
+                            } else {
+                                wordScores[mLastLarge] = 0;
+                            }
+                            isWord[mLastLarge] = isThereFlag;
+                            calcGameScore();
+                        }
+                    }
+//                }
+                    ((ScraggleGameActivity) getActivity()).setScore(gameScore);
+                    ((ScraggleGameActivity) getActivity()).stopThinking();
+                } else {
+                    if (getActivity() == null) return;
+                    if(wordCheck2.length() >= 3) {
+                        Boolean isThereFlag = ((ScraggleGameActivity) getActivity()).searchWord(wordCheck2);
+                        Log.e("think", "isThereFlag = " + isThereFlag);
+                        if (isThereFlag) {
+                            wordsMadePhase2[countWordFound] = wordCheck2;
                             View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast, null);
-
                             Toast customtoast = new Toast(getActivity().getApplicationContext());
-
                             customtoast.setView(customToastRoot);
                             customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
                             customtoast.setDuration(Toast.LENGTH_SHORT);
                             customtoast.show();
-
-                            wordScore = 0;
-                            for (int i = 0; i < wordMadeList[mLastLarge].length(); i++) {
-                                wordScore += getScore(wordMadeList[mLastLarge].charAt(i));
-                            }
-                            wordScores[mLastLarge] = wordScore;
-                        } else {
-                            wordScores[mLastLarge] = 0;
+                            countWordFound++;
+                            refreshBoard(mView);
+                            calcGameScore2();
                         }
-                        isWord[mLastLarge] = isThereFlag;
-
-                        calcGameScore();
                     }
+                    ((ScraggleGameActivity) getActivity()).setScore2(gameScore);
+                    ((ScraggleGameActivity) getActivity()).stopThinking();
                 }
-//                }
-                ((ScraggleGameActivity) getActivity()).setScore(gameScore);
-                ((ScraggleGameActivity) getActivity()).stopThinking();
             }
         }, 1000);
     }
@@ -310,6 +352,21 @@ public class ScraggleGameFragment extends Fragment {
                 gameScore += wordScores[i];
                 Log.e("Game SCORES", String.valueOf(gameScore));
             }
+        }
+        Log.e("DICT TEST Score", String.valueOf(gameScore));
+    }
+
+    private void calcGameScore2() {
+        gameScore = 0;
+        wordScore = 0;
+
+        for(int cnt = 0; cnt < countWordFound; cnt++) {
+            for (int i = 0; i < wordCheck2.length(); i++) {
+                wordScore += getScore(wordCheck2.charAt(i));
+            }
+            Log.e("SCORES", String.valueOf(cnt)+" : "+String.valueOf(wordScore));
+            gameScore += wordScore;
+            Log.e("Game SCORES", String.valueOf(gameScore));
         }
         Log.e("DICT TEST Score", String.valueOf(gameScore));
     }
@@ -532,14 +589,48 @@ public class ScraggleGameFragment extends Fragment {
                         innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_deselected_scraggle));
                         innerText.setEnabled(false);
                     }
-                }
-                else {
+                } else {
                     if(mSmallTiles[large][small].getIsSelected()) {
                         innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
                     } else {
                         innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
                     }
                 }
+            }
+        }
+    }
+
+    private void refreshBoard(View rootView) {
+        Log.e("refreshBoard", "inside");
+        mEntireBoard.setView(rootView);
+        for (int large = 0; large < 9; large++) {
+            Log.e("refreshBoard", "isWord[large] = " + isWord[large]);
+            View outer = rootView.findViewById(mLargeIdList[large]);
+            mLargeTiles[large].setView(outer);
+//          to restore previous state on GUI
+            for (int small = 0; small < 9; small++) {
+//                to add letters of the words
+                Button innerText = (Button) outer.findViewById
+                        (mSmallIdList[small]);
+//                if (isPhaseTwo) {
+                    if(mSmallTiles[large][small].getIsSelected()) {
+                        if(isWord[large]) {
+                            Log.e("putPrevLetters", "inside word true");
+                            innerText.setText(String.valueOf(mSmallTiles[large][small].getInnerText()));
+                            innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                        } else {
+                            Log.e("putPrevLetters", "inside word false");
+                            innerText.setText("");
+                            innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_deselected_scraggle));
+                            innerText.setEnabled(false);
+                        }
+                    } else {
+                        innerText.setText("");
+                        Log.e("putPrevLetters", "inside letter not selected");
+                        innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_deselected_scraggle));
+                        innerText.setEnabled(false);
+                    }
+//                }
             }
         }
     }
@@ -673,6 +764,11 @@ public class ScraggleGameFragment extends Fragment {
             Log.e("wordAddTestTest out 2", wordMadeList[i]);
         }
         return null;
+    }
+
+    private String makeWord(String str) {
+        word2 = word2.concat(str);
+        return word2;
     }
 
     protected void disableLetterGrid() {

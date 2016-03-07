@@ -413,6 +413,14 @@ public class ScraggleGameActivity extends Activity {
         score = savedScore;
     }
 
+    public int getScore2() {
+        return this.score2;
+    }
+
+    public void setScore2(int savedScore) {
+        score2 = savedScore;
+    }
+
     public boolean isRestore() {
         return this.restore;
     }
