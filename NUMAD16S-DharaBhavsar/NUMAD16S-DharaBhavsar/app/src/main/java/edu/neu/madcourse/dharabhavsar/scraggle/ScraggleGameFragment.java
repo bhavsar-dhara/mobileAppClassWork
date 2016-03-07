@@ -67,7 +67,6 @@ public class ScraggleGameFragment extends Fragment {
         initGame();
 
         Bundle b = this.getActivity().getIntent().getExtras();
-
         if (b != null) {
             isPhaseTwo = b.getBoolean("isTwoFlag");
             gameData = b.getString("gameData");
@@ -118,7 +117,7 @@ public class ScraggleGameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("onCreateView", "inside");
+        Log.e("onCreateView", "inside : " + gameData);
         View rootView =
                 inflater.inflate(R.layout.large_board_scraggle, container, false);
         mView = rootView;
@@ -133,7 +132,7 @@ public class ScraggleGameFragment extends Fragment {
     }
 
     private void initAddLetters(View rootView) {
-        Log.e("initAddLetters", "inside");
+        Log.e("initAddLetters", "inside : " + isPhaseTwo);
         mEntireBoard.setView(rootView);
         for (int large = 0; large < 9; large++) {
             View outer = rootView.findViewById(mLargeIdList[large]);
@@ -155,7 +154,7 @@ public class ScraggleGameFragment extends Fragment {
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
 //                to add letters of the words
 //                }
-                } else {
+                } /*else {
                     Log.e("Phase-2", "inside initAddLetters");
                     Button innerText = (Button) outer.findViewById
                             (mSmallIdList[small]);
@@ -164,7 +163,7 @@ public class ScraggleGameFragment extends Fragment {
                         innerText.setText(String.valueOf(gameLetterState[large][small]));
                         smallTileText.setInnerText(String.valueOf(gameLetterState[large][small]));
                     }
-                }
+                }*/
             }
         }
     }
@@ -442,7 +441,7 @@ public class ScraggleGameFragment extends Fragment {
         builder.append(',');
         builder.append(((ScraggleGameActivity) this.getActivity()).getScore());
         builder.append(',');
-        builder.append(isPhaseTwo);
+        builder.append(((ScraggleGameActivity) this.getActivity()).isPhaseTwo());
         builder.append(',');
         builder.append(mLastLarge);
         builder.append(',');
@@ -478,6 +477,7 @@ public class ScraggleGameFragment extends Fragment {
         gameScore = Integer.parseInt(fields[index++]);
         ((ScraggleGameActivity) this.getActivity()).setScore(gameScore);
         isPhaseTwo = Boolean.parseBoolean(fields[index++]);
+//        Log.e("putSTATE", "isPhaseTwo = " + isPhaseTwo);
         ((ScraggleGameActivity) this.getActivity()).setIsPhaseTwo(isPhaseTwo);
         mLastLarge = Integer.parseInt(fields[index++]);
         mLastSmall = Integer.parseInt(fields[index++]);
@@ -503,8 +503,10 @@ public class ScraggleGameFragment extends Fragment {
 
     private void putPrevLetters(View rootView) {
         Log.e("putPrevLetters", "inside");
+//        Log.e("putPrevLetters", "isPhaseTwo = " + isPhaseTwo);
         mEntireBoard.setView(rootView);
         for (int large = 0; large < 9; large++) {
+            Log.e("putPrevLetters", "isWord[large] = " + isWord[large]);
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
 //          to restore previous state on GUI
@@ -512,11 +514,32 @@ public class ScraggleGameFragment extends Fragment {
 //                to add letters of the words
                 Button innerText = (Button) outer.findViewById
                         (mSmallIdList[small]);
-                innerText.setText(String.valueOf(mSmallTiles[large][small].getInnerText()));
-                if (mSmallTiles[large][small].getIsSelected())
-                    innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
-                else
-                    innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                if (isPhaseTwo) {
+                    if(mSmallTiles[large][small].getIsSelected()) {
+                        if(isWord[large]) {
+                            Log.e("putPrevLetters", "inside word true");
+                            innerText.setText(String.valueOf(mSmallTiles[large][small].getInnerText()));
+                            innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                        } else {
+                            Log.e("putPrevLetters", "inside word false");
+                            innerText.setText("");
+                            innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_deselected_scraggle));
+                            innerText.setEnabled(false);
+                        }
+                    } else {
+                        innerText.setText("");
+                        Log.e("putPrevLetters", "inside letter not selected");
+                        innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_deselected_scraggle));
+                        innerText.setEnabled(false);
+                    }
+                }
+                else {
+                    if(mSmallTiles[large][small].getIsSelected()) {
+                        innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
+                    } else {
+                        innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
+                    }
+                }
             }
         }
     }

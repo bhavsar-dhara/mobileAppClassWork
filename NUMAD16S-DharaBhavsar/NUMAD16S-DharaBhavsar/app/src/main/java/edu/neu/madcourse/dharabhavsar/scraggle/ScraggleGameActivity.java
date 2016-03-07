@@ -56,9 +56,31 @@ public class ScraggleGameActivity extends Activity {
     private boolean isPhaseTwo = false;
     private String gameData = "";
 
+    static final String STATE_SCORE = "playerScore";
+    static final String STATE_LEVEL = "playerLevel";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check whether we're recreating a previously destroyed instance
+        /*if (savedInstanceState != null) {
+            // Restore value of members from saved state
+//            score = savedInstanceState.getInt(STATE_SCORE);
+            isPhaseTwo = savedInstanceState.getBoolean(STATE_LEVEL);
+        } else {
+            // Probably initialize members with default values for a new instance
+        }
+        Log.e("GAMEActivity", "isPhaseTwo = " + isPhaseTwo);*/
+        Bundle b = this.getIntent().getExtras();
+        if (b != null) {
+            isPhaseTwo = b.getBoolean("isTwoFlag");
+            gameData = b.getString("gameData");
+        }
+        Log.e("ScraggleActivity", "isPhaseTwo = " + isPhaseTwo);
+        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
+
 //         The below code didn't work for this activity
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
@@ -70,33 +92,43 @@ public class ScraggleGameActivity extends Activity {
         if (restore) {
             String gameData = getPreferences(MODE_PRIVATE)
                     .getString(PREF_RESTORE, null);
+            Log.e("ScraggleActivity", "gameData = " + gameData);
             if (gameData != null) {
                 mGameFragment.putState(gameData);
             }
         }
         Log.e("Scraggle", "restore = " + restore);
-        Bundle b = this.getIntent().getExtras();
-        if (b != null) {
-            isPhaseTwo = b.getBoolean("isTwoFlag");
-            gameData = b.getString("gameData");
-        }
-        Log.e("ScraggleActivity", "isPhaseTwo = " + isPhaseTwo);
 
         mTextField = (TextView) findViewById(R.id.timerView);
-        if(isPhaseTwo && savedRemainingInterval == 1) {
-            counter = new MyCount(interval, 1000);
+        if(isPhaseTwo) {
+            if(savedRemainingInterval < 2000) {
+                Log.e("ScraggleActivity", "interval = " + interval);
+                counter = new MyCount(interval, 1000);
+            } else {
+                counter = new MyCount(savedRemainingInterval, 1000);
+            }
         } else {
-            counter = new MyCount(savedRemainingInterval, 1000);
-        }
-        if (savedRemainingInterval > 1) {
-            counter = new MyCount(savedRemainingInterval, 1000);
-        } else {
-            counter = new MyCount(interval, 1000);
+            if (savedRemainingInterval > 0) {
+                counter = new MyCount(savedRemainingInterval, 1000);
+            } else {
+                counter = new MyCount(interval, 1000);
+            }
         }
         counter.start();
         mScoreTextField = (TextView) findViewById(R.id.scoreView);
         mScoreTextField.setText("Score = " + String.valueOf(score));
     }
+
+    /*@Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.e("onSaveInstanceState", "isPhaseTwo = " + isPhaseTwo);
+        // Save the user's current game state
+//        savedInstanceState.putInt(STATE_SCORE, score);
+        savedInstanceState.putBoolean(STATE_LEVEL, isPhaseTwo);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }*/
 
     public List<String> methodCallToAsyncTaskRunner() {
         try {
