@@ -92,7 +92,7 @@ public class ScraggleGameActivity extends Activity {
         if (restore) {
             String gameData = getPreferences(MODE_PRIVATE)
                     .getString(PREF_RESTORE, null);
-            Log.e("ScraggleActivity", "gameData = " + gameData);
+//            Log.e("ScraggleActivity", "gameData = " + gameData);
             if (gameData != null) {
                 mGameFragment.putState(gameData);
             }
@@ -102,7 +102,7 @@ public class ScraggleGameActivity extends Activity {
         mTextField = (TextView) findViewById(R.id.timerView);
         if(isPhaseTwo) {
             if(savedRemainingInterval < 2000) {
-                Log.e("ScraggleActivity", "interval = " + interval);
+//                Log.e("ScraggleActivity", "interval = " + interval);
                 counter = new MyCount(interval, 1000);
             } else {
                 counter = new MyCount(savedRemainingInterval, 1000);
@@ -166,6 +166,7 @@ public class ScraggleGameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("onResume", "inside resume");
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
@@ -173,12 +174,17 @@ public class ScraggleGameActivity extends Activity {
             counter = new MyCount(savedRemainingInterval, 1000);
             counter.start();
         }
+        if(!isPhaseTwo) {
+            mScoreTextField.setText("Score = " + String.valueOf(score));
+        } else {
+            mScoreTextField.setText("Score = " + String.valueOf(score + score2));
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("Mute TEST Pause", "inside pause");
+        Log.e("onPause", "inside pause");
         mHandler.removeCallbacks(null);
         mMediaPlayer.stop();
         mMediaPlayer.reset();
@@ -220,7 +226,7 @@ public class ScraggleGameActivity extends Activity {
                     Random yourRandom = new Random();
                     int index = yourRandom.nextInt(stringList.size());
                     word = stringList.get(index);
-                    Log.e("nineLetter", word + " " + String.valueOf(word.length()));
+//                    Log.e("nineLetter", word + " " + String.valueOf(word.length()));
                     wordSet.add(word);
                 }
             } catch (Exception e) {
@@ -232,12 +238,12 @@ public class ScraggleGameActivity extends Activity {
     }
 
     public void toogleMute() {
-        Log.e("Mute TEST toogleMute", "inside func");
+//        Log.e("Mute TEST toogleMute", "inside func");
         if (mMediaPlayer.isPlaying()) {
-            Log.e("Mute TEST toogleMute", "inside for pause");
+//            Log.e("Mute TEST toogleMute", "inside for pause");
             mMediaPlayer.pause();
         } else {
-            Log.e("Mute TEST toogleMute", "inside for start");
+//            Log.e("Mute TEST toogleMute", "inside for start");
             mMediaPlayer.start();
         }
     }
@@ -288,6 +294,7 @@ public class ScraggleGameActivity extends Activity {
     }
 
     protected void onPauseGame() {
+        Log.e("onPauseGame", "inside pause");
         counter.cancel();
         mMediaPlayer.pause();
         mGameFragment.disableLetterGrid();
@@ -295,6 +302,7 @@ public class ScraggleGameActivity extends Activity {
     }
 
     protected void onResumeGame() {
+        Log.e("onResumeGame", "inside pause");
         counter = new MyCount(savedRemainingInterval, 1000);
         counter.start();
         mMediaPlayer.start();
@@ -303,6 +311,8 @@ public class ScraggleGameActivity extends Activity {
     }
 
     protected void onQuitGame() {
+        Log.e("onQuit", "inside pause");
+        isResumeFlag = false;
         String gameData = mGameFragment.getState();
         getPreferences(MODE_PRIVATE).edit()
                 .putString(PREF_RESTORE, gameData)
@@ -315,7 +325,7 @@ public class ScraggleGameActivity extends Activity {
             String word = params[0];
             try {
                 try {
-                    Log.e("Inside AS0", "Inside AS0");
+//                    Log.e("Inside AS0", "Inside AS0");
                     Resources res = getResources();
                     InputStream in_s = null;
                     String fileName = String.valueOf(word.charAt(0));
@@ -325,11 +335,11 @@ public class ScraggleGameActivity extends Activity {
                     in_s.read(b);
                     result = new String(b);
                     String[] strings = result.split("\\n");
-                    Log.e("INSERT", "inserting count = " + strings.length);
+//                    Log.e("INSERT", "inserting count = " + strings.length);
                     for (String s : strings) {
                         vocabList.add(s);
                     }
-                    Log.e("INSERT", "inserted");
+//                    Log.e("INSERT", "inserted");
                 } catch (IOException e) {
                     Log.e("ERROR", "not inserted");
                 }
@@ -348,7 +358,7 @@ public class ScraggleGameActivity extends Activity {
             String resp = "";
             boolean isThereInDict = false;
             try {
-                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
+//                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
                 for (String s : vocabList) {
                     if (insertedText.equals(s.trim())) {
                         resp = insertedText;
@@ -357,11 +367,11 @@ public class ScraggleGameActivity extends Activity {
                 if (!resp.equals("")) {
                     isThereInDict = true;
                 }
-                Log.e("TEST HASHMAP resp", resp);
+//                Log.e("TEST HASHMAP resp", resp);
             } catch (Exception e) {
                 Log.e("AsyncTaskRunner2", "Error encountered");
             }
-            Log.e("AsyncTaskRunner2", "result = " + resp);
+//            Log.e("AsyncTaskRunner2", "result = " + resp);
             return isThereInDict;
         }
     }
@@ -370,20 +380,20 @@ public class ScraggleGameActivity extends Activity {
     public Boolean searchWord(String str) {
         String result1 = "";
         String word = str;
-        Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length() + " word = " + word);
+//        Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length() + " word = " + word);
         if (word.length() >= 3) {
             try {
                 new AsyncTaskRunner0().execute(word).get();
                 resFlag = new AsyncTaskRunner2().execute(word).get();
-                Log.e("searchWord", "resFlag = " + resFlag);
-                Log.e("searchWord", finalResult);
+//                Log.e("searchWord", "resFlag = " + resFlag);
+//                Log.e("searchWord", finalResult);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
             result1 = resultStr;
-            Log.e("searchWord RESULT STR", "afterTextChanged: RESULT STRING = " + result1);
+//            Log.e("searchWord RESULT STR", "afterTextChanged: RESULT STRING = " + result1);
         } else {
             List<String> list = Arrays.asList(resultStr.split("\n"));
             Set<String> uniqueWords = new HashSet<String>(list);
@@ -392,7 +402,7 @@ public class ScraggleGameActivity extends Activity {
                 System.out.println(word + ": " + Collections.frequency(list, s1));
                 finalResult = finalResult + s1 + "\n";
             }
-            Log.e("searchWord", finalResult);
+//            Log.e("searchWord", finalResult);
         }
         return resFlag;
     }
