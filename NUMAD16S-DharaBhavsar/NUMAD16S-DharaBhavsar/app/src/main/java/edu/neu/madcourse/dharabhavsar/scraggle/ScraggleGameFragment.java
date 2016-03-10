@@ -245,6 +245,8 @@ public class ScraggleGameFragment extends Fragment {
                         } else {
                             Log.e("initViews", "inside PhaseTwo code");
                             ((ScraggleGameActivity) getActivity()).startThinking();
+                            Log.e("initViews", "mLastLarge = " + mLastLarge);
+                            Log.e("initViews", "fLarge = " + fLarge);
                             if (mLastLarge != fLarge) {
                                 if (!smallTile.getIsBlank()) {
                                     Log.e("initViews", "inside is selected code");
@@ -257,6 +259,7 @@ public class ScraggleGameFragment extends Fragment {
                                     think();
                                 }
                             } else {
+                                ((ScraggleGameActivity) getActivity()).stopThinking();
                                 mSoundPool.play(mSoundMiss, mVolume, mVolume, 1, 0, 1f);
                             }
                             mLastLarge = fLarge;
@@ -289,6 +292,7 @@ public class ScraggleGameFragment extends Fragment {
                             }
                             v.vibrate(50);
                             calcGameScore();
+                            ((ScraggleGameActivity) getActivity()).setScore(gameScore);
                         } else {
                             Log.e("Long PRESS 2", String.valueOf(fLarge));
                             refreshBoard(mView);
@@ -334,10 +338,10 @@ public class ScraggleGameFragment extends Fragment {
                             }
                             isWord[mLastLarge] = isThereFlag;
                             calcGameScore();
+                            ((ScraggleGameActivity) getActivity()).setScore(gameScore);
                         }
                     }
 //                }
-                    ((ScraggleGameActivity) getActivity()).setScore(gameScore);
                     ((ScraggleGameActivity) getActivity()).stopThinking();
                 } else {
                     if (getActivity() == null) return;
@@ -357,10 +361,10 @@ public class ScraggleGameFragment extends Fragment {
                                 countWordFound++;
                                 refreshBoard(mView);
                                 calcGameScore2();
+                                ((ScraggleGameActivity) getActivity()).setScore2(gameScore);
                             }
                         }
                     }
-                    ((ScraggleGameActivity) getActivity()).setScore2(gameScore);
                     ((ScraggleGameActivity) getActivity()).stopThinking();
                 }
             }
@@ -648,6 +652,7 @@ public class ScraggleGameFragment extends Fragment {
                             mSmallTiles[large][small].setIsBlank(false);
                             wordCheck2 = "";
                             word2 = "";
+                            mLastLarge = -1;
                             innerText.setText(String.valueOf(mSmallTiles[large][small].getInnerText()));
                             innerText.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
                         } else {
