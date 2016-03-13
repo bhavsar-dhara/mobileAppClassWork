@@ -61,6 +61,7 @@ public class ScraggleGameActivity extends Activity {
     private boolean isPhaseTwo = false;
     private String gameData = "";
     private Context appContext = this;
+    private boolean isGameEnd = false;
 
     static final String STATE_SCORE = "playerScore";
     static final String STATE_LEVEL = "playerLevel";
@@ -84,8 +85,8 @@ public class ScraggleGameActivity extends Activity {
             isPhaseTwo = b.getBoolean("isTwoFlag");
             gameData = b.getString("gameData");
         }
-        Log.e("ScraggleActivity", "isPhaseTwo = " + isPhaseTwo);
-        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
+//        Log.e("ScraggleActivity", "isPhaseTwo = " + isPhaseTwo);
+//        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
 
 //         The below code didn't work for this activity
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -96,6 +97,8 @@ public class ScraggleGameActivity extends Activity {
         mControlFragment = (ControlFragmentScraggle) getFragmentManager()
                 .findFragmentById(R.id.fragment_control_scraggle);
         mTextField = (TextView) findViewById(R.id.timerView);
+        mScoreTextField = (TextView) findViewById(R.id.scoreView);
+
         restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {
             String gameData = getPreferences(MODE_PRIVATE)
@@ -107,32 +110,54 @@ public class ScraggleGameActivity extends Activity {
         }
         Log.e("Scraggle", "restore = " + restore);
 
-        mTextField = (TextView) findViewById(R.id.timerView);
-        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
-        if (isPhaseTwo) {
-            if (savedRemainingInterval < 2000) {
-                Log.e("PhaseTwo Timer", "interval");
-                counter = new MyCount(interval, 1000);
-            } else {
-                Log.e("PhaseTwo Timer", "savedRemainingInterval");
-                counter = new MyCount(savedRemainingInterval, 1000);
-            }
-        } else {
-            if (savedRemainingInterval > 0) {
-                Log.e("PhaseOne Timer", "savedRemainingInterval");
-                counter = new MyCount(savedRemainingInterval, 1000);
-            } else {
-                Log.e("PhaseOne Timer", "interval");
-                counter = new MyCount(interval, 1000);
-            }
-        }
-//        counter.start();
-        mScoreTextField = (TextView) findViewById(R.id.scoreView);
 //        mScoreTextField.setText("Score = " + String.valueOf(score));
         if (!isPhaseTwo) {
             mScoreTextField.setText("Score = " + String.valueOf(score));
         } else {
-            mScoreTextField.setText("Score2 = " + String.valueOf(score + score2));
+            mScoreTextField.setText("Score = " + String.valueOf(score + score2));
+        }
+
+//        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
+        if (isPhaseTwo) {
+            if (savedRemainingInterval < 2000) {
+                Log.e("PhaseTwo Timer", "interval and gameEndFlag = " + String.valueOf(isGameEnd) );
+//                TODO
+//                if(!isGameEnd) {
+                    counter = new MyCount(interval, 1000);
+                /*} else {
+                    Log.e("inGameEndFlag", "GameHasEnded");
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+                            builder.setTitle(R.string.no_saved_game_title);
+                            builder.setMessage(R.string.no_saved_game_text);
+                            builder.setCancelable(false);
+                            builder.setPositiveButton(R.string.ok_label,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            Intent home = new Intent(getApplicationContext(), MainActivityScraggle.class);
+                                            startActivity(home);
+                                            finish();
+                                        }
+                                    });
+                            mDialog = builder.show();
+                        }
+                    }, 4000);
+                }*/
+            } else {
+//                Log.e("PhaseTwo Timer", "savedRemainingInterval");
+                counter = new MyCount(savedRemainingInterval, 1000);
+            }
+        } else {
+            if (savedRemainingInterval > 0) {
+//                Log.e("PhaseOne Timer", "savedRemainingInterval");
+                counter = new MyCount(savedRemainingInterval, 1000);
+            } else {
+//                Log.e("PhaseOne Timer", "interval");
+                counter = new MyCount(interval, 1000);
+            }
         }
     }
 
@@ -174,7 +199,7 @@ public class ScraggleGameActivity extends Activity {
         if (!isPhaseTwo) {
             mScoreTextField.setText("Score = " + String.valueOf(score));
         } else {
-            mScoreTextField.setText("Score2 = " + String.valueOf(score + score2));
+            mScoreTextField.setText("Score = " + String.valueOf(score + score2));
         }
         View thinkView = findViewById(R.id.thinking_scraggle);
         thinkView.setVisibility(View.GONE);
@@ -197,12 +222,12 @@ public class ScraggleGameActivity extends Activity {
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
-        Log.e("onResume", "score = " + score);
-        Log.e("onResume", "score2 = " + score2);
+//        Log.e("onResume", "score = " + score);
+//        Log.e("onResume", "score2 = " + score2);
         if (!isPhaseTwo) {
             mScoreTextField.setText("Score = " + String.valueOf(score));
         } else {
-            mScoreTextField.setText("Score2 = " + String.valueOf(score + score2));
+            mScoreTextField.setText("Score = " + String.valueOf(score + score2));
         }
     }
 
@@ -218,11 +243,13 @@ public class ScraggleGameActivity extends Activity {
         if (isResumeFlag) {
             isResumeFlag = false;
         }
-        String gameData = mGameFragment.getState();
-        getPreferences(MODE_PRIVATE).edit()
-                .putString(PREF_RESTORE, gameData)
-                .commit();
-        Log.d("Scraggle", "state = " + gameData);
+//        if(!isGameEnd) {
+            String gameData = mGameFragment.getState();
+            getPreferences(MODE_PRIVATE).edit()
+                    .putString(PREF_RESTORE, gameData)
+                    .commit();
+            Log.d("Scraggle", "state = " + gameData);
+//        }
     }
 
     public void toogleMute() {
@@ -245,42 +272,62 @@ public class ScraggleGameActivity extends Activity {
         @Override
         public void onFinish() {
             if (!isPhaseTwo) {
-                Log.e("onFinish", "Done");
-                mTextField.setText("            DONE");
-//            TODO method to disable the whole grid and go to phase 2
-                mGameFragment.disableLetterGrid();
-                AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+                Log.e("onFinish p1", String.valueOf(mGameFragment.getWordCount1()));
+                if(mGameFragment.getWordCount1() > 1) {
+                    Log.e("onFinish", "Done");
+                    mTextField.setText("            DONE");
+                    mGameFragment.disableLetterGrid();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
 //                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
-                builder.setTitle(R.string.phase_change_title);
-                builder.setMessage(R.string.phase_change_text);
-                builder.setCancelable(false);
-                builder.setPositiveButton(R.string.ok_label,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // take to Phase 2
-                                isPhaseTwo = true;
-                                savedRemainingInterval = 0;
+                    builder.setTitle(R.string.phase_change_title);
+                    builder.setMessage(R.string.phase_change_text);
+                    builder.setCancelable(false);
+                    builder.setPositiveButton(R.string.ok_label,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // take to Phase 2
+                                    isPhaseTwo = true;
+                                    savedRemainingInterval = 0;
 //                                mGameFragment.setIsPhaseTwo(true);
 //                                startActivity(new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class));
-                                Intent intent = new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class);
-                                intent.putExtra("gameData", mGameFragment.getState());
-                                intent.putExtra("isTwoFlag", isPhaseTwo);
+                                    Intent intent = new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class);
+                                    intent.putExtra("gameData", mGameFragment.getState());
+                                    intent.putExtra("isTwoFlag", isPhaseTwo);
 //                                intent.putExtra("isTwoFlagFrag", isPhaseTwo);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                mDialog = builder.show();
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                    mDialog = builder.show();
+                } else {
+                    Log.e("onFinish", "Game Over Phase 1");
+                    mTextField.setText("            GAME OVER");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+                    builder.setTitle(R.string.game_end_title);
+                    builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score));
+                    builder.setCancelable(false);
+                    builder.setPositiveButton(R.string.ok_label,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            });
+                    mDialog = builder.show();
+                }
             } else {
                 Log.e("onFinish", "Game Over");
                 mTextField.setText("            GAME OVER");
                 mGameFragment.disableLetterGrid();
                 mControlFragment.getView().setVisibility(View.INVISIBLE);
+                gameData = null;
+//                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
                 AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
 //                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
                 builder.setTitle(R.string.game_end_title);
-                builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score+score2));
+                builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score + score2));
                 builder.setCancelable(false);
                 builder.setPositiveButton(R.string.ok_label,
                         new DialogInterface.OnClickListener() {
@@ -290,6 +337,8 @@ public class ScraggleGameActivity extends Activity {
                             }
                         });
                 mDialog = builder.show();
+                isGameEnd = true;
+//                Log.e("null game state 2", (gameData!=null?String.valueOf(gameData):"null"));
             }
         }
 
@@ -301,13 +350,13 @@ public class ScraggleGameActivity extends Activity {
             String stringTime = String.format("%02d:%02d", minutes, seconds);
             if (stringTime.equals("00:05") || stringTime.equals("00:04") || stringTime.equals("00:03") ||
                     stringTime.equals("00:02") || stringTime.equals("00:01")) {
-                Log.e("onTick", "in animation");
+//                Log.e("onTick", "in animation");
 //                mTextField.animator();
                 Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.gametimer);
                 mTextField.startAnimation(animation1);
                 mTextField.setText("            Time: " + stringTime);
             } else {
-                Log.e("onTick", "no");
+//                Log.e("onTick", "no");
                 mTextField.setText("            Time: " + stringTime);
             }
 //            mTextField.setText("Seconds Remaining: " + millisUntilFinished / 1000);
@@ -325,7 +374,7 @@ public class ScraggleGameActivity extends Activity {
 
     protected void onResumeGame() {
         Log.e("onResumeGame", "inside pause");
-//        counter = new MyCount(savedRemainingInterval, 1000);
+        counter = new MyCount(savedRemainingInterval, 1000);
         counter.start();
         mMediaPlayer.start();
         mGameFragment.enableLetterGrid();
@@ -385,7 +434,7 @@ public class ScraggleGameActivity extends Activity {
             String word = params[0];
             try {
                 try {
-                    Log.e("Inside AS0", "Inside AS0");
+//                    Log.e("Inside AS0", "Inside AS0");
                     InputStream in_s = null;
                     String fileName = String.valueOf(word.charAt(0));
                     int resID = getResources().getIdentifier(fileName, "raw", getPackageName());
@@ -397,7 +446,7 @@ public class ScraggleGameActivity extends Activity {
                     for (String s : strings) {
                         vocabList.add(s);
                     }
-                    Log.e("INSERT", "inserted");
+//                    Log.e("INSERT", "inserted");
                 } catch (IOException e) {
                     Log.e("ERROR", "not inserted");
                 }
@@ -416,7 +465,7 @@ public class ScraggleGameActivity extends Activity {
             String resp = "";
             boolean isThereInDict = false;
             try {
-                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
+//                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
                 for (String s : vocabList) {
                     if (insertedText.equals(s.trim())) {
                         resp = insertedText;
@@ -428,7 +477,7 @@ public class ScraggleGameActivity extends Activity {
             } catch (Exception e) {
                 Log.e("AsyncTaskRunner2", "Error encountered");
             }
-            Log.e("AsyncTaskRunner2", "result = " + resp);
+//            Log.e("AsyncTaskRunner2", "result = " + resp);
             return isThereInDict;
         }
     }
@@ -437,20 +486,20 @@ public class ScraggleGameActivity extends Activity {
     public Boolean searchWord(String str) {
         String result1 = "";
         String word = str;
-        Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length() + " word = " + word);
+//        Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length() + " word = " + word);
         if (word.length() >= 3) {
             try {
                 new AsyncTaskRunner0().execute(word).get();
                 resFlag = new AsyncTaskRunner2().execute(word).get();
-                Log.e("searchWord", "resFlag = " + resFlag);
-                Log.e("searchWord", finalResult);
+//                Log.e("searchWord", "resFlag = " + resFlag);
+//                Log.e("searchWord", finalResult);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
             result1 = resultStr;
-            Log.e("searchWord RESULT STR", "afterTextChanged: RESULT STRING = " + result1);
+//            Log.e("searchWord RESULT STR", "afterTextChanged: RESULT STRING = " + result1);
         } else {
             List<String> list = Arrays.asList(resultStr.split("\n"));
             Set<String> uniqueWords = new HashSet<String>(list);
@@ -459,7 +508,7 @@ public class ScraggleGameActivity extends Activity {
                 System.out.println(word + ": " + Collections.frequency(list, s1));
                 finalResult = finalResult + s1 + "\n";
             }
-            Log.e("searchWord", "finalResult = " + finalResult);
+//            Log.e("searchWord", "finalResult = " + finalResult);
         }
         return resFlag;
     }
@@ -511,5 +560,13 @@ public class ScraggleGameActivity extends Activity {
             anim.setTarget(mTextField);
             anim.start();
         }
+    }
+
+    public boolean isGameEnd() {
+        return this.isGameEnd;
+    }
+
+    public void setIsGameEnd(boolean isGameEndFlag) {
+        isGameEnd = isGameEndFlag;
     }
 }
