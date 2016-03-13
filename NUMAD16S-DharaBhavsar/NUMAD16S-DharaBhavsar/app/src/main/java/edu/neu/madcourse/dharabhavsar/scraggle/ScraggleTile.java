@@ -3,6 +3,8 @@ package edu.neu.madcourse.dharabhavsar.scraggle;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import edu.neu.madcourse.dharabhavsar.main.R;
@@ -46,6 +48,11 @@ public class ScraggleTile {
             anim.setTarget(getView());
             anim.start();
         }
+    }
+
+    public void animation1(View tile) {
+        Animation animation1 = AnimationUtils.loadAnimation(mGame.getActivity(), R.anim.gametimer);
+        tile.startAnimation(animation1);
     }
 
     public void updateDrawableState() {

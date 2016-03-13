@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class ScraggleGameFragment extends Fragment {
     }
 
     private void addNextMove(ScraggleTile tile) {
-        tile.animate();
+//        tile.animate();
         mNextMove.add(tile);
     }
 
@@ -321,7 +322,15 @@ public class ScraggleGameFragment extends Fragment {
 
                             if (isThereFlag) {
 //                            Custom Toast on Successfully finding a Word
-                                View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast, null);
+                                View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast,
+                                        (ViewGroup) getActivity().findViewById(R.id.toast_layout_root));
+
+                                TextView text = (TextView) customToastRoot.findViewById(R.id.textView1);
+                                String str = String.format(getResources().getString(R.string.custom_toast_text),
+                                        wordMadeList[mLastLarge]);
+                                Log.e("WordFound", str);
+                                text.setText(str);
+
                                 Toast customtoast = new Toast(getActivity().getApplicationContext());
                                 customtoast.setView(customToastRoot);
                                 customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
@@ -769,7 +778,7 @@ public class ScraggleGameFragment extends Fragment {
         if (i == mLastLarge) {
             word = word.concat(str);
 //            Log.e("wordAddTestTest out 1", word);
-            if (wordMadeList[i] != null && wordMadeList[i] != "") {
+            if (wordMadeList[i] != null && wordMadeList[i] != "" && !wordMadeList[i].equals("null")) {
                 if (word.length() == 1) {
                     word = wordMadeList[i].concat(word);
 //                    Log.e("wordAddTestTest out 3", word);
@@ -782,7 +791,7 @@ public class ScraggleGameFragment extends Fragment {
         } else {
             word = "".concat(str);
 //            Log.e("wordAddTestTest out 1", word);
-            if (wordMadeList[i] != null && wordMadeList[i] != "") {
+            if (wordMadeList[i] != null && wordMadeList[i] != "" && !wordMadeList[i].equals("null")) {
                 word = wordMadeList[i].concat(word);
                 wordMadeList[i] = word;
             } else {

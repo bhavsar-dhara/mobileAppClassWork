@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:layout_margin="5px"
     android:padding="10dp"
-    android:layout_gravity="center_horizontal">
+    android:layout_gravity="center_horizontal"
+    android:id="@+id/toast_layout_root">
 
     <LinearLayout android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +24,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:text="Word Found!!!"
             android:textColor="#000000"
             android:textSize="16dp"
             android:layout_gravity="center_vertical"/>
@@ -31,3 +31,5 @@
     </LinearLayout>
 
 </LinearLayout>
+
+    <!--android:text="Word Found!!!"-->

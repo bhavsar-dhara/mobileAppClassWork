@@ -71,14 +71,15 @@
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.dictionary.AcknowledgementMainActivity"
             android:label="@string/ack_app_screen" >
-            <meta-data
+            <meta-datamy
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.dictionary.AcknowledgementMainActivity" />
         </activity>
     </application>
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
 <!--<activity-->

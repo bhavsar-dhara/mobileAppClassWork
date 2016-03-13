@@ -51,25 +51,29 @@ both sides in the larger game.
 
     <string name="help_text">\
 This game is played just like
-regular Boggle and Scramble game. Except that it has two rounds.\n\
+regular Boggle and Scramble game. Except that it has two phases.\n\
 \n\
 In PHASE-1, you have to find 9 words from
-each of the 9 letters in 1.5 minute like a Boggle Game. Such that
-each next letter should be horizontal, vertical or diagonal
+each of the 9 letters from the 9 3x3 grids in 1.5 minute
+like a Boggle Game. Such that each next letter to the
+selected one should be horizontally, vertically or diagonally
 adjacent to the selected letter. \n\
-You CANNOT REUSE the letter in the first phase of the game.\n\
 \n\
-Similarly in PHASE-2, you have to make words
+Similarly in PHASE-2, you have to make as many words possible
 from the letters of the words which were made in the
-first round in another 1.5 minute. \n\
-Here also you CANNOT REUSE the letter but one not consecutively.\n\
+first round in another 1.5 minute.
+And you have to keep in mind that the consecutive letters cannot
+be from the same 3x3grid to form a word in this phase. \n\
 \n\
-Scoring is based on the words prepared. And weightage of each letters
-used to prepare that word.\n\
+You CANNOT REUSE the letters at all in the game to form words.\n\
+\n\
+Scoring is based on the weightage of letters used to prepare the
+correct words.\n\
 </string>
 
     <string name="ack_text">\
-Pictures: depositphotos\n\
+Pictures from website:\n\
+        depositphotos\n\
         dreamstime\n\
         lisamarieandjayscrabblepieces\n\
         swipe to\n\
@@ -88,6 +92,10 @@ Help from: Dharam and Deryl\n\
     <string name="phase_change_title">End of Phase-1</string>
     <string name="phase_change_text">Let us start the Phase-2 of the game.</string>
 
+    <string name="game_end_title">End of Game</string>
+    <string name="game_end_text">Score is : %1$d</string>
+
+    <string name="custom_toast_text">Word - %1$s - found!!!</string>
     <string name="pause_label">Pause</string>
     <string name="resume_label">Resume</string>
     <string name="quit_label">Quit</string>
