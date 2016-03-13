@@ -26,5 +26,6 @@
     android:interpolator="@android:anim/accelerate_interpolator"
     android:duration="600"
     android:repeatMode="reverse"
-    android:repeatCount="infinite"/>
+    android:repeatCount="infinite"
+    android:background="@color/red_color"/>
 </set>

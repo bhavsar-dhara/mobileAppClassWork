@@ -361,7 +361,15 @@ public class ScraggleGameFragment extends Fragment {
                             Log.e("think 2", "isThereFlag = " + isThereFlag);
                             if (isThereFlag) {
                                 wordsMadePhase2[countWordFound] = wordCheck2;
-                                View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast, null);
+                                View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast,
+                                        (ViewGroup) getActivity().findViewById(R.id.toast_layout_root));
+
+                                TextView text = (TextView) customToastRoot.findViewById(R.id.textView1);
+                                String str = String.format(getResources().getString(R.string.custom_toast_text),
+                                        wordCheck2);
+                                Log.e("WordFound", str);
+                                text.setText(str);
+
                                 Toast customtoast = new Toast(getActivity().getApplicationContext());
                                 customtoast.setView(customToastRoot);
                                 customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);

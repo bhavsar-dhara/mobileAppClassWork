@@ -15,6 +15,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -300,7 +302,9 @@ public class ScraggleGameActivity extends Activity {
             if (stringTime.equals("00:05") || stringTime.equals("00:04") || stringTime.equals("00:03") ||
                     stringTime.equals("00:02") || stringTime.equals("00:01")) {
                 Log.e("onTick", "in animation");
-                mTextField.animate();
+//                mTextField.animator();
+                Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.gametimer);
+                mTextField.startAnimation(animation1);
                 mTextField.setText("            Time: " + stringTime);
             } else {
                 Log.e("onTick", "no");
@@ -500,7 +504,7 @@ public class ScraggleGameActivity extends Activity {
         isPhaseTwo = isPhaseTwoFlag;
     }
 
-    private void animate() {
+    private void animator() {
         Animator anim = AnimatorInflater.loadAnimator(this,
                 R.animator.gametimer);
         if (mTextField != null) {
