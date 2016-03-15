@@ -30,6 +30,16 @@
             android:id="@+id/textView" />-->
 
         <Button
+            android:id="@+id/wordgame2player_button"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/menu_button_margin"
+            android:padding="@dimen/menu_button_padding"
+            android:text="@string/wordgame2_label"
+            android:textAllCaps="false" />
+
+        <Button
             android:id="@+id/wordgame_button"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
