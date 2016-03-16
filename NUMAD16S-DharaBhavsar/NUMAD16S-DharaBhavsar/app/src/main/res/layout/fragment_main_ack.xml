@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.neu.madcourse.dharabhavsar.dictionary.AcknowledgementMainActivity"
+    tools:context="edu.neu.madcourse.dharabhavsar.ui.dictionary.AcknowledgementMainActivity"
     android:showDividers="none" >
 
     <TextView

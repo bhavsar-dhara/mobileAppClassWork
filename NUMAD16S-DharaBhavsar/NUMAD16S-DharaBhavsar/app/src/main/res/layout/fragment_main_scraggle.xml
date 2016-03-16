@@ -5,7 +5,7 @@
     android:elevation="@dimen/elevation_high"
     android:orientation="vertical"
     android:padding="@dimen/menu_padding"
-    tools:context="edu.neu.madcourse.dharabhavsar.scraggle.MainActivityScraggle"
+    tools:context="edu.neu.madcourse.dharabhavsar.ui.scraggle.MainActivityScraggle"
     android:background="#326c90">
 
     <TextView

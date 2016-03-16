@@ -27,7 +27,7 @@
 
       <fragment
          android:id="@+id/fragment_game"
-         class="edu.neu.madcourse.dharabhavsar.ut3.GameFragment"
+         class="edu.neu.madcourse.dharabhavsar.ui.ut3.GameFragment"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          tools:layout="@layout/fragment_game"/>
@@ -35,7 +35,7 @@
 
       <fragment
          android:id="@+id/fragment_game_controls"
-         class="edu.neu.madcourse.dharabhavsar.ut3.ControlFragment"
+         class="edu.neu.madcourse.dharabhavsar.ui.ut3.ControlFragment"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          tools:layout="@layout/fragment_control"/>

@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.neu.madcourse.dharabhavsar.dictionary.MainActivityDict"
+    tools:context="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict"
     android:weightSum="1">
 
     //Custom Title Bar

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    tools:context="edu.neu.madcourse.dharabhavsar.about.MainActivityAbout"
+    tools:context="edu.neu.madcourse.dharabhavsar.ui.about.MainActivityAbout"
     android:orientation="vertical">
     <!--tools:context=".AboutActivity"-->
 
@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/fragment_main_about"
-        class="edu.neu.madcourse.dharabhavsar.about.MainFragmentAbout"
+        class="edu.neu.madcourse.dharabhavsar.ui.about.MainFragmentAbout"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

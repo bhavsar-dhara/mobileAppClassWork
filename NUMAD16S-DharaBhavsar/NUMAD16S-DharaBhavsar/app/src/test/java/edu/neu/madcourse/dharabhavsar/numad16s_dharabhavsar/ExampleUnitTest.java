@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.main;
+package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import org.junit.Test;
 

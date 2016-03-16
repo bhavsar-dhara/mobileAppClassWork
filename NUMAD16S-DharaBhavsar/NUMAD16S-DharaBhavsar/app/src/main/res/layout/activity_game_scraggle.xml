@@ -40,14 +40,14 @@
 
         <fragment
             android:id="@+id/fragment_game_scraggle"
-            class="edu.neu.madcourse.dharabhavsar.scraggle.ScraggleGameFragment"
+            class="edu.neu.madcourse.dharabhavsar.ui.scraggle.ScraggleGameFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_game_scraggle" />
 
         <fragment
             android:id="@+id/fragment_control_scraggle"
-            class="edu.neu.madcourse.dharabhavsar.scraggle.ControlFragmentScraggle"
+            class="edu.neu.madcourse.dharabhavsar.ui.scraggle.ControlFragmentScraggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_control_scraggle" />
