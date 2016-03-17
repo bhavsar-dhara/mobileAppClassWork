@@ -18,6 +18,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="edu.neu.madcourse.dharabhavsar.gcmcomm.CommunicationMain"
+            android:label="@string/app_name">
+        </activity>
+        <receiver
+            android:name="edu.neu.madcourse.dharabhavsar.gcmcomm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="edu.neu.madcourse.gcmdemo" />
+            </intent-filter>
+        </receiver>
+        <service android:name="edu.neu.madcourse.dharabhavsar.gcmcomm.GcmIntentService" />
+
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.communication.MainActivityScraggle2"
             android:label="@string/wordgame_label"
@@ -35,6 +51,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2" />
         </activity>
+
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict2"
             android:label="@string/dictActivityLabelWordGame">
@@ -42,6 +59,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict2" />
         </activity>
+
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.scraggle.MainActivityScraggle"
             android:label="@string/wordgame_label"
@@ -59,6 +77,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.ui.scraggle.MainActivityScraggle" />
         </activity>
+
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivityUt3"
             android:label="@string/ut3_app_name" >
@@ -69,6 +88,7 @@
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.ut3.GameActivity">
         </activity>
+
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.about.MainActivityAbout"
             android:label="@string/about_app_screen" >
@@ -76,6 +96,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.ui.about.MainActivityAbout" />
         </activity>
+
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict"
             android:label="@string/dictActivityLabel"
@@ -85,6 +106,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict" />
         </activity>
+
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.dictionary.AcknowledgementMainActivity"
             android:label="@string/ack_app_screen" >
@@ -92,11 +114,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.ui.dictionary.AcknowledgementMainActivity" />
         </activity>
+
     </application>
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+        android:name="edu.neu.madcourse.dharabhavsar.gcmcomm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="edu.neu.madcourse.gcmdemo.permission.C2D_MESSAGE" />
 
 </manifest>
 <!--<activity-->

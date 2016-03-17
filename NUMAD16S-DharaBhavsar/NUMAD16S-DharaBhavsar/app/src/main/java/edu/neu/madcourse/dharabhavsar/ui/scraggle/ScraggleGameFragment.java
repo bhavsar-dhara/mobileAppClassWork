@@ -62,6 +62,8 @@ public class ScraggleGameFragment extends Fragment {
     private String wordCheck2 = "";
     private int countWordFound = 0;
     private int gameScore2 = 0;
+//    added to handle and store neighbor tiles that can be selected next
+    private boolean[][] nextNeighbor = new boolean[9][9];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -497,12 +499,34 @@ public class ScraggleGameFragment extends Fragment {
             }
 //            }
         }
-
         // If there were none available, make all squares available
         if (mNextMove.isEmpty()) {
 //            Log.e("WordTEST", "Set All initially");
             setAllNextMoves();
         }
+
+
+//        to handle neighbor tiles in a better way
+        /*if (small != -1 && large != -1) {
+            List<Integer> intList = getNeighbors(small);
+            for (int i = 0; i < intList.size(); i++) {
+                int j = intList.get(i);
+                ScraggleTile neighborTile = mSmallTiles[large][j];
+                if (!neighborTile.getIsSelected()) {
+                    addNextMove(neighborTile);
+                    nextNeighbor[large][j] = true;
+                }
+            }
+            for (int j = 0; j < 9; j++) {
+                for (int k = 0; k < 9; k++) {
+                    if (j != large) {
+                        ScraggleTile neighborTile = mSmallTiles[j][k];
+                        addNextMove(neighborTile);
+
+                    }
+                }
+            }
+        }*/
     }
 
     private void setAllNextMoves() {

@@ -11,6 +11,8 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
 
+import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
+import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 
 /**
  * Created by derylrodrigues on 3/4/16.
@@ -30,7 +32,7 @@ public class RemoteClient {
     {
         this.mContext = mContext;
         Firebase.setAndroidContext(mContext);
-
+//        Firebase.getDefaultConfig().setLogLevel(Logger.Level.DEBUG);
     }
 
 
@@ -90,6 +92,68 @@ public class RemoteClient {
             public void onCancelled(FirebaseError firebaseError) {
                 Log.e(TAG, firebaseError.getMessage());
                 Log.e(TAG, firebaseError.getDetails());
+            }
+        });
+    }
+
+//    code to save and retrieve userData
+    public void saveUserData(UserData value) {
+        Firebase ref = new Firebase(FIREBASE_DB);
+        Firebase usersRef = ref.child("userData");
+        usersRef.push().setValue(value, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                if (firebaseError != null) {
+                    Log.d(TAG, "Data could not be saved. " + firebaseError.getMessage());
+                } else {
+                    Log.d(TAG, "Data saved successfully.");
+                }
+            }
+        });
+    }
+
+    public void fetchUserData(String key, final String userId) {
+        Log.d(TAG, "Get Value for Key - " + key);
+        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Query queryRef = ref.orderByKey();
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // snapshot contains the key and value
+                if (snapshot.getValue() != null) {
+                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    // Adding the data to the HashMap
+                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                        if(postSnapshot.getKey().equals(userId)) {
+                            UserData user = postSnapshot.getValue(UserData.class);
+                            System.out.println(user.getUserId() + " - " + user.getUserName()
+                                    + " - " + user.getUserLastScore() + " - " + user.getUserBestScore());
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Data Not Received");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(TAG, firebaseError.getMessage());
+                Log.e(TAG, firebaseError.getDetails());
+            }
+        });
+    }
+
+//    code to store gameData
+    public void saveGameData(GameData value) {
+        Firebase ref = new Firebase(FIREBASE_DB);
+        Firebase gameRef = ref.child("gameData");
+        gameRef.setValue(value, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                if (firebaseError != null) {
+                    Log.d(TAG, "Data could not be saved. " + firebaseError.getMessage());
+                } else {
+                    Log.d(TAG, "Data saved successfully.");
+                }
             }
         });
     }

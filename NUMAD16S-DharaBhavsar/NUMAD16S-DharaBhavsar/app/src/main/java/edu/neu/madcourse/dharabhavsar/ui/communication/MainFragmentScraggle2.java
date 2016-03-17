@@ -22,7 +22,7 @@ public class MainFragmentScraggle2 extends Fragment {
                 inflater.inflate(R.layout.fragment_main_scraggle2, container, false);
         // Handle buttons here...
         View newButton = rootView.findViewById(R.id.new_button);
-        View continueButton = rootView.findViewById(R.id.continue_button);
+//        View continueButton = rootView.findViewById(R.id.continue_button);
         View ackButton = rootView.findViewById(R.id.acknowledgementsBtn);
         View helpButton = rootView.findViewById(R.id.game_instructions_button);
 
@@ -33,19 +33,19 @@ public class MainFragmentScraggle2 extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
-        continueButton.setOnClickListener(new View.OnClickListener() {
+        /*continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ScraggleGameActivity2.class);
                 intent.putExtra(ScraggleGameActivity2.KEY_RESTORE, true);
                 getActivity().startActivity(intent);
             }
-        });
+        });*/
         ackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(R.string.ack_text);
+                builder.setMessage(R.string.ack_text_2);
                 builder.setCancelable(false);
                 builder.setPositiveButton(R.string.ok_label,
                         new DialogInterface.OnClickListener() {
@@ -61,7 +61,7 @@ public class MainFragmentScraggle2 extends Fragment {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(R.string.help_text);
+                builder.setMessage(R.string.help_text_2);
                 builder.setCancelable(false);
                 builder.setPositiveButton(R.string.ok_label,
                         new DialogInterface.OnClickListener() {
