@@ -116,8 +116,12 @@ Help from: Dharam and Deryl\n\
     <string name="send_label">Send</string>
     <string name="clear_label">Clear</string>
 
+    <string name="combine_play_label">Combine Play</string>
+    <string name="challenged_play_label">Challenged Play</string>
+
     <string name="first_time_user"> First-time User </string>
     <string name="whats_your_name"> Please enter your name. </string>
+    <string name="hint_name">Enter your name here...</string>
 
         <string name="help_text_2">
 This game is played just like
@@ -172,6 +176,8 @@ Code Snippets: \n\
         http://www.mkyong.com/android/android-prompt-user-input-dialog-example/\n\
         http://stackoverflow.com/questions/10361243/check-internet-connection-in-android-and-reload-the-activity-if-it-is-not-availa\n\
         http://stackoverflow.com/questions/21087423/dialog-is-not-displaying-textview-imageview\n\
+        http://developer.android.com/reference/android/app/TabActivity.html\n\
+        https://thepseudocoder.wordpress.com/2011/10/04/android-tabs-the-fragment-way/\n\
 \n\
 Sound: freesound.org\n\
 \n\

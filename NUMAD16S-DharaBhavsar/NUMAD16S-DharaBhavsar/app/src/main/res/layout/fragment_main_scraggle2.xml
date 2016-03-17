@@ -18,7 +18,7 @@
         android:textSize="@dimen/menu_text_size"
         android:textColor="@color/scraggle_title_textColor" />
 
-    <!-- <Button
+    <Button
         android:id="@+id/continue_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:textAllCaps="false"
         android:textColor="@color/scraggle_btn_textColor"
         android:background="@color/scraggle_btn_backgroundColor"
-        android:visibility="invisible" /> -->
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/new_button"
@@ -41,6 +41,31 @@
         android:textAllCaps="false"
         android:textColor="@color/scraggle_btn_textColor"
         android:background="@color/scraggle_btn_backgroundColor" />
+
+    <Button
+        android:id="@+id/combine_play_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/menu_button_margin"
+        android:padding="@dimen/menu_button_padding"
+        android:text="@string/combine_play_label"
+        android:textAllCaps="false"
+        android:textColor="@color/scraggle_btn_textColor"
+        android:background="@color/scraggle_btn_backgroundColor" />
+
+    <Button
+        android:id="@+id/challenged_play_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/menu_button_margin"
+        android:padding="@dimen/menu_button_padding"
+        android:text="@string/challenged_play_label"
+        android:textAllCaps="false"
+        android:textColor="@color/scraggle_btn_textColor"
+        android:background="@color/scraggle_btn_backgroundColor"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/game_instructions_button"

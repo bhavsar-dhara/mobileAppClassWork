@@ -12,5 +12,41 @@ public class GameData {
     private boolean isPhaseTwo;
     private int mLastLarge;
     private int mLastSmall;
+    private boolean isGameEnd;
 
+    public GameData() {
+    }
+
+    public GameData(int gameTime, int score1, int score2, boolean isPhaseTwo, int mLastLarge, int mLastSmall) {
+        this.gameTime = gameTime;
+        this.score1 = score1;
+        this.score2 = score2;
+        this.isPhaseTwo = isPhaseTwo;
+        this.mLastLarge = mLastLarge;
+        this.mLastSmall = mLastSmall;
+    }
+
+    public int getGameTime() {
+        return gameTime;
+    }
+
+    public int getScore1() {
+        return score1;
+    }
+
+    public int getScore2() {
+        return score2;
+    }
+
+    public boolean isPhaseTwo() {
+        return isPhaseTwo;
+    }
+
+    public int getmLastLarge() {
+        return mLastLarge;
+    }
+
+    public int getmLastSmall() {
+        return mLastSmall;
+    }
 }

@@ -25,6 +25,7 @@ public class MainFragmentScraggle2 extends Fragment {
 //        View continueButton = rootView.findViewById(R.id.continue_button);
         View ackButton = rootView.findViewById(R.id.acknowledgementsBtn);
         View helpButton = rootView.findViewById(R.id.game_instructions_button);
+        View scoreButton = rootView.findViewById(R.id.score_board_button);
 
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +72,13 @@ public class MainFragmentScraggle2 extends Fragment {
                             }
                         });
                 mDialog = builder.show();
+            }
+        });
+        scoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), TabFragmentActivity.class);
+                getActivity().startActivity(intent);
             }
         });
         return rootView;

@@ -20,6 +20,16 @@
         </activity>
 
         <activity
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication.TabFragmentActivity">
+        </activity>
+        <!--<activity
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication.Tab1Fragment">
+        </activity>
+        <activity
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication.Tab2Fragment">
+        </activity>-->
+
+        <activity
             android:name="edu.neu.madcourse.dharabhavsar.gcmcomm.CommunicationMain"
             android:label="@string/app_name">
         </activity>

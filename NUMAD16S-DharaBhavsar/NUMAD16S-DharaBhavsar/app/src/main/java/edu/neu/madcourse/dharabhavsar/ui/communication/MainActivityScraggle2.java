@@ -8,10 +8,11 @@ import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import edu.neu.madcourse.dharabhavsar.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.gcmcomm.CommunicationMain;
@@ -28,6 +29,7 @@ public class MainActivityScraggle2 extends Activity {
     String regId;
     private Handler mHandler = new Handler();
     private AlertDialog mDialog;
+    private static final int TEXT_ID = 0;
     // ...
 
     @Override
@@ -88,7 +90,15 @@ public class MainActivityScraggle2 extends Activity {
         builder.setMessage(getResources().getString(R.string.whats_your_name));
 
         final EditText newName = new EditText(context);
-        newName.setHint("Enter your name here...");
+        newName.setId(TEXT_ID);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        newName.setLayoutParams(lp);
+        newName.setHint(getResources().getString(R.string.hint_name));
+        newName.setInputType(InputType.TYPE_CLASS_TEXT);
+        newName.setText("");
+        builder.setView(newName);
 
         builder.setCancelable(false);
         builder.setPositiveButton(R.string.ok_label,
@@ -107,16 +117,18 @@ public class MainActivityScraggle2 extends Activity {
                         }
                     }
                 });
-        newName.setFocusable(true);
+//        newName.setFocusable(true);
 //        requestfocus();
-        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(newName.getWindowToken(), 0);
+//        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        mgr.hideSoftInputFromWindow(newName.getWindowToken(), 0);
         Log.e(LOG_TAG, "exiting startGameDialog");
-        builder.setView(newName);
+
         /*mDialog.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         mDialog.getWindow().clearFlags(
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);*/
-        mDialog = builder.show();
+//        mDialog = builder.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
