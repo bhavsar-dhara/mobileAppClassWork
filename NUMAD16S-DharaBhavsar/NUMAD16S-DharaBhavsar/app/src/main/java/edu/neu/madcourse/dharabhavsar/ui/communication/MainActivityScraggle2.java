@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -42,21 +44,25 @@ public class MainActivityScraggle2 extends Activity {
 
         Log.e(LOG_TAG, "in onCreate");
 
-        regId = mCommObj.getRegistrationId(context);
-        if (!regId.isEmpty()) {
+        if(isNetworkAvailable(context)) {
+            regId = mCommObj.getRegistrationId(context);
+            if (!regId.isEmpty()) {
 //            retrieve the userData
-            Log.e(LOG_TAG, "an existing user" + regId);
-            mRemoteClient.fetchUserData("userData", regId);
-        }
-        else {
+                Log.e(LOG_TAG, "an existing user" + regId);
+                mRemoteClient.fetchUserData("userData", regId);
+            } else {
 //            get and store the userData
-            Log.e(LOG_TAG, "not an existing user");
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startGameDialog();
-                }
-            }, 2000);
+                Log.e(LOG_TAG, "not an existing user");
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startGameDialog();
+                    }
+                }, 2000);
+            }
+        } else {
+            Log.e(LOG_TAG, "No Internet Connection");
+            startReconnectNetDialog();
         }
 
         Log.e(LOG_TAG, "exiting onCreate");
@@ -82,9 +88,28 @@ public class MainActivityScraggle2 extends Activity {
             mDialog.dismiss();
     }
 
+    protected void onResumeActivity() {
+        regId = mCommObj.getRegistrationId(context);
+        if (!regId.isEmpty()) {
+//            retrieve the userData
+            Log.e(LOG_TAG, "an existing user" + regId);
+            mRemoteClient.fetchUserData("userData", regId);
+        } else {
+//            get and store the userData
+            Log.e(LOG_TAG, "not an existing user");
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startGameDialog();
+                }
+            }, 2000);
+        }
+    }
+
     public void startGameDialog(){
         Log.e(LOG_TAG, "in startGameDialog");
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle2.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle2.this,
+                AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 
         builder.setTitle(getResources().getString(R.string.first_time_user));
         builder.setMessage(getResources().getString(R.string.whats_your_name));
@@ -98,6 +123,7 @@ public class MainActivityScraggle2 extends Activity {
         newName.setHint(getResources().getString(R.string.hint_name));
         newName.setInputType(InputType.TYPE_CLASS_TEXT);
         newName.setText("");
+        newName.setTextColor(getResources().getColor(R.color.blue_color));
         builder.setView(newName);
 
         builder.setCancelable(false);
@@ -117,18 +143,57 @@ public class MainActivityScraggle2 extends Activity {
                         }
                     }
                 });
-//        newName.setFocusable(true);
-//        requestfocus();
-//        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//        mgr.hideSoftInputFromWindow(newName.getWindowToken(), 0);
         Log.e(LOG_TAG, "exiting startGameDialog");
 
-        /*mDialog.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        mDialog.getWindow().clearFlags(
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);*/
-//        mDialog = builder.show();
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        mDialog = builder.show();
+    }
+
+    private static boolean isNetworkAvailable(Context context)
+    {
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity == null)
+        {
+            return false;
+        } else
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+            {
+                for (int i = 0; i < info.length; i++)
+                {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void startReconnectNetDialog(){
+        Log.e(LOG_TAG, "in startReconnectNetDialog");
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle2.this,
+                AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+
+        builder.setTitle(getResources().getString(R.string.net_lost_title));
+        builder.setMessage(getResources().getString(R.string.net_lost_text));
+
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.reconnect_label,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(isNetworkAvailable(context)) {
+//                            TODO not a correct way to implement it - change it
+                            onResumeActivity();
+                        } else {
+                            startReconnectNetDialog();
+                        }
+                    }
+                });
+        Log.e(LOG_TAG, "exiting startReconnectNetDialog");
+
+        mDialog = builder.show();
     }
 }

@@ -173,7 +173,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
 //                mDisplay.append(msg + "\n");
                 mRemoteClient = new RemoteClient(context1);
                 Log.e(TAG, "User GCM Id is : " + regid);
-                mUserData = new UserData(regid, userName, 0, 0);
+                mUserData = new UserData(regid, userName, 0, 0, "", false, "", false);
                 mRemoteClient.saveUserData(mUserData);
             }
         }.execute(null, null, null);

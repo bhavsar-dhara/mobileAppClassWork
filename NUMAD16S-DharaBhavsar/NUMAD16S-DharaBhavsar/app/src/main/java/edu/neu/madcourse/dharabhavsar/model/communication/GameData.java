@@ -17,13 +17,15 @@ public class GameData {
     public GameData() {
     }
 
-    public GameData(int gameTime, int score1, int score2, boolean isPhaseTwo, int mLastLarge, int mLastSmall) {
+    public GameData(int gameTime, int score1, int score2, boolean isPhaseTwo, int mLastLarge,
+                    int mLastSmall, boolean isGameEnd) {
         this.gameTime = gameTime;
         this.score1 = score1;
         this.score2 = score2;
         this.isPhaseTwo = isPhaseTwo;
         this.mLastLarge = mLastLarge;
         this.mLastSmall = mLastSmall;
+        this.isGameEnd = isGameEnd;
     }
 
     public int getGameTime() {
@@ -48,5 +50,9 @@ public class GameData {
 
     public int getmLastSmall() {
         return mLastSmall;
+    }
+
+    public boolean isGameEnd() {
+        return isGameEnd;
     }
 }

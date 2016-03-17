@@ -185,4 +185,9 @@ Help from: Dharam and Deryl\n\
 \n\
 </string>
 
+    <string name="net_lost_title"> Internet Connection Lost </string>
+    <string name="net_lost_text"> There is no internet connection. The game requires one. </string>
+
+    <string name="reconnect_label"> Try Reconnecting </string>
+
 </resources>

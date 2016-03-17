@@ -74,20 +74,14 @@ public class RemoteClient {
                 if(snapshot.getValue() != null)
                 {
                     Log.d(TAG, "Data Received" + snapshot.getValue().toString());
-
                     // Adding the data to the HashMap
                     fireBaseData.put(snapshot.getKey(), snapshot.getValue().toString());
-
                 }
                 else {
                     Log.d(TAG, "Data Not Received");
                     fireBaseData.put(snapshot.getKey(), null);
-
                 }
-
-
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Log.e(TAG, firebaseError.getMessage());
@@ -127,7 +121,7 @@ public class RemoteClient {
                         if(postSnapshot.getKey().equals(userId)) {
                             UserData user = postSnapshot.getValue(UserData.class);
                             System.out.println(user.getUserId() + " - " + user.getUserName()
-                                    + " - " + user.getUserLastScore() + " - " + user.getUserBestScore());
+                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
                         }
                     }
                 } else {
