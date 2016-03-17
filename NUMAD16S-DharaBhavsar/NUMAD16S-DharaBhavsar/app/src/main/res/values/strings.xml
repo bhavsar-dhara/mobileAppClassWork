@@ -119,7 +119,7 @@ Help from: Dharam and Deryl\n\
     <string name="first_time_user"> First-time User </string>
     <string name="whats_your_name"> Please enter your name. </string>
 
-        <string name="help_text_2">\
+        <string name="help_text_2">
 This game is played just like
 regular Boggle and Scramble game. Except that it has two phases
 and will be played between two random players.\n\
@@ -142,7 +142,7 @@ SCORING is based on the weightage of letters used to prepare the
 correct words.\n\
 \n\
 If you have selected NEW GAME then an async Combative Game will be
-started and on it's successful completion of both the phases will be
+started and on its successful completion of both the phases will be
 sent to another player selected randomly to play against you on the
 same board.\n\
 \n\
