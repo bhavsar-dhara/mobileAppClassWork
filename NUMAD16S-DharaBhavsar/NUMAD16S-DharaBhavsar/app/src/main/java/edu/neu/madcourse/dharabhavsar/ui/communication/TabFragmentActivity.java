@@ -1,17 +1,15 @@
 package edu.neu.madcourse.dharabhavsar.ui.communication;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.widget.TabHost;
+import android.support.v7.app.AppCompatActivity;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 /**
  * Created by Dhara on 3/17/2016.
  */
-public class TabFragmentActivity extends FragmentActivity {
+public class TabFragmentActivity extends AppCompatActivity {
     private FragmentTabHost mTabHost;
 
     @Override
@@ -19,6 +17,8 @@ public class TabFragmentActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.score_board_tab_scraggle2);
+        this.setTitle("Score Board");
+
         mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 

@@ -23,6 +23,7 @@ public class GcmIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		Log.e("IN INTENT", "in sending notification from intent");
 		String alertText = CommunicationConstants.alertText;
 		String titleText = CommunicationConstants.titleText;
 		String contentText = CommunicationConstants.contentText;
@@ -54,7 +55,7 @@ public class GcmIntentService extends IntentService {
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				this)
-				.setSmallIcon(R.drawable.ic_stat_cloud)
+				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(titleText)
 				.setStyle(
 						new NotificationCompat.BigTextStyle()

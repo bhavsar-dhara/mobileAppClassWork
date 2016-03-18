@@ -6,53 +6,78 @@ package edu.neu.madcourse.dharabhavsar.model.communication;
  * POJO class to store and retrieve data from Firebase
  */
 public class GameData {
-    private int gameTime;
-    private int score1;
-    private int score2;
-    private boolean isPhaseTwo;
-    private int mLastLarge;
-    private int mLastSmall;
-    private boolean isGameEnd;
+    private int scoreCombinePlay;
+    private int score1P1;
+    private int score2P1;
+    private int score1P2;
+    private int score2P2;
+    private String player1ID;
+    private String player2ID;
+    private char[][] gameLetterState;
+    private boolean isFirstCombatPlay;
+    private boolean isSecondCombatPlay;
+    private boolean isCombinePlay;
 
     public GameData() {
     }
 
-    public GameData(int gameTime, int score1, int score2, boolean isPhaseTwo, int mLastLarge,
-                    int mLastSmall, boolean isGameEnd) {
-        this.gameTime = gameTime;
-        this.score1 = score1;
-        this.score2 = score2;
-        this.isPhaseTwo = isPhaseTwo;
-        this.mLastLarge = mLastLarge;
-        this.mLastSmall = mLastSmall;
-        this.isGameEnd = isGameEnd;
+    public GameData(int scoreCombinePlay, int score1P1, int score2P1, int score1P2, int score2P2,
+                    String player1ID, String player2ID, char[][] gameLetterState,
+                    boolean isFirstCombatPlay, boolean isSecondCombatPlay, boolean isCombinePlay) {
+        this.scoreCombinePlay = scoreCombinePlay;
+        this.score1P1 = score1P1;
+        this.score2P1 = score2P1;
+        this.score1P2 = score1P2;
+        this.score2P2 = score2P2;
+        this.player1ID = player1ID;
+        this.player2ID = player2ID;
+        this.gameLetterState = gameLetterState;
+        this.isFirstCombatPlay = isFirstCombatPlay;
+        this.isSecondCombatPlay = isSecondCombatPlay;
+        this.isCombinePlay = isCombinePlay;
     }
 
-    public int getGameTime() {
-        return gameTime;
+    public int getScoreCombinePlay() {
+        return scoreCombinePlay;
     }
 
-    public int getScore1() {
-        return score1;
+    public int getScore1P1() {
+        return score1P1;
     }
 
-    public int getScore2() {
-        return score2;
+    public int getScore2P1() {
+        return score2P1;
     }
 
-    public boolean isPhaseTwo() {
-        return isPhaseTwo;
+    public int getScore1P2() {
+        return score1P2;
     }
 
-    public int getmLastLarge() {
-        return mLastLarge;
+    public int getScore2P2() {
+        return score2P2;
     }
 
-    public int getmLastSmall() {
-        return mLastSmall;
+    public String getPlayer1ID() {
+        return player1ID;
     }
 
-    public boolean isGameEnd() {
-        return isGameEnd;
+    public String getPlayer2ID() {
+        return player2ID;
+    }
+
+    public char[][] getGameLetterState() {
+        return gameLetterState;
+    }
+
+    public boolean isFirstCombatPlay() {
+        return isFirstCombatPlay;
+    }
+
+    public boolean isSecondCombatPlay() {
+        return isSecondCombatPlay;
+    }
+
+    public boolean isCombinePlay() {
+        return isCombinePlay;
     }
 }

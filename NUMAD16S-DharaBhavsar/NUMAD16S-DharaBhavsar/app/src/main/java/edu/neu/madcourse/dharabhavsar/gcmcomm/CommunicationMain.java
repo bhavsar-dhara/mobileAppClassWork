@@ -115,7 +115,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
         CommunicationConstants.contentText = msg;
     }
 
-	private void registerInBackground() {
+	/*private void registerInBackground() {
 		new AsyncTask<Void, Void, String>() {
 			@Override
 			protected String doInBackground(Void... params) {
@@ -145,7 +145,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
 
     private void sendRegistrationIdToBackend() {
         // Your implementation here.
-    }
+    }*/
 
     private void registerInBackground(final Context context1, final String userName) {
         new AsyncTask<Void, Void, String>() {
@@ -228,7 +228,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
 			if (checkPlayServices()) {
 				regid = getRegistrationId(context);
 				if (TextUtils.isEmpty(regid)) {
-					registerInBackground();
+//					registerInBackground();
 				}
 			}
 		}
@@ -290,7 +290,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
 				String msg = "";
 				List<String> regIds = new ArrayList<String>();
 				String reg_device = regid;
-				int nIcon = R.drawable.ic_stat_cloud;
+				int nIcon = R.drawable.ic_launcher;
 				int nType = CommunicationConstants.SIMPLE_NOTIFICATION;
 				Map<String, String> msgParams;
 				msgParams = new HashMap<String, String>();

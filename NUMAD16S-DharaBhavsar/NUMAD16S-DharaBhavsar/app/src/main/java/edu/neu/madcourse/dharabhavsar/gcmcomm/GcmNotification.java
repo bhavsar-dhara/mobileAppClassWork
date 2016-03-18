@@ -27,6 +27,7 @@ public class GcmNotification {
 
 	public void sendNotification(final Map<String, String> msgParams,
 			final List<String> regIds, final Context context) {
+		Log.e("SENDNOTIFICATION", "in sending notification");
 
 		sendNotificationTask = new AsyncTask<Void, Void, Void>() {
 
