@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.ui.scraggle;
+package edu.neu.madcourse.dharabhavsar.ui.communication;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -33,13 +32,13 @@ import java.util.concurrent.ExecutionException;
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.TrieLookup;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
-public class ScraggleGameActivity extends Activity {
+public class ScraggleGameActivity2Combine extends Activity {
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
     private MediaPlayer mMediaPlayer;
     private Handler mHandler = new Handler();
-    private ScraggleGameFragment mGameFragment;
-    private ControlFragmentScraggle mControlFragment;
+    private ScraggleGameFragment2Combine mGameFragment;
+    private ControlFragmentScraggle2 mControlFragment;
     List<String> nineWords = new ArrayList<>();
     TextView mTextField;
     private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
@@ -91,10 +90,10 @@ public class ScraggleGameActivity extends Activity {
 //         The below code didn't work for this activity
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
-        setContentView(R.layout.activity_game_scraggle);
-        mGameFragment = (ScraggleGameFragment) getFragmentManager()
+        setContentView(R.layout.activity_game_scraggle2combine);
+        mGameFragment = (ScraggleGameFragment2Combine) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
-        mControlFragment = (ControlFragmentScraggle) getFragmentManager()
+        mControlFragment = (ControlFragmentScraggle2) getFragmentManager()
                 .findFragmentById(R.id.fragment_control_scraggle);
         mTextField = (TextView) findViewById(R.id.timerView);
         mScoreTextField = (TextView) findViewById(R.id.scoreView);
@@ -249,6 +248,9 @@ public class ScraggleGameActivity extends Activity {
                     .commit();
             Log.d("Scraggle", "state = " + gameData);
 //        }
+        // Get rid of the about dialog if it's still up
+        if (mDialog != null)
+            mDialog.dismiss();
     }
 
     public void toogleMute() {
@@ -270,36 +272,8 @@ public class ScraggleGameActivity extends Activity {
 
         @Override
         public void onFinish() {
-            if (!isPhaseTwo) {
                 Log.e("onFinish p1", String.valueOf(mGameFragment.getWordCount1()));
                 if(mGameFragment.getWordCount1() > 1) {
-                    Log.e("onFinish", "Done");
-                    mTextField.setText("            DONE");
-                    mGameFragment.disableLetterGrid();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
-                    builder.setTitle(R.string.phase_change_title);
-                    builder.setMessage(R.string.phase_change_text);
-                    builder.setCancelable(false);
-                    builder.setPositiveButton(R.string.ok_label,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    // take to Phase 2
-                                    isPhaseTwo = true;
-                                    savedRemainingInterval = 0;
-//                                mGameFragment.setIsPhaseTwo(true);
-//                                startActivity(new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class));
-                                    Intent intent = new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class);
-                                    intent.putExtra("gameData", mGameFragment.getState());
-                                    intent.putExtra("isTwoFlag", isPhaseTwo);
-//                                intent.putExtra("isTwoFlagFrag", isPhaseTwo);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
-                    mDialog = builder.show();
-                } else {
                     Log.e("onFinish", "Game Over Phase 1");
                     mTextField.setText("            GAME OVER");
                     AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
@@ -316,29 +290,6 @@ public class ScraggleGameActivity extends Activity {
                             });
                     mDialog = builder.show();
                 }
-            } else {
-                Log.e("onFinish", "Game Over");
-                mTextField.setText("            GAME OVER");
-                mGameFragment.disableLetterGrid();
-                mControlFragment.getView().setVisibility(View.INVISIBLE);
-                gameData = null;
-//                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
-                AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
-                builder.setTitle(R.string.game_end_title);
-                builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score + score2));
-                builder.setCancelable(false);
-                builder.setPositiveButton(R.string.ok_label,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                            }
-                        });
-                mDialog = builder.show();
-                isGameEnd = true;
-//                Log.e("null game state 2", (gameData!=null?String.valueOf(gameData):"null"));
-            }
         }
 
         @Override

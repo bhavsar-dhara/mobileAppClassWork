@@ -3,8 +3,6 @@ package edu.neu.madcourse.dharabhavsar.ui.communication;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
@@ -12,6 +10,7 @@ import edu.neu.madcourse.dharabhavsar.ui.main.R;
 public class ScraggleTile2 {
 
     private ScraggleGameFragment2 mGame;
+    private ScraggleGameFragment2Combine mGameCombine;
     private View mView;
     private ScraggleTile2 mSubTiles[];
     private Boolean isSelected; // for both the phases
@@ -23,6 +22,13 @@ public class ScraggleTile2 {
         this.isSelected = false; // none of the tiles are selected initially
         this.isBlank = false; // none of the tiles are blank initially - required to drop
                               // unselected letters for phase 2
+    }
+
+    public ScraggleTile2(ScraggleGameFragment2Combine game) {
+        this.mGameCombine = game;
+        this.isSelected = false; // none of the tiles are selected initially
+        this.isBlank = false; // none of the tiles are blank initially - required to drop
+        // unselected letters for phase 2
     }
 
     public View getView() {
@@ -50,9 +56,13 @@ public class ScraggleTile2 {
         }
     }
 
-    public void animation1(View tile) {
-        Animation animation1 = AnimationUtils.loadAnimation(mGame.getActivity(), R.anim.gametimer);
-        tile.startAnimation(animation1);
+    public void animateCombine() {
+        Animator anim = AnimatorInflater.loadAnimator(mGameCombine.getActivity(),
+                R.animator.tictactoe);
+        if (getView() != null) {
+            anim.setTarget(getView());
+            anim.start();
+        }
     }
 
     public void updateDrawableState() {

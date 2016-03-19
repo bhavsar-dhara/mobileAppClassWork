@@ -121,7 +121,6 @@ public class ScraggleGameActivity2 extends Activity {
         if (isPhaseTwo) {
             if (savedRemainingInterval < 2000) {
                 Log.e("PhaseTwo Timer", "interval and gameEndFlag = " + String.valueOf(isGameEnd) );
-//                TODO
 //                if(!isGameEnd) {
                     counter = new MyCount(interval, 1000);
                 /*} else {

@@ -26,11 +26,19 @@ public class MainFragmentScraggle2 extends Fragment {
         View ackButton = rootView.findViewById(R.id.acknowledgementsBtn);
         View helpButton = rootView.findViewById(R.id.game_instructions_button);
         View scoreButton = rootView.findViewById(R.id.score_board_button);
+        View combineButton = rootView.findViewById(R.id.combine_play_button);
 
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ScraggleGameActivity2.class);
+                getActivity().startActivity(intent);
+            }
+        });
+        combineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ScraggleGameActivity2Combine.class);
                 getActivity().startActivity(intent);
             }
         });
