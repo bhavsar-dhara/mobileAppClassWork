@@ -117,10 +117,10 @@ public class RemoteClient {
                 if (snapshot.getValue() != null) {
                     Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
                     // Adding the data to the HashMap
-                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                        if(postSnapshot.getKey().equals(userId)) {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (postSnapshot.getKey().equals(userId)) {
                             UserData user = postSnapshot.getValue(UserData.class);
-                            System.out.println(user.getUserId() + " - " + user.getUserName()
+                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
                                     + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
                         }
                     }
@@ -128,6 +128,7 @@ public class RemoteClient {
                     Log.d(TAG, "Data Not Received");
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Log.e(TAG, firebaseError.getMessage());
@@ -140,7 +141,7 @@ public class RemoteClient {
     public void saveGameData(GameData value) {
         Firebase ref = new Firebase(FIREBASE_DB);
         Firebase gameRef = ref.child("gameData");
-        gameRef.setValue(value, new Firebase.CompletionListener() {
+        gameRef.push().setValue(value, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
@@ -148,6 +149,37 @@ public class RemoteClient {
                 } else {
                     Log.d(TAG, "Data saved successfully.");
                 }
+            }
+        });
+    }
+
+    public void fetchGameData(String key, final String userId) {
+        Log.d(TAG, "Get Value for Key - " + key);
+        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Query queryRef = ref.orderByKey();
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // snapshot contains the key and value
+                if (snapshot.getValue() != null) {
+                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    // Adding the data to the HashMap
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (postSnapshot.getKey().equals(userId)) {
+                            UserData user = postSnapshot.getValue(UserData.class);
+                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
+                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Data Not Received");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(TAG, firebaseError.getMessage());
+                Log.e(TAG, firebaseError.getDetails());
             }
         });
     }

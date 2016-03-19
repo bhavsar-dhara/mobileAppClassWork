@@ -326,6 +326,7 @@ public class ScraggleGameActivity2 extends Activity {
                 mGameFragment.disableLetterGrid();
                 mControlFragment.getView().setVisibility(View.INVISIBLE);
                 gameData = null;
+//                TODO assign a random opponent to this player and save gameData in the gameData model class
 //                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
                 AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
 //                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);

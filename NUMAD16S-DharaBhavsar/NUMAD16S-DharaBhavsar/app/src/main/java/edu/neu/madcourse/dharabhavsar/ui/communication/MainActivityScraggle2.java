@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -88,24 +89,6 @@ public class MainActivityScraggle2 extends Activity {
             mDialog.dismiss();
     }
 
-    protected void onResumeActivity() {
-        regId = mCommObj.getRegistrationId(context);
-        if (!regId.isEmpty()) {
-//            retrieve the userData
-            Log.e(LOG_TAG, "an existing user" + regId);
-            mRemoteClient.fetchUserData("userData", regId);
-        } else {
-//            get and store the userData
-            Log.e(LOG_TAG, "not an existing user");
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startGameDialog();
-                }
-            }, 2000);
-        }
-    }
-
     public void startGameDialog(){
         Log.e(LOG_TAG, "in startGameDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle2.this,
@@ -185,8 +168,10 @@ public class MainActivityScraggle2 extends Activity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(isNetworkAvailable(context)) {
-//                            TODO not a correct way to implement it - change it
-                            onResumeActivity();
+//                            TODO changed it - testing left
+                            Intent intent = new Intent(MainActivityScraggle2.this, MainActivityScraggle2.class);
+                            startActivity(intent);
+                            finish();
                         } else {
                             startReconnectNetDialog();
                         }
