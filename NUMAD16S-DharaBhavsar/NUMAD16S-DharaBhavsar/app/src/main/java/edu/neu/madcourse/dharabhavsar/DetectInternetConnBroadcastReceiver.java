@@ -12,7 +12,7 @@ public class DetectInternetConnBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e("DetectInternetConnBroadcastReceiver", "in onReceive");
+        Log.e("dicBroadcastReceiver", "in onReceive");
         DetectInternetConn dic = new DetectInternetConn(context);
         dic.isNetworkAvailable();
         /*if(intent.getExtras()!=null) {
