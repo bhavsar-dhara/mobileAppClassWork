@@ -47,6 +47,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.neu.madcourse.dharabhavsar.ui.communication.MainActivityScraggle2" />
         </activity>
+        <receiver android:name="edu.neu.madcourse.dharabhavsar.DetectInternetConnBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2"
             android:screenOrientation="portrait"

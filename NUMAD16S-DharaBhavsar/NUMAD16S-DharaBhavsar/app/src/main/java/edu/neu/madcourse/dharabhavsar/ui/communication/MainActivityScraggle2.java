@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -17,6 +15,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import edu.neu.madcourse.dharabhavsar.DetectInternetConn;
 import edu.neu.madcourse.dharabhavsar.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.gcmcomm.CommunicationMain;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
@@ -33,6 +32,8 @@ public class MainActivityScraggle2 extends Activity {
     private Handler mHandler = new Handler();
     private AlertDialog mDialog;
     private static final int TEXT_ID = 0;
+    DetectInternetConn dic;
+    private static final boolean DBG = true;
     // ...
 
     @Override
@@ -42,18 +43,22 @@ public class MainActivityScraggle2 extends Activity {
         setContentView(R.layout.activity_main_scraggle2);
         context = getApplicationContext();
         mRemoteClient = new RemoteClient(context);
+        dic = new DetectInternetConn(getApplicationContext());
 
-        Log.e(LOG_TAG, "in onCreate");
+        if(DBG)
+            Log.e(LOG_TAG, "in onCreate");
 
-        if(isNetworkAvailable(context)) {
+        if(dic.isNetworkAvailable()) {
             regId = mCommObj.getRegistrationId(context);
             if (!regId.isEmpty()) {
 //            retrieve the userData
-                Log.e(LOG_TAG, "an existing user" + regId);
+                if(DBG)
+                    Log.e(LOG_TAG, "an existing user" + regId);
                 mRemoteClient.fetchUserData("userData", regId);
             } else {
 //            get and store the userData
-                Log.e(LOG_TAG, "not an existing user");
+                if(DBG)
+                    Log.e(LOG_TAG, "not an existing user");
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -66,7 +71,8 @@ public class MainActivityScraggle2 extends Activity {
             startReconnectNetDialog();
         }
 
-        Log.e(LOG_TAG, "exiting onCreate");
+        if(DBG)
+            Log.e(LOG_TAG, "exiting onCreate");
     }
 
     @Override
@@ -76,6 +82,8 @@ public class MainActivityScraggle2 extends Activity {
         mMediaPlayer.setVolume(0.5f, 0.5f);
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
+//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+//        registerReceiver(DetectInternetConnBroadcastReceiver.networkReceiver, filter);
     }
 
     @Override
@@ -87,10 +95,12 @@ public class MainActivityScraggle2 extends Activity {
         // Get rid of the about dialog if it's still up
         if (mDialog != null)
             mDialog.dismiss();
+//        unregisterReceiver(networkReceiver);
     }
 
     public void startGameDialog(){
-        Log.e(LOG_TAG, "in startGameDialog");
+        if(DBG)
+            Log.e(LOG_TAG, "in startGameDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle2.this,
                 AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 
@@ -126,36 +136,15 @@ public class MainActivityScraggle2 extends Activity {
                         }
                     }
                 });
-        Log.e(LOG_TAG, "exiting startGameDialog");
+        if(DBG)
+            Log.e(LOG_TAG, "exiting startGameDialog");
 
         mDialog = builder.show();
     }
 
-    private static boolean isNetworkAvailable(Context context)
-    {
-        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity == null)
-        {
-            return false;
-        } else
-        {
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null)
-            {
-                for (int i = 0; i < info.length; i++)
-                {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     public void startReconnectNetDialog(){
-        Log.e(LOG_TAG, "in startReconnectNetDialog");
+        if(DBG)
+            Log.e(LOG_TAG, "in startReconnectNetDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle2.this,
                 AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 
@@ -167,7 +156,7 @@ public class MainActivityScraggle2 extends Activity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if(isNetworkAvailable(context)) {
+                        if (dic.isNetworkAvailable()) {
 //                            TODO changed it - testing left
                             Intent intent = new Intent(MainActivityScraggle2.this, MainActivityScraggle2.class);
                             startActivity(intent);
@@ -177,7 +166,8 @@ public class MainActivityScraggle2 extends Activity {
                         }
                     }
                 });
-        Log.e(LOG_TAG, "exiting startReconnectNetDialog");
+        if(DBG)
+            Log.e(LOG_TAG, "exiting startReconnectNetDialog");
 
         mDialog = builder.show();
     }
