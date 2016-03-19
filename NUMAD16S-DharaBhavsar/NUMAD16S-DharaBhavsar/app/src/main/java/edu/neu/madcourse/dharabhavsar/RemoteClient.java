@@ -139,6 +139,7 @@ public class RemoteClient {
 
 //    code to store gameData
     public void saveGameData(GameData value) {
+//        TODO saving game data for both the plays
         Firebase ref = new Firebase(FIREBASE_DB);
         Firebase gameRef = ref.child("gameData");
         gameRef.push().setValue(value, new Firebase.CompletionListener() {
@@ -154,6 +155,103 @@ public class RemoteClient {
     }
 
     public void fetchGameData(String key, final String userId) {
+//        TODO game data fetching for async play + combine play
+        Log.d(TAG, "Get Value for Key - " + key);
+        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Query queryRef = ref.orderByKey();
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // snapshot contains the key and value
+                if (snapshot.getValue() != null) {
+                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    // Adding the data to the HashMap
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (postSnapshot.getKey().equals(userId)) {
+                            UserData user = postSnapshot.getValue(UserData.class);
+                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
+                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Data Not Received");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(TAG, firebaseError.getMessage());
+                Log.e(TAG, firebaseError.getDetails());
+            }
+        });
+    }
+
+    public void fetchRandomUsers(String key, final String userId) {
+//        TODO users for 2player combat game
+        Log.d(TAG, "Get Value for Key - " + key);
+        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Query queryRef = ref.orderByKey();
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // snapshot contains the key and value
+                if (snapshot.getValue() != null) {
+                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    // Adding the data to the HashMap
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (postSnapshot.getKey().equals(userId)) {
+                            UserData user = postSnapshot.getValue(UserData.class);
+                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
+                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Data Not Received");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(TAG, firebaseError.getMessage());
+                Log.e(TAG, firebaseError.getDetails());
+            }
+        });
+    }
+
+    public void fetchAllUsers(String key, final String userId) {
+//        TODO users for combine play
+        Log.d(TAG, "Get Value for Key - " + key);
+        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Query queryRef = ref.orderByKey();
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // snapshot contains the key and value
+                if (snapshot.getValue() != null) {
+                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    // Adding the data to the HashMap
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (postSnapshot.getKey().equals(userId)) {
+                            UserData user = postSnapshot.getValue(UserData.class);
+                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
+                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Data Not Received");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(TAG, firebaseError.getMessage());
+                Log.e(TAG, firebaseError.getDetails());
+            }
+        });
+    }
+
+    public void fetchScoreBoardData(String key, final String userId) {
+//        TODO score board data
         Log.d(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
