@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class MainActivityScraggle2 extends Activity {
+    public static final String USER_UNIQUE_KEY = "user_key";
     MediaPlayer mMediaPlayer;
     CommunicationMain mCommObj = new CommunicationMain();
     Context context;
@@ -32,8 +34,10 @@ public class MainActivityScraggle2 extends Activity {
     private Handler mHandler = new Handler();
     private AlertDialog mDialog;
     private static final int TEXT_ID = 0;
+
     DetectInternetConn dic;
     private static final boolean DBG = true;
+    SharedPreferences prefs;
     // ...
 
     @Override
@@ -44,6 +48,7 @@ public class MainActivityScraggle2 extends Activity {
         context = getApplicationContext();
         mRemoteClient = new RemoteClient(context);
         dic = new DetectInternetConn(getApplicationContext());
+        prefs = context.getSharedPreferences(RemoteClient.class.getSimpleName(), Context.MODE_PRIVATE);
 
         if(DBG)
             Log.e(LOG_TAG, "in onCreate");
@@ -54,7 +59,12 @@ public class MainActivityScraggle2 extends Activity {
 //            retrieve the userData
                 if(DBG)
                     Log.e(LOG_TAG, "an existing user" + regId);
-                mRemoteClient.fetchUserData("userData", regId);
+                String userKey = prefs.getString(USER_UNIQUE_KEY, "");
+                Log.e(LOG_TAG, "an existing user key " + userKey);
+                mRemoteClient.fetchUserData("userData", userKey);
+
+                // any polling mechanism can be used
+//                startTimer(userKey);
             } else {
 //            get and store the userData
                 if(DBG)

@@ -11,9 +11,9 @@ public class UserData {
     private int userCombineBestScore;
     private String teamPlayerName;      // name of the team player with whom the best score for
                                         // combine game was scored
-    private boolean isChallengedGamePending;  // true if there is already pending game with the user
+    private boolean challengedGamePending;  // true if there is already pending game with the user
     private String challengedBy;
-    private boolean isCombineGameRequest;   // true if there is a combine Play game request
+    private boolean combineGameRequest;   // true if there is a combine Play game request
 
     public UserData() {
     }
@@ -27,9 +27,9 @@ public class UserData {
         this.userIndividualBestScore = userIndividualBestScore;
         this.userCombineBestScore = userCombineBestScore;
         this.teamPlayerName = teamPlayerName;
-        this.isChallengedGamePending = isChallengedGamePending;
+        this.challengedGamePending = isChallengedGamePending;
         this.challengedBy = challengedBy;
-        this.isCombineGameRequest = isCombineGameRequest;
+        this.combineGameRequest = isCombineGameRequest;
     }
 
     public String getUserId() {
@@ -53,7 +53,7 @@ public class UserData {
     }
 
     public boolean isChallengedGamePending() {
-        return isChallengedGamePending;
+        return challengedGamePending;
     }
 
     public String getChallengedBy() {
@@ -61,6 +61,6 @@ public class UserData {
     }
 
     public boolean isCombineGameRequest() {
-        return isCombineGameRequest;
+        return combineGameRequest;
     }
 }
