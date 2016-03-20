@@ -872,5 +872,9 @@ public class ScraggleGameFragment2 extends Fragment {
         }
         return count;
     }
+
+    public char[][] getGameLetterState() {
+        return gameLetterState;
+    }
 }
 

@@ -14,8 +14,8 @@ public class GameData {
     private String player1ID;
     private String player2ID;
     private char[][] gameLetterState;
-    private boolean firstCombatPlay;        // ???
-    private boolean secondCombatPlay;       // ???
+    private boolean firstCombatPlay;        // true when P1's turn starts
+    private boolean secondCombatPlay;       // true when P2's turn starts
     private boolean combinePlay;            // true if it is a combine play
     private boolean gameOver;               // true if both the players have played it
 

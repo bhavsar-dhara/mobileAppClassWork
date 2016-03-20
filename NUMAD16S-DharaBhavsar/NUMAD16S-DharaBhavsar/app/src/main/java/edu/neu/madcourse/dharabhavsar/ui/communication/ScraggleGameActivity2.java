@@ -33,6 +33,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 import edu.neu.madcourse.dharabhavsar.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.TrieLookup;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
@@ -81,6 +82,10 @@ public class ScraggleGameActivity2 extends Activity {
     private UserData user2player;
     Timer timer2;
     TimerTask timerTask2;
+    String userKey;
+    String userId;
+    GameData gameDataFb;
+    private char[][] gameLetter = new char[9][9];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,9 @@ public class ScraggleGameActivity2 extends Activity {
 
         prefs = appContext.getSharedPreferences(RemoteClient.class.getSimpleName(), Context.MODE_PRIVATE);
         mRemoteClient = new RemoteClient(appContext);
+
+        userKey = prefs.getString(USER_UNIQUE_KEY, "");
+        userId = prefs.getString(PROPERTY_REG_ID, "");
 
         setContentView(R.layout.activity_game_scraggle2);
         mGameFragment = (ScraggleGameFragment2) getFragmentManager()
@@ -130,16 +138,14 @@ public class ScraggleGameActivity2 extends Activity {
 //        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
         if (isPhaseTwo) {
             if (savedRemainingInterval < 2000) {
-                Log.e("PhaseTwo Timer", "interval and gameEndFlag = " + String.valueOf(isGameEnd) );
-                    counter = new MyCount(interval, 1000);
+                Log.e("PhaseTwo Timer", "interval and gameEndFlag = " + String.valueOf(isGameEnd));
+                counter = new MyCount(interval, 1000);
             } else {
 //                Log.e("PhaseTwo Timer", "savedRemainingInterval");
                 counter = new MyCount(savedRemainingInterval, 1000);
             }
-            final String userKey = prefs.getString(USER_UNIQUE_KEY, "");
-            String userId = prefs.getString(PROPERTY_REG_ID, "");
             Log.e("onFinish phase2", "in prefs, userKey = " + userKey);
-            if(userKey != null) {
+            if (userKey != null) {
                 mRemoteClient.fetchUserData(USER_DATA, userKey);
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -168,6 +174,16 @@ public class ScraggleGameActivity2 extends Activity {
 //                Log.e("PhaseOne Timer", "interval");
                 counter = new MyCount(interval, 1000);
             }
+//            TODO initializing game data at the start of the game
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    gameLetter = mGameFragment.getGameLetterState();
+                    Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
+                    gameDataFb = new GameData(0, 0, 0, 0, 0, userId, "", gameLetter, true, false, false, false);
+                    mRemoteClient.saveGameData(gameDataFb);
+                }
+            }, 5000);
         }
     }
 
@@ -243,11 +259,11 @@ public class ScraggleGameActivity2 extends Activity {
             isResumeFlag = false;
         }
 //        if(!isGameEnd) {
-            String gameData = mGameFragment.getState();
-            getPreferences(MODE_PRIVATE).edit()
-                    .putString(PREF_RESTORE, gameData)
-                    .commit();
-            Log.d("Scraggle", "state = " + gameData);
+        String gameData = mGameFragment.getState();
+        getPreferences(MODE_PRIVATE).edit()
+                .putString(PREF_RESTORE, gameData)
+                .commit();
+        Log.d("Scraggle", "state = " + gameData);
 //        }
         // Get rid of the about dialog if it's still up
         if (mDialog != null)
@@ -275,7 +291,7 @@ public class ScraggleGameActivity2 extends Activity {
         public void onFinish() {
             if (!isPhaseTwo) {
                 Log.e("onFinish p1", String.valueOf(mGameFragment.getWordCount1()));
-                if(mGameFragment.getWordCount1() > 1) {
+                if (mGameFragment.getWordCount1() > 1) {
                     Log.e("onFinish", "Done");
                     mTextField.setText("            DONE");
                     mGameFragment.disableLetterGrid();
@@ -587,11 +603,19 @@ public class ScraggleGameActivity2 extends Activity {
         timer2.schedule(timerTask2, 5000, 1000);
     }
 
-    public void stoptimertask() {
+    public void stoptimertask1() {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
             timer = null;
+        }
+    }
+
+    public void stoptimertask2() {
+        //stop the timer, if it's not already null
+        if (timer2 != null) {
+            timer2.cancel();
+            timer2 = null;
         }
     }
 
@@ -608,7 +632,7 @@ public class ScraggleGameActivity2 extends Activity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
-                    stoptimertask();
+                    stoptimertask1();
                 }
             }
         };
@@ -627,7 +651,7 @@ public class ScraggleGameActivity2 extends Activity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
-                    stoptimertask();
+                    stoptimertask2();
                 }
             }
         };
