@@ -24,6 +24,7 @@ import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class MainActivityScraggle2 extends Activity {
     public static final String USER_UNIQUE_KEY = "user_key";
+    public static final String USER_DATA = "userData";
     MediaPlayer mMediaPlayer;
     CommunicationMain mCommObj = new CommunicationMain();
     Context context;
@@ -58,13 +59,10 @@ public class MainActivityScraggle2 extends Activity {
             if (!regId.isEmpty()) {
 //            retrieve the userData
                 if(DBG)
-                    Log.e(LOG_TAG, "an existing user" + regId);
+                    Log.e(LOG_TAG, "an existing user " + regId);
                 String userKey = prefs.getString(USER_UNIQUE_KEY, "");
                 Log.e(LOG_TAG, "an existing user key " + userKey);
-                mRemoteClient.fetchUserData("userData", userKey);
-
-                // any polling mechanism can be used
-//                startTimer(userKey);
+//                mRemoteClient.fetchUserData(USER_DATA, userKey);
             } else {
 //            get and store the userData
                 if(DBG)

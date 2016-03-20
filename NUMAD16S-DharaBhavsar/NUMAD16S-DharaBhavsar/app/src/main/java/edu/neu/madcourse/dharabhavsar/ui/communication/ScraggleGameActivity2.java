@@ -1,7 +1,5 @@
 package edu.neu.madcourse.dharabhavsar.ui.communication;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -43,6 +41,8 @@ public class ScraggleGameActivity2 extends Activity {
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
     public static final String USER_UNIQUE_KEY = "user_key";
+    public static final String USER_DATA = "userData";
+    public static final String PROPERTY_REG_ID = "registration_id";
     private MediaPlayer mMediaPlayer;
     private Handler mHandler = new Handler();
     private ScraggleGameFragment2 mGameFragment;
@@ -83,15 +83,7 @@ public class ScraggleGameActivity2 extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check whether we're recreating a previously destroyed instance
-        /*if (savedInstanceState != null) {
-            // Restore value of members from saved state
-//            score = savedInstanceState.getInt(STATE_SCORE);
-            isPhaseTwo = savedInstanceState.getBoolean(STATE_LEVEL);
-        } else {
-            // Probably initialize members with default values for a new instance
-        }
-        Log.e("GAMEActivity", "isPhaseTwo = " + isPhaseTwo);*/
+        Log.e("GAMEActivity", "isPhaseTwo = " + isPhaseTwo);
         Bundle b = this.getIntent().getExtras();
         if (b != null) {
             isPhaseTwo = b.getBoolean("isTwoFlag");
@@ -104,6 +96,7 @@ public class ScraggleGameActivity2 extends Activity {
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         prefs = appContext.getSharedPreferences(RemoteClient.class.getSimpleName(), Context.MODE_PRIVATE);
+        mRemoteClient = new RemoteClient(appContext);
 
         setContentView(R.layout.activity_game_scraggle2);
         mGameFragment = (ScraggleGameFragment2) getFragmentManager()
@@ -135,30 +128,7 @@ public class ScraggleGameActivity2 extends Activity {
         if (isPhaseTwo) {
             if (savedRemainingInterval < 2000) {
                 Log.e("PhaseTwo Timer", "interval and gameEndFlag = " + String.valueOf(isGameEnd) );
-//                if(!isGameEnd) {
                     counter = new MyCount(interval, 1000);
-                /*} else {
-                    Log.e("inGameEndFlag", "GameHasEnded");
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-                            builder.setTitle(R.string.no_saved_game_title);
-                            builder.setMessage(R.string.no_saved_game_text);
-                            builder.setCancelable(false);
-                            builder.setPositiveButton(R.string.ok_label,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            Intent home = new Intent(getApplicationContext(), MainActivityScraggle.class);
-                                            startActivity(home);
-                                            finish();
-                                        }
-                                    });
-                            mDialog = builder.show();
-                        }
-                    }, 4000);
-                }*/
             } else {
 //                Log.e("PhaseTwo Timer", "savedRemainingInterval");
                 counter = new MyCount(savedRemainingInterval, 1000);
@@ -173,17 +143,6 @@ public class ScraggleGameActivity2 extends Activity {
             }
         }
     }
-
-    /*@Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        Log.e("onSaveInstanceState", "isPhaseTwo = " + isPhaseTwo);
-        // Save the user's current game state
-//        savedInstanceState.putInt(STATE_SCORE, score);
-        savedInstanceState.putBoolean(STATE_LEVEL, isPhaseTwo);
-
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }*/
 
     public List<String> methodCallToAsyncTaskRunner() {
         try {
@@ -343,13 +302,14 @@ public class ScraggleGameActivity2 extends Activity {
                 /*String userKey = getPreferences(MODE_PRIVATE)
                         .getString(USER_UNIQUE_KEY, null);*/
                 String userKey = prefs.getString(USER_UNIQUE_KEY, "");
+                String userId = prefs.getString(PROPERTY_REG_ID, "");
                 Log.e("onFinish phase2", "in prefs, userKey = " + userKey);
                 if(userKey != null) {
-                    mRemoteClient.fetchUserData("userData", userKey);
+                    mRemoteClient.fetchUserData(USER_DATA, userKey);
                     // any polling mechanism can be used
-                    startTimer(userKey);
-                    Log.e("SAVING GAME DATA", user.getUserId() + " - " + user.getUserName()
-                            + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                    startTimer(userId);
+                    /*Log.e("SAVING GAME DATA", user.getUserId() + " - " + user.getUserName()
+                            + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());*/
                 }
 //                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
                 AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
@@ -581,15 +541,6 @@ public class ScraggleGameActivity2 extends Activity {
         isPhaseTwo = isPhaseTwoFlag;
     }
 
-    private void animator() {
-        Animator anim = AnimatorInflater.loadAnimator(this,
-                R.animator.gametimer);
-        if (mTextField != null) {
-            anim.setTarget(mTextField);
-            anim.start();
-        }
-    }
-
     public boolean isGameEnd() {
         return this.isGameEnd;
     }
@@ -603,7 +554,7 @@ public class ScraggleGameActivity2 extends Activity {
         timer = new Timer();
         //initialize the TimerTask's job
         initializeTimerTask(key);
-        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+        //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
         // The values can be adjusted depending on the performance
         timer.schedule(timerTask, 5000, 1000);
     }
@@ -619,21 +570,19 @@ public class ScraggleGameActivity2 extends Activity {
     public void initializeTimerTask(final String key) {
         timerTask = new TimerTask() {
             public void run() {
-                Log.d("GameActivity2", "isDataFetched >>>>" + mRemoteClient.isDataFetched());
-                if(mRemoteClient.isDataFetched())
-                {
+                Log.e("GameActivity2", "isDataFetched >>>>" + mRemoteClient.isDataFetched());
+                if (mRemoteClient.isDataFetched()) {
                     mHandler.post(new Runnable() {
 
                         public void run() {
-                            Log.d("GameActivity2", "Value >>>>" + mRemoteClient.getValue(key));
-                            Toast.makeText(ScraggleGameActivity2.this, "Value   " + mRemoteClient.getValue(key),
+                            user = mRemoteClient.getUserData(key);
+                            Log.e("GameActivity2", "Value >>>>" + user);
+                            Toast.makeText(ScraggleGameActivity2.this, "Value   " + user.getUserName(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
-
                     stoptimertask();
                 }
-
             }
         };
     }

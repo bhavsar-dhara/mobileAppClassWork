@@ -22,6 +22,7 @@ public class RemoteClient {
 
     private static final String MyPREFERENCES = "MyPrefs" ;
     public static final String USER_UNIQUE_KEY = "user_key";
+    public static final String USER_DATA = "userData";
 //    private static final String FIREBASE_DB = "https://<Your FireBase AppName>.firebaseIO.com/";
     private static final String FIREBASE_DB = "https://popping-fire-5271.firebaseio.com/";
     private static final String TAG = "RemoteClient";
@@ -29,6 +30,7 @@ public class RemoteClient {
     private Context mContext;
     private HashMap<String, String> fireBaseData = new HashMap<String, String>();
     SharedPreferences prefs;
+    private UserData user = new UserData();
 
     public RemoteClient(Context mContext)
     {
@@ -95,7 +97,7 @@ public class RemoteClient {
 //    code to save and retrieve userData
     public void saveUserData(UserData value) {
         Firebase ref = new Firebase(FIREBASE_DB);
-        Firebase usersRef = ref.child("userData");
+        Firebase usersRef = ref.child(USER_DATA);
         Firebase newUserRef = usersRef.push();
         newUserRef.setValue(value, new Firebase.CompletionListener() {
             @Override
@@ -119,20 +121,22 @@ public class RemoteClient {
 
     public void fetchUserData(String key, final String userId) {
         Log.e(TAG, "Get Value for Key - " + userId);
-        Firebase ref = new Firebase(FIREBASE_DB + key);
-        /*Firebase usersRef = ref.child(key);
-        Query queryRef = usersRef.orderByKey();*/
-        Query queryRef = ref.orderByKey();
+        Firebase ref = new Firebase(FIREBASE_DB);
+//        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Firebase usersRef = ref.child(key);
+        Query queryRef = usersRef.orderByKey();
+//        Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                isDataChanged = true;
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
                     Log.e(TAG, "There are " + snapshot.getChildrenCount() + " users");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (postSnapshot.getKey().equals(userId)) {
-                            UserData user = postSnapshot.getValue(UserData.class);
+                            user = postSnapshot.getValue(UserData.class);
                             Log.e(TAG, user.getUserId() + " - " + user.getUserName()
                                     + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
                         }
@@ -148,6 +152,14 @@ public class RemoteClient {
                 Log.e(TAG, firebaseError.getDetails());
             }
         });
+    }
+
+    public UserData getUserData(String userId) {
+        if(userId.equals(user.getUserId())) {
+            Log.e(TAG, "is a match");
+            return user;
+        }
+        return null;
     }
 
 //    code to store gameData
