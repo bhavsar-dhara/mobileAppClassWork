@@ -31,6 +31,7 @@ public class RemoteClient {
     private HashMap<String, String> fireBaseData = new HashMap<String, String>();
     SharedPreferences prefs;
     private UserData user = new UserData();
+    private HashMap<String, UserData> fireBaseUserData = new HashMap<String, UserData>();
 
     public RemoteClient(Context mContext)
     {
@@ -139,10 +140,12 @@ public class RemoteClient {
                             user = postSnapshot.getValue(UserData.class);
                             Log.e(TAG, user.getUserId() + " - " + user.getUserName()
                                     + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                            fireBaseUserData.put(userId, user);
                         }
                     }
                 } else {
                     Log.e(TAG, "Data Not Received");
+                    fireBaseUserData.put(userId, null);
                 }
             }
 
@@ -155,11 +158,13 @@ public class RemoteClient {
     }
 
     public UserData getUserData(String userId) {
-        if(userId.equals(user.getUserId())) {
+        /*if(userId.equals(user.getUserId())) {
             Log.e(TAG, "is a match");
             return user;
         }
-        return null;
+        Log.e(TAG, "not a match");
+        return null;*/
+        return (fireBaseUserData.get(userId));
     }
 
 //    code to store gameData

@@ -133,6 +133,16 @@ public class ScraggleGameActivity2 extends Activity {
 //                Log.e("PhaseTwo Timer", "savedRemainingInterval");
                 counter = new MyCount(savedRemainingInterval, 1000);
             }
+            String userKey = prefs.getString(USER_UNIQUE_KEY, "");
+            String userId = prefs.getString(PROPERTY_REG_ID, "");
+            Log.e("onFinish phase2", "in prefs, userKey = " + userKey);
+            if(userKey != null) {
+                mRemoteClient.fetchUserData(USER_DATA, userKey);
+                // any polling mechanism can be used
+                startTimer(userKey);
+                    /*Log.e("SAVING GAME DATA", user.getUserId() + " - " + user.getUserName()
+                            + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());*/
+            }
         } else {
             if (savedRemainingInterval > 0) {
 //                Log.e("PhaseOne Timer", "savedRemainingInterval");
@@ -301,16 +311,7 @@ public class ScraggleGameActivity2 extends Activity {
 //                TODO assign a random opponent to this player and save gameData in the gameData model class
                 /*String userKey = getPreferences(MODE_PRIVATE)
                         .getString(USER_UNIQUE_KEY, null);*/
-                String userKey = prefs.getString(USER_UNIQUE_KEY, "");
-                String userId = prefs.getString(PROPERTY_REG_ID, "");
-                Log.e("onFinish phase2", "in prefs, userKey = " + userKey);
-                if(userKey != null) {
-                    mRemoteClient.fetchUserData(USER_DATA, userKey);
-                    // any polling mechanism can be used
-                    startTimer(userId);
-                    /*Log.e("SAVING GAME DATA", user.getUserId() + " - " + user.getUserName()
-                            + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());*/
-                }
+
 //                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
                 AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
 //                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
