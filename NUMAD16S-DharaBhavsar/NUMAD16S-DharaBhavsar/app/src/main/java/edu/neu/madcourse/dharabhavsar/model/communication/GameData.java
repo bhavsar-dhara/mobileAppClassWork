@@ -7,54 +7,57 @@ package edu.neu.madcourse.dharabhavsar.model.communication;
  */
 public class GameData {
     private int scoreCombinePlay;
-    private int score1P1;
-    private int score2P1;
-    private int score1P2;
-    private int score2P2;
+    private int p1Score1;
+    private int p1Score2;
+    private int p2Score1;
+    private int p2Score2;
     private String player1ID;
     private String player2ID;
     private char[][] gameLetterState;
-    private boolean isFirstCombatPlay;
-    private boolean isSecondCombatPlay;
-    private boolean isCombinePlay;
+    private boolean firstCombatPlay;        // ???
+    private boolean secondCombatPlay;       // ???
+    private boolean combinePlay;            // true if it is a combine play
+    private boolean gameOver;               // true if both the players have played it
 
     public GameData() {
     }
 
     public GameData(int scoreCombinePlay, int score1P1, int score2P1, int score1P2, int score2P2,
                     String player1ID, String player2ID, char[][] gameLetterState,
-                    boolean isFirstCombatPlay, boolean isSecondCombatPlay, boolean isCombinePlay) {
+                    boolean isFirstCombatPlay, boolean isSecondCombatPlay, boolean isCombinePlay,
+                    boolean isGameOver) {
         this.scoreCombinePlay = scoreCombinePlay;
-        this.score1P1 = score1P1;
-        this.score2P1 = score2P1;
-        this.score1P2 = score1P2;
-        this.score2P2 = score2P2;
+        this.p1Score1 = score1P1;
+        this.p1Score2 = score2P1;
+        this.p2Score1 = score1P2;
+        this.p2Score2 = score2P2;
         this.player1ID = player1ID;
         this.player2ID = player2ID;
         this.gameLetterState = gameLetterState;
-        this.isFirstCombatPlay = isFirstCombatPlay;
-        this.isSecondCombatPlay = isSecondCombatPlay;
-        this.isCombinePlay = isCombinePlay;
+        this.firstCombatPlay = isFirstCombatPlay;
+        this.secondCombatPlay = isSecondCombatPlay;
+        this.combinePlay = isCombinePlay;
+        this.gameOver = isGameOver;
     }
 
     public int getScoreCombinePlay() {
         return scoreCombinePlay;
     }
 
-    public int getScore1P1() {
-        return score1P1;
+    public int getP1Score1() {
+        return p1Score1;
     }
 
-    public int getScore2P1() {
-        return score2P1;
+    public int getP1Score2() {
+        return p1Score2;
     }
 
-    public int getScore1P2() {
-        return score1P2;
+    public int getP2Score1() {
+        return p2Score1;
     }
 
-    public int getScore2P2() {
-        return score2P2;
+    public int getP2Score2() {
+        return p2Score2;
     }
 
     public String getPlayer1ID() {
@@ -70,14 +73,18 @@ public class GameData {
     }
 
     public boolean isFirstCombatPlay() {
-        return isFirstCombatPlay;
+        return firstCombatPlay;
     }
 
     public boolean isSecondCombatPlay() {
-        return isSecondCombatPlay;
+        return secondCombatPlay;
     }
 
     public boolean isCombinePlay() {
-        return isCombinePlay;
+        return combinePlay;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 }

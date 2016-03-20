@@ -14,22 +14,31 @@ public class UserData {
     private boolean challengedGamePending;  // true if there is already pending game with the user
     private String challengedBy;
     private boolean combineGameRequest;   // true if there is a combine Play game request
+    private int userPendingIndividualGameScore;
+    private int userPendingCombineGameScore;
+    private String pendingCombatGameKey;
+    private String pendingCombineGameKey;
 
     public UserData() {
     }
 
     public UserData(String userId, String userName, int userIndividualBestScore,
-                    int userCombineBestScore, String teamPlayerName,
-                    boolean isChallengedGamePending, String challengedBy,
-                    boolean isCombineGameRequest) {
+                    int userCombineBestScore, String teamPlayerName, boolean challengedGamePending,
+                    String challengedBy, boolean combineGameRequest,
+                    int userPendingIndividualGameScore, int userPendingCombineGameScore,
+                    String pendingCombatGameKey, String pendingCombineGameKey) {
         this.userId = userId;
         this.userName = userName;
         this.userIndividualBestScore = userIndividualBestScore;
         this.userCombineBestScore = userCombineBestScore;
         this.teamPlayerName = teamPlayerName;
-        this.challengedGamePending = isChallengedGamePending;
+        this.challengedGamePending = challengedGamePending;
         this.challengedBy = challengedBy;
-        this.combineGameRequest = isCombineGameRequest;
+        this.combineGameRequest = combineGameRequest;
+        this.userPendingIndividualGameScore = userPendingIndividualGameScore;
+        this.userPendingCombineGameScore = userPendingCombineGameScore;
+        this.pendingCombatGameKey = pendingCombatGameKey;
+        this.pendingCombineGameKey = pendingCombineGameKey;
     }
 
     public String getUserId() {
@@ -62,5 +71,21 @@ public class UserData {
 
     public boolean isCombineGameRequest() {
         return combineGameRequest;
+    }
+
+    public int getUserPendingIndividualGameScore() {
+        return userPendingIndividualGameScore;
+    }
+
+    public int getUserPendingCombineGameScore() {
+        return userPendingCombineGameScore;
+    }
+
+    public String getPendingCombatGameKey() {
+        return pendingCombatGameKey;
+    }
+
+    public String getPendingCombineGameKey() {
+        return pendingCombineGameKey;
     }
 }

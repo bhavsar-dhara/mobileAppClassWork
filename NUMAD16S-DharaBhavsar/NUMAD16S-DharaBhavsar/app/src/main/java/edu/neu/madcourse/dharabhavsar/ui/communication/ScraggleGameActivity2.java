@@ -78,6 +78,9 @@ public class ScraggleGameActivity2 extends Activity {
     SharedPreferences prefs;
     Timer timer;
     TimerTask timerTask;
+    private UserData user2player;
+    Timer timer2;
+    TimerTask timerTask2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,15 +136,29 @@ public class ScraggleGameActivity2 extends Activity {
 //                Log.e("PhaseTwo Timer", "savedRemainingInterval");
                 counter = new MyCount(savedRemainingInterval, 1000);
             }
-            String userKey = prefs.getString(USER_UNIQUE_KEY, "");
+            final String userKey = prefs.getString(USER_UNIQUE_KEY, "");
             String userId = prefs.getString(PROPERTY_REG_ID, "");
             Log.e("onFinish phase2", "in prefs, userKey = " + userKey);
             if(userKey != null) {
                 mRemoteClient.fetchUserData(USER_DATA, userKey);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        user = mRemoteClient.getUserData(userKey);
+                        Log.e("remote", "username = " + user.getUserName());
+                    }
+                }, 5000);
                 // any polling mechanism can be used
-                startTimer(userKey);
-                    /*Log.e("SAVING GAME DATA", user.getUserId() + " - " + user.getUserName()
-                            + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());*/
+//                startTimer1(userKey);
+                mRemoteClient.fetchRandomUsers(USER_DATA, userKey);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        user2player = mRemoteClient.getRandomUserData();
+                        Log.e("remote", "username 2 = " + user2player.getUserName());
+                    }
+                }, 5000);
+//                startTimer2(userKey);
             }
         } else {
             if (savedRemainingInterval > 0) {
@@ -550,14 +567,24 @@ public class ScraggleGameActivity2 extends Activity {
         isGameEnd = isGameEndFlag;
     }
 
-    public void startTimer(String key) {
+    public void startTimer1(String key) {
         //set a new Timer
         timer = new Timer();
         //initialize the TimerTask's job
-        initializeTimerTask(key);
+        initializeTimerTask1(key);
         //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
         // The values can be adjusted depending on the performance
         timer.schedule(timerTask, 5000, 1000);
+    }
+
+    public void startTimer2(String key) {
+        //set a new Timer
+        timer2 = new Timer();
+        //initialize the TimerTask's job
+        initializeTimerTask2();
+        //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
+        // The values can be adjusted depending on the performance
+        timer2.schedule(timerTask2, 5000, 1000);
     }
 
     public void stoptimertask() {
@@ -568,17 +595,35 @@ public class ScraggleGameActivity2 extends Activity {
         }
     }
 
-    public void initializeTimerTask(final String key) {
+    public void initializeTimerTask1(final String key) {
         timerTask = new TimerTask() {
             public void run() {
-                Log.e("GameActivity2", "isDataFetched >>>>" + mRemoteClient.isDataFetched());
+                Log.e("GameActivity2", "isDataFetched >>>> " + mRemoteClient.isDataFetched());
                 if (mRemoteClient.isDataFetched()) {
                     mHandler.post(new Runnable() {
-
                         public void run() {
                             user = mRemoteClient.getUserData(key);
-                            Log.e("GameActivity2", "Value >>>>" + user);
-                            Toast.makeText(ScraggleGameActivity2.this, "Value   " + user.getUserName(),
+                            Log.e("GameActivity2", "Value >>>> " + user);
+                            Toast.makeText(ScraggleGameActivity2.this, "Value 1  " + user.getUserName(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    stoptimertask();
+                }
+            }
+        };
+    }
+
+    public void initializeTimerTask2() {
+        timerTask2 = new TimerTask() {
+            public void run() {
+                Log.e("GameActivity2", "isDataFetched >>>> " + mRemoteClient.isDataFetched());
+                if (mRemoteClient.isDataFetched()) {
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            user2player = mRemoteClient.getRandomUserData();
+                            Log.e("GameActivity2", "Value2 >>>> " + user);
+                            Toast.makeText(ScraggleGameActivity2.this, "Value 2  " + user2player.getUserName(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
