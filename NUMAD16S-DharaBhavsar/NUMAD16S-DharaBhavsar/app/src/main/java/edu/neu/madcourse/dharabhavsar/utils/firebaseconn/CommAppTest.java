@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar;
+package edu.neu.madcourse.dharabhavsar.utils.firebaseconn;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

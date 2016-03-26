@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.gcmcomm;
+package edu.neu.madcourse.dharabhavsar.utils.gcmcomm;
 
 import android.app.Activity;
 import android.content.ComponentName;

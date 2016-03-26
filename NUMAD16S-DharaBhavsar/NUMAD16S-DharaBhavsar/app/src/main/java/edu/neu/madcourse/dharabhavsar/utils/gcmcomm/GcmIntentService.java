@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.gcmcomm;
+package edu.neu.madcourse.dharabhavsar.utils.gcmcomm;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -46,7 +46,7 @@ public class GcmIntentService extends IntentService {
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		Intent notificationIntent;
 		notificationIntent = new Intent(this,
-				edu.neu.madcourse.dharabhavsar.gcmcomm.CommunicationMain.class);
+				edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		notificationIntent.putExtra("show_response", "show_response");
 		PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(

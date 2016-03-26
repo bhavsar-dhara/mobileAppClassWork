@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.gcmcomm;
+package edu.neu.madcourse.dharabhavsar.utils.gcmcomm;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.neu.madcourse.dharabhavsar.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.utils.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
@@ -304,7 +304,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
                 regIds.clear();
                 regIds.add(reg_device);
                 gcmNotification.sendNotification(msgParams, regIds,
-                        edu.neu.madcourse.dharabhavsar.gcmcomm.CommunicationMain.this);
+                        edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain.this);
 				msg = "sending information...";
 				return msg;
 			}

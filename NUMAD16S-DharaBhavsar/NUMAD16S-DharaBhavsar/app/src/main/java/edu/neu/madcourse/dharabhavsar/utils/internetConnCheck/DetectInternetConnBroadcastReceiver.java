@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar;
+package edu.neu.madcourse.dharabhavsar.utils.internetConnCheck;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,12 +15,5 @@ public class DetectInternetConnBroadcastReceiver extends BroadcastReceiver {
         Log.e("dicBroadcastReceiver", "in onReceive");
         DetectInternetConn dic = new DetectInternetConn(context);
         dic.isNetworkAvailable();
-        /*if(intent.getExtras()!=null) {
-            NetworkInfo ni=(NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
-            if(ni!=null && ni.getState()==NetworkInfo.State.CONNECTED) {
-                // we're connected
-            }
-        }
-        // we're not connected*/
     }
 }

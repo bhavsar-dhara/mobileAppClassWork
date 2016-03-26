@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar;
+package edu.neu.madcourse.dharabhavsar.utils.internetConnCheck;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -18,7 +18,8 @@ public class DetectInternetConn {
 
     public boolean isNetworkAvailable() {
         Log.e("DetectInternetConn", "in isNetworkAvailable");
-        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
@@ -28,10 +29,6 @@ public class DetectInternetConn {
                     }
                 }
             }
-            /*NetworkInfo activeNetwork = connectivity.getActiveNetworkInfo();
-            boolean isConnected = activeNetwork != null &&
-                    activeNetwork.isConnectedOrConnecting();
-            return isConnected;*/
         }
         return false;
     }

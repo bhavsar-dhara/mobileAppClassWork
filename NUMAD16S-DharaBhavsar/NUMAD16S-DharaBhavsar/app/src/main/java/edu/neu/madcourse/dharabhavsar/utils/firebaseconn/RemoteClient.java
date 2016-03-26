@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar;
+package edu.neu.madcourse.dharabhavsar.utils.firebaseconn;
 
 import android.content.Context;
 import android.content.SharedPreferences;

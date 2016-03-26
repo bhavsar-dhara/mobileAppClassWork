@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.gcmcomm;
+package edu.neu.madcourse.dharabhavsar.utils.gcmcomm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
