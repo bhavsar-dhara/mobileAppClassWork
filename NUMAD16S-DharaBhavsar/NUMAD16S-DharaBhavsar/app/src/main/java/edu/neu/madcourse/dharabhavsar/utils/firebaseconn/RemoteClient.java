@@ -10,7 +10,9 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
@@ -30,6 +32,7 @@ public class RemoteClient {
     private UserData user = new UserData();
     private HashMap<String, UserData> fireBaseUserData = new HashMap<String, UserData>();
     private HashMap<String, UserData> fireBaseRandomUserData = new HashMap<String, UserData>();
+    private HashMap<String, UserData> fireBaseSelectedUserData = new HashMap<String, UserData>();
     private HashMap<String, GameData> fireBaseGameData = new HashMap<String, GameData>();
     private static boolean isRandomDataChanged = false;
     private int randomInt;
@@ -202,7 +205,7 @@ public class RemoteClient {
         Log.e(TAG, "in prefs, gameKey = " + gameKey);
     }
 
-    public void updateGameData(UserData value) {
+    public void updateGameData(GameData value) {
         Firebase ref = new Firebase(Constants.FIREBASE_DB);
 //        TODO may not work properly correct the game unique key
         Firebase usersRef = ref.child(Constants.GAME_DATA).child(Constants.GAME_UNIQUE_KEY);
@@ -223,14 +226,17 @@ public class RemoteClient {
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (postSnapshot.getKey().equals(gameId)) {
-                            GameData user = postSnapshot.getValue(GameData.class);
-                            Log.e(TAG, user.getPlayer1ID() + " - " + user.isFirstCombatPlay()
-                                    + " - " + user.isSecondCombatPlay()
-                                    + " - " + user.getGameLetterState());
+                            String gameKey = postSnapshot.getKey();
+                            GameData game = postSnapshot.getValue(GameData.class);
+                            Log.e(TAG, game.getPlayer1ID() + " - " + game.isFirstCombatPlay()
+                                    + " - " + game.isSecondCombatPlay()
+                                    + " - " + game.getGameLetterState());
+                            fireBaseGameData.put(gameKey, game);
                         }
                     }
                 } else {
                     Log.d(TAG, "Data Not Received");
+                    fireBaseGameData.put(gameId, null);
                 }
             }
 
@@ -240,6 +246,10 @@ public class RemoteClient {
                 Log.e(TAG, firebaseError.getDetails());
             }
         });
+    }
+
+    public GameData getGameData(String gameKey) {
+        return (fireBaseGameData.get(gameKey));
     }
 
     public void fetchRandomUsers(final String key, final String userId) {
@@ -285,6 +295,15 @@ public class RemoteClient {
         });
     }
 
+    public HashMap<String, UserData> getFireBaseRandomUserData() {
+        Random random = new Random();
+        List<String> keys = new ArrayList<String>(fireBaseRandomUserData.keySet());
+        String randomKey = keys.get( random.nextInt(keys.size()) );
+        UserData value = fireBaseRandomUserData.get(randomKey);
+        fireBaseSelectedUserData.put(randomKey, value);
+        return fireBaseSelectedUserData;
+    }
+
     public String getRandomUserKey() {
         Random generator = new Random();
         Object[] keys = fireBaseRandomUserData.keySet().toArray();
@@ -297,6 +316,13 @@ public class RemoteClient {
         Object[] values = fireBaseRandomUserData.values().toArray();
         Object randomValue = values[randomInt];
         return (UserData)randomValue;
+    }
+
+    public void updateUser2Data(String key, UserData value) {
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
+//        TODO may not work properly correct the user unique key -- NEED TO PASS THE KEY OF USER 2
+        Firebase usersRef = ref.child(Constants.USER_DATA).child(Constants.USER_UNIQUE_KEY);
+        usersRef.setValue(value);
     }
 
     public void fetchAllUsers(String key, final String userId) {

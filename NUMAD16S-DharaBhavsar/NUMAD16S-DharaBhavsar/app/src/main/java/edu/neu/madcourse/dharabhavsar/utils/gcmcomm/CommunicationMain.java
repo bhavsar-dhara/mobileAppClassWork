@@ -116,7 +116,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
     }
 
 	private static void setCombatGameRequestValues(String msg) {
-		CommunicationConstants.alertText = "Scraggle - Word Game";
+		CommunicationConstants.alertText = "Scraggle Word Game";
 		CommunicationConstants.titleText = "You have a new combat Game Request";
 		CommunicationConstants.contentText = "default msg" + msg;
 	}
@@ -325,16 +325,18 @@ public class CommunicationMain extends Activity implements OnClickListener {
 
 	@SuppressLint("NewApi")
 	public void sendCombatGameRequest(final String message, final String regid) {
-		/*if (regid == null || regid.equals("")) {
-			Toast.makeText(this, "You must register first", Toast.LENGTH_LONG)
-					.show();
-			return;
-		}*/
-		if (message.isEmpty()) {
-			Toast.makeText(this, "Empty Message", Toast.LENGTH_LONG).show();
+		if (regid == null || regid.equals("")) {
+			/*Toast.makeText(this, "You must register first", Toast.LENGTH_LONG)
+					.show();*/
+			Log.e(TAG, "sendCombatGameRequest : regid is null");
 			return;
 		}
-
+		if (message.isEmpty()) {
+			/*Toast.makeText(this, "Empty Message", Toast.LENGTH_LONG).show();*/
+			Log.e(TAG, "sendCombatGameRequest : message is null");
+			return;
+		}
+		Log.e(TAG, "sendCombatGameRequest : regid : " + regid);
 		new AsyncTask<Void, Void, String>() {
 			@Override
 			protected String doInBackground(Void... params) {
@@ -363,6 +365,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
 			@Override
 			protected void onPostExecute(String msg) {
 //				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+				Log.e(TAG, "sendCombatGameRequest : in onPostExecute");
 			}
 		}.execute(null, null, null);
 	}

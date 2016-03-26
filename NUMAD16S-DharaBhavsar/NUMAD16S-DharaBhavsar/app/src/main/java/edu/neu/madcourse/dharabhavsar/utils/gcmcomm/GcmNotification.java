@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,10 +23,11 @@ public class GcmNotification {
 
 	private AsyncTask<Void, Void, Void> sendNotificationTask;
 	private int status;
+	private String LOG_TAG = "GcmNotification";
 
 	public void sendNotification(final Map<String, String> msgParams,
 			final List<String> regIds, final Context context) {
-		Log.e("SENDNOTIFICATION", "in sending notification");
+		Log.e(LOG_TAG, "in sending notification");
 
 		sendNotificationTask = new AsyncTask<Void, Void, Void>() {
 
@@ -46,13 +46,15 @@ public class GcmNotification {
 			protected void onPostExecute(Void result) {
 
 				if (status != 200) {
-					Toast.makeText(context.getApplicationContext(),
+					/*Toast.makeText(context.getApplicationContext(),
 							"message failed... status: " + status,
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();*/
+					Log.e(LOG_TAG, "status != 200");
 				} else {
-					Toast.makeText(context.getApplicationContext(),
+					/*Toast.makeText(context.getApplicationContext(),
 							"message sent... notification coming",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();*/
+					Log.e(LOG_TAG, "status == 200");
 				}
 
 				sendNotificationTask = null;
@@ -64,7 +66,7 @@ public class GcmNotification {
 	@SuppressLint("NewApi")
 	private void post(Map<String, String> params, List<String> regIds)
 			throws IOException {
-
+		Log.e(LOG_TAG, "in POST sending notification");
 		URL url;
 		try {
 			url = new URL(CommunicationConstants.BASE_URL);
@@ -121,7 +123,7 @@ public class GcmNotification {
 
 			// handle the response
 			status = conn.getResponseCode();
-			Log.d("GCM status: ", String.valueOf(status));
+			Log.e("GCM status: ", String.valueOf(status));
 			if (status != 200) {
 				throw new IOException("GCM Post failed with error code "
 						+ status);

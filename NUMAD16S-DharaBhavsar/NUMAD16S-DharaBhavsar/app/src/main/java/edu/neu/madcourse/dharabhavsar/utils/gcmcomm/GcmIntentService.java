@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class GcmIntentService extends IntentService {
@@ -23,7 +24,7 @@ public class GcmIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.e("IN INTENT", "in sending notification from intent");
+		Log.e("IN INTENT", "in onHandleIntent function");
 		String alertText = CommunicationConstants.alertText;
 		String titleText = CommunicationConstants.titleText;
 		String contentText = CommunicationConstants.contentText;
@@ -42,15 +43,17 @@ public class GcmIntentService extends IntentService {
 	// a GCM message.
 	public void sendNotification(String alertText, String titleText,
 			String contentText) {
+		Log.e("IN INTENT", "in sending notification from intent");
 		mNotificationManager = (NotificationManager) this
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		Intent notificationIntent;
 		notificationIntent = new Intent(this,
-				edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain.class);
+				edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		notificationIntent.putExtra("show_response", "show_response");
+//		TODO more putExtra to pass the gameKey
 		PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
-						this, CommunicationMain.class),
+						this, ScraggleGameActivity2.class),
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
