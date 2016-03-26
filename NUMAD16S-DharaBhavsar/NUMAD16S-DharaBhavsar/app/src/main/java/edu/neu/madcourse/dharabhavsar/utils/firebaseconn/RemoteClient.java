@@ -15,18 +15,13 @@ import java.util.Random;
 
 import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
+import edu.neu.madcourse.dharabhavsar.utils.Constants;
 
 /**
  * Created by derylrodrigues on 3/4/16.
  */
 public class RemoteClient {
 
-    private static final String MyPREFERENCES = "MyPrefs" ;
-    public static final String USER_UNIQUE_KEY = "user_key";
-    public static final String GAME_UNIQUE_KEY = "game_key";
-    public static final String USER_DATA = "userData";
-//    private static final String FIREBASE_DB = "https://<Your FireBase AppName>.firebaseIO.com/";
-    private static final String FIREBASE_DB = "https://popping-fire-5271.firebaseio.com/";
     private static final String TAG = "RemoteClient";
     private static boolean isDataChanged = false;
     private Context mContext;
@@ -35,19 +30,22 @@ public class RemoteClient {
     private UserData user = new UserData();
     private HashMap<String, UserData> fireBaseUserData = new HashMap<String, UserData>();
     private HashMap<String, UserData> fireBaseRandomUserData = new HashMap<String, UserData>();
+    private HashMap<String, GameData> fireBaseGameData = new HashMap<String, GameData>();
     private static boolean isRandomDataChanged = false;
+    private int randomInt;
 
     public RemoteClient(Context mContext)
     {
         this.mContext = mContext;
         Firebase.setAndroidContext(mContext);
 //        Firebase.getDefaultConfig().setLogLevel(Logger.Level.DEBUG);
-        prefs = mContext.getSharedPreferences(RemoteClient.class.getSimpleName(), Context.MODE_PRIVATE);
+        prefs = mContext.getSharedPreferences
+                (RemoteClient.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
 
     public void saveValue(String key, String value) {
-        Firebase ref = new Firebase(FIREBASE_DB);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
         Firebase usersRef = ref.child(key);
         usersRef.setValue(value, new Firebase.CompletionListener() {
             @Override
@@ -79,7 +77,7 @@ public class RemoteClient {
     public void fetchValue(String key) {
 
         Log.d(TAG, "Get Value for Key - " + key);
-        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -104,10 +102,10 @@ public class RemoteClient {
         });
     }
 
-//    code to save and retrieve userData
+//    code to save, update and retrieve userData
     public void saveUserData(UserData value) {
-        Firebase ref = new Firebase(FIREBASE_DB);
-        Firebase usersRef = ref.child(USER_DATA);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
+        Firebase usersRef = ref.child(Constants.USER_DATA);
         Firebase newUserRef = usersRef.push();
         newUserRef.setValue(value, new Firebase.CompletionListener() {
             @Override
@@ -123,15 +121,22 @@ public class RemoteClient {
         String uniqueUserId = newUserRef.getKey();
         Log.e(TAG, "uniqueUserId = " + uniqueUserId);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(USER_UNIQUE_KEY, uniqueUserId);
+        editor.putString(Constants.USER_UNIQUE_KEY, uniqueUserId);
         editor.commit();
-        String userKey = prefs.getString(USER_UNIQUE_KEY, "");
+        String userKey = prefs.getString(Constants.USER_UNIQUE_KEY, "");
         Log.e(TAG, "in prefs, userKey = " + userKey);
+    }
+
+    public void updateUserData(UserData value) {
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
+//        TODO may not work properly correct the user unique key
+        Firebase usersRef = ref.child(Constants.USER_DATA).child(Constants.USER_UNIQUE_KEY);
+        usersRef.setValue(value);
     }
 
     public void fetchUserData(String key, final String userId) {
         Log.e(TAG, "Get Value for Key - " + userId);
-        Firebase ref = new Firebase(FIREBASE_DB);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
 //        Firebase ref = new Firebase(FIREBASE_DB + key);
         Firebase usersRef = ref.child(key);
         Query queryRef = usersRef.orderByKey();
@@ -148,7 +153,8 @@ public class RemoteClient {
                         if (postSnapshot.getKey().equals(userId)) {
                             user = postSnapshot.getValue(UserData.class);
                             Log.e(TAG, user.getUserId() + " - " + user.getUserName()
-                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                                    + " - " + user.getUserCombineBestScore()
+                                    + " - " + user.getUserIndividualBestScore());
                             fireBaseUserData.put(userId, user);
                         }
                     }
@@ -173,8 +179,8 @@ public class RemoteClient {
 //    code to store gameData
     public void saveGameData(GameData value) {
 //        TODO saving game data for both the plays
-        Firebase ref = new Firebase(FIREBASE_DB);
-        Firebase gameRef = ref.child("gameData");
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
+        Firebase gameRef = ref.child(Constants.GAME_DATA);
         Firebase newGameRef = gameRef.push();
         newGameRef.setValue(value, new Firebase.CompletionListener() {
             @Override
@@ -190,29 +196,37 @@ public class RemoteClient {
         String uniqueGameKey = newGameRef.getKey();
         Log.e(TAG, "uniqueGameKey = " + uniqueGameKey);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(GAME_UNIQUE_KEY, uniqueGameKey);
+        editor.putString(Constants.GAME_UNIQUE_KEY, uniqueGameKey);
         editor.commit();
-        String gameKey = prefs.getString(GAME_UNIQUE_KEY, "");
+        String gameKey = prefs.getString(Constants.GAME_UNIQUE_KEY, "");
         Log.e(TAG, "in prefs, gameKey = " + gameKey);
     }
 
-    public void fetchGameData(String key, final String userId) {
+    public void updateGameData(UserData value) {
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
+//        TODO may not work properly correct the game unique key
+        Firebase usersRef = ref.child(Constants.GAME_DATA).child(Constants.GAME_UNIQUE_KEY);
+        usersRef.setValue(value);
+    }
+
+    public void fetchGameData(String key, final String gameId) {
 //        TODO game data fetching for async play + combine play
         Log.d(TAG, "Get Value for Key - " + key);
-        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
-                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " number of games created.");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        if (postSnapshot.getKey().equals(userId)) {
-                            UserData user = postSnapshot.getValue(UserData.class);
-                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
-                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                        if (postSnapshot.getKey().equals(gameId)) {
+                            GameData user = postSnapshot.getValue(GameData.class);
+                            Log.e(TAG, user.getPlayer1ID() + " - " + user.isFirstCombatPlay()
+                                    + " - " + user.isSecondCombatPlay()
+                                    + " - " + user.getGameLetterState());
                         }
                     }
                 } else {
@@ -231,7 +245,7 @@ public class RemoteClient {
     public void fetchRandomUsers(final String key, final String userId) {
 //        TODO users for 2player combat game
         Log.d(TAG, "Get Value for Key - " + key);
-        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -239,17 +253,21 @@ public class RemoteClient {
                 isRandomDataChanged = true;
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
-                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " number of users.");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (!postSnapshot.getKey().equals(userId)) {
+                            String randomUserKey = postSnapshot.getKey();
                             UserData user = postSnapshot.getValue(UserData.class);
                             if(!user.isChallengedGamePending()) {
-                                fireBaseRandomUserData.put(userId, user);
+                                fireBaseRandomUserData.put(randomUserKey, user);
                                 Log.e(TAG, user.getUserId() + " - " + user.getUserName()
-                                        + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore()
-                                        + " - " + user.getChallengedBy() + " - " + user.getTeamPlayerName()
-                                        + " - " + user.isCombineGameRequest() + " - " + user.isChallengedGamePending());
+                                        + " - " + user.getUserCombineBestScore()
+                                        + " - " + user.getUserIndividualBestScore()
+                                        + " - " + user.getChallengedBy()
+                                        + " - " + user.getTeamPlayerName()
+                                        + " - " + user.isCombineGameRequest()
+                                        + " - " + user.isChallengedGamePending());
                             }
                         }
                     }
@@ -267,17 +285,24 @@ public class RemoteClient {
         });
     }
 
-    public UserData getRandomUserData() {
+    public String getRandomUserKey() {
         Random generator = new Random();
+        Object[] keys = fireBaseRandomUserData.keySet().toArray();
+        randomInt = generator.nextInt(keys.length);
+        Object randomKey = keys[generator.nextInt(randomInt)];
+        return (String)randomKey;
+    }
+
+    public UserData getRandomUserData() {
         Object[] values = fireBaseRandomUserData.values().toArray();
-        Object randomValue = values[generator.nextInt(values.length)];
+        Object randomValue = values[randomInt];
         return (UserData)randomValue;
     }
 
     public void fetchAllUsers(String key, final String userId) {
 //        TODO users for combine play
         Log.d(TAG, "Get Value for Key - " + key);
-        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -290,7 +315,8 @@ public class RemoteClient {
                         if (postSnapshot.getKey().equals(userId)) {
                             UserData user = postSnapshot.getValue(UserData.class);
                             Log.e(TAG, user.getUserId() + " - " + user.getUserName()
-                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                                    + " - " + user.getUserCombineBestScore()
+                                    + " - " + user.getUserIndividualBestScore());
                         }
                     }
                 } else {
@@ -309,7 +335,7 @@ public class RemoteClient {
     public void fetchScoreBoardData(String key, final String userId) {
 //        TODO score board data
         Log.d(TAG, "Get Value for Key - " + key);
-        Firebase ref = new Firebase(FIREBASE_DB + key);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -322,7 +348,8 @@ public class RemoteClient {
                         if (postSnapshot.getKey().equals(userId)) {
                             UserData user = postSnapshot.getValue(UserData.class);
                             Log.e(TAG, user.getUserId() + " - " + user.getUserName()
-                                    + " - " + user.getUserCombineBestScore() + " - " + user.getUserIndividualBestScore());
+                                    + " - " + user.getUserCombineBestScore()
+                                    + " - " + user.getUserIndividualBestScore());
                         }
                     }
                 } else {

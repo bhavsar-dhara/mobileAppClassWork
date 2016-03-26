@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.neu.madcourse.dharabhavsar.utils.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
@@ -114,6 +114,13 @@ public class CommunicationMain extends Activity implements OnClickListener {
         CommunicationConstants.titleText = "Sending Message";
         CommunicationConstants.contentText = msg;
     }
+
+	private static void setCombatGameRequestValues(String msg) {
+		CommunicationConstants.alertText = "Scraggle - Word Game";
+		CommunicationConstants.titleText = "You have a new combat Game Request";
+		CommunicationConstants.contentText = "default msg" + msg;
+	}
+
 
 	/*private void registerInBackground() {
 		new AsyncTask<Void, Void, String>() {
@@ -312,6 +319,50 @@ public class CommunicationMain extends Activity implements OnClickListener {
 			@Override
 			protected void onPostExecute(String msg) {
 				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+			}
+		}.execute(null, null, null);
+	}
+
+	@SuppressLint("NewApi")
+	public void sendCombatGameRequest(final String message, final String regid) {
+		/*if (regid == null || regid.equals("")) {
+			Toast.makeText(this, "You must register first", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}*/
+		if (message.isEmpty()) {
+			Toast.makeText(this, "Empty Message", Toast.LENGTH_LONG).show();
+			return;
+		}
+
+		new AsyncTask<Void, Void, String>() {
+			@Override
+			protected String doInBackground(Void... params) {
+				String msg = "";
+				List<String> regIds = new ArrayList<String>();
+				String reg_device = regid;
+				int nIcon = R.drawable.ic_launcher;
+				int nType = CommunicationConstants.SIMPLE_NOTIFICATION;
+				Map<String, String> msgParams;
+				msgParams = new HashMap<String, String>();
+				msgParams.put("data.alertText", "Notification");
+				msgParams.put("data.titleText", "Notification Title");
+				msgParams.put("data.contentText", message);
+				msgParams.put("data.nIcon", String.valueOf(nIcon));
+				msgParams.put("data.nType", String.valueOf(nType));
+				setCombatGameRequestValues(message);
+				GcmNotification gcmNotification = new GcmNotification();
+				regIds.clear();
+				regIds.add(reg_device);
+				gcmNotification.sendNotification(msgParams, regIds,
+						edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain.this);
+				msg = "sending information...";
+				return msg;
+			}
+
+			@Override
+			protected void onPostExecute(String msg) {
+//				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 			}
 		}.execute(null, null, null);
 	}

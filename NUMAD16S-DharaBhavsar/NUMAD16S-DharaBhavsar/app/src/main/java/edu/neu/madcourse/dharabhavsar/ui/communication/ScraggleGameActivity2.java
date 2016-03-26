@@ -32,60 +32,59 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
-import edu.neu.madcourse.dharabhavsar.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
-import edu.neu.madcourse.dharabhavsar.ui.dictionary.TrieLookup;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.utils.Constants;
+import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 
 public class ScraggleGameActivity2 extends Activity {
-    public static final String KEY_RESTORE = "key_restore";
-    public static final String PREF_RESTORE = "pref_restore";
-    public static final String USER_UNIQUE_KEY = "user_key";
-    public static final String USER_DATA = "userData";
-    public static final String PROPERTY_REG_ID = "registration_id";
     private MediaPlayer mMediaPlayer;
     private Handler mHandler = new Handler();
     private ScraggleGameFragment2 mGameFragment;
     private ControlFragmentScraggle2 mControlFragment;
-    List<String> nineWords = new ArrayList<>();
-    TextView mTextField;
+    private List<String> nineWords = new ArrayList<>();
+    private TextView mTextField;
     private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
-    long savedRemainingInterval = 0;
-    MyCount counter;
-    String resultStr = "";
-    String finalResult = "";
-    String result = "";
-    ArrayList<String> vocabList = new ArrayList<String>();
-    String insertedText = "";
+    private long savedRemainingInterval = 0;
+    private MyCount counter;
+    private String resultStr = "";
+    private String finalResult = "";
+    private String result = "";
+    private ArrayList<String> vocabList = new ArrayList<String>();
+    private String insertedText = "";
     private AlertDialog mDialog;
-    TrieLookup trie;
-    Boolean resFlag = false;
-    TextView mScoreTextField;
-    int score = 0;
-    int score2 = 0;
-    boolean restore;
-    boolean isResumeFlag = false;
+    private Boolean resFlag = false;
+    private TextView mScoreTextField;
+    private int score = 0;
+    private int score2 = 0;
+    private boolean restore;
+    private boolean isResumeFlag = false;
     private boolean isPhaseTwo = false;
     private String gameData = "";
     private Context appContext = this;
     private boolean isGameEnd = false;
 
-    static final String STATE_SCORE = "playerScore";
-    static final String STATE_LEVEL = "playerLevel";
+    private static final String STATE_SCORE = "playerScore";
+    private static final String STATE_LEVEL = "playerLevel";
 
     private UserData user;
-    RemoteClient mRemoteClient;
-    SharedPreferences prefs;
-    Timer timer;
-    TimerTask timerTask;
+    private RemoteClient mRemoteClient;
+    private SharedPreferences prefs;
+    private SharedPreferences prefs2;
+    private Timer timer;
+    private TimerTask timerTask;
     private UserData user2player;
-    Timer timer2;
-    TimerTask timerTask2;
-    String userKey;
-    String userId;
-    GameData gameDataFb;
+    private Timer timer2;
+    private TimerTask timerTask2;
+    private String userKey;
+    private String userId;
+    private GameData gameDataFb;
     private char[][] gameLetter = new char[9][9];
+    private CommunicationMain mCommMain = new CommunicationMain();
+    private String gameKey;
+    private String user2key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,10 +103,12 @@ public class ScraggleGameActivity2 extends Activity {
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         prefs = appContext.getSharedPreferences(RemoteClient.class.getSimpleName(), Context.MODE_PRIVATE);
+        prefs2 = appContext.getSharedPreferences(CommunicationMain.class.getSimpleName(), Context.MODE_PRIVATE);
         mRemoteClient = new RemoteClient(appContext);
 
-        userKey = prefs.getString(USER_UNIQUE_KEY, "");
-        userId = prefs.getString(PROPERTY_REG_ID, "");
+        userKey = prefs.getString(Constants.USER_UNIQUE_KEY, "");
+        userId = prefs2.getString(Constants.PROPERTY_REG_ID, "");
+        gameKey = prefs.getString(Constants.GAME_UNIQUE_KEY, "");
 
         setContentView(R.layout.activity_game_scraggle2);
         mGameFragment = (ScraggleGameFragment2) getFragmentManager()
@@ -117,10 +118,10 @@ public class ScraggleGameActivity2 extends Activity {
         mTextField = (TextView) findViewById(R.id.timerView);
         mScoreTextField = (TextView) findViewById(R.id.scoreView);
 
-        restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
+        restore = getIntent().getBooleanExtra(Constants.KEY_RESTORE, false);
         if (restore) {
             String gameData = getPreferences(MODE_PRIVATE)
-                    .getString(PREF_RESTORE, null);
+                    .getString(Constants.PREF_RESTORE, null);
 //            Log.e("ScraggleActivity", "gameData = " + gameData);
             if (gameData != null) {
                 mGameFragment.putState(gameData);
@@ -146,25 +147,12 @@ public class ScraggleGameActivity2 extends Activity {
             }
             Log.e("onFinish phase2", "in prefs, userKey = " + userKey);
             if (userKey != null) {
-                mRemoteClient.fetchUserData(USER_DATA, userKey);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        user = mRemoteClient.getUserData(userKey);
-                        Log.e("remote", "username = " + user.getUserName());
-                    }
-                }, 5000);
+                fetchPlayerDetailsCombat();
                 // any polling mechanism can be used
 //                startTimer1(userKey);
-                mRemoteClient.fetchRandomUsers(USER_DATA, userKey);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        user2player = mRemoteClient.getRandomUserData();
-                        Log.e("remote", "username 2 = " + user2player.getUserName());
-                    }
-                }, 5000);
+                fetchRandomPlayer2DetailsCombat();
 //                startTimer2(userKey);
+//                ... TODO add something aomething
             }
         } else {
             if (savedRemainingInterval > 0) {
@@ -175,15 +163,7 @@ public class ScraggleGameActivity2 extends Activity {
                 counter = new MyCount(interval, 1000);
             }
 //            TODO initializing game data at the start of the game
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    gameLetter = mGameFragment.getGameLetterState();
-                    Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
-                    gameDataFb = new GameData(0, 0, 0, 0, 0, userId, "", gameLetter, true, false, false, false);
-                    mRemoteClient.saveGameData(gameDataFb);
-                }
-            }, 5000);
+            saveInitialGameDataP1Combat();
         }
     }
 
@@ -216,8 +196,8 @@ public class ScraggleGameActivity2 extends Activity {
         } else {
             mScoreTextField.setText("Score = " + String.valueOf(score + score2));
         }
-        View thinkView = findViewById(R.id.thinking_scraggle);
-        thinkView.setVisibility(View.GONE);
+//        View thinkView = findViewById(R.id.thinking_scraggle);
+//        thinkView.setVisibility(View.GONE);
     }
 
     @Override
@@ -261,7 +241,7 @@ public class ScraggleGameActivity2 extends Activity {
 //        if(!isGameEnd) {
         String gameData = mGameFragment.getState();
         getPreferences(MODE_PRIVATE).edit()
-                .putString(PREF_RESTORE, gameData)
+                .putString(Constants.PREF_RESTORE, gameData)
                 .commit();
         Log.d("Scraggle", "state = " + gameData);
 //        }
@@ -344,7 +324,10 @@ public class ScraggleGameActivity2 extends Activity {
 //                TODO assign a random opponent to this player and save gameData in the gameData model class
                 /*String userKey = getPreferences(MODE_PRIVATE)
                         .getString(USER_UNIQUE_KEY, null);*/
+                updatePlayer1DetailsOnFinishCombat();
+                updateGameDetailsOnFinishCombat();
 
+                mCommMain.sendCombatGameRequest("TEST", user2player.getUserId());
 //                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
                 AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
 //                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
@@ -655,5 +638,103 @@ public class ScraggleGameActivity2 extends Activity {
                 }
             }
         };
+    }
+
+
+    // TODO functions to save and update and fetch user and game data
+
+    private void saveInitialGameDataP1Combat() {
+        /*mRemoteClient.fetchUserData(Constants.USER_DATA, userKey);
+        user = mRemoteClient.getUserData(userKey);*/
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                gameLetter = mGameFragment.getGameLetterState();
+                Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
+                gameDataFb = new GameData(0, 0, 0, 0, 0, userId, "", gameLetter, true, false, false, false);
+                mRemoteClient.saveGameData(gameDataFb);
+            }
+        }, 5000);
+    }
+
+    private void fetchPlayerDetailsCombat() {
+        mRemoteClient.fetchUserData(Constants.USER_DATA, userKey);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                user = mRemoteClient.getUserData(userKey);
+                Log.e("remote", "username = " + user.getUserName());
+            }
+        }, 5000);
+    }
+
+    private void fetchRandomPlayer2DetailsCombat() {
+        mRemoteClient.fetchRandomUsers(Constants.USER_DATA, userKey);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                user2key = mRemoteClient.getRandomUserKey();
+                user2player = mRemoteClient.getRandomUserData();
+                Log.e("remote", "username 2 = " + user2player.getUserName());
+            }
+        }, 5000);
+    }
+
+    private void updatePlayer1DetailsOnFinishCombat() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                String gameKey = prefs.getString(Constants.GAME_UNIQUE_KEY, "");
+                UserData updatedUserData = new UserData(user.getUserId(), user.getUserName(),
+                        ((user.getUserIndividualBestScore()>0 && user.getUserIndividualBestScore()>(score+score2))
+                                ?user.getUserIndividualBestScore():score+score2),
+                        user.getUserCombineBestScore(), user.getTeamPlayerName(), true,
+                        user.getChallengedBy(), user.isCombineGameRequest(), score+score2,
+                        user.getUserPendingCombineGameScore(), gameKey, user.getPendingCombineGameKey());
+                mRemoteClient.updateUserData(updatedUserData);
+                Log.e("remote", "username = " + user.getUserName());
+            }
+        }, 5000);
+    }
+
+    private void updateGameDetailsOnFinishCombat() {
+//        final String gameKey = prefs.getString(Constants.GAME_UNIQUE_KEY, "");
+        mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKey);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                GameData updatedGameData = new GameData();
+                UserData updatedUserData = new UserData(user.getUserId(), user.getUserName(),
+                        ((user.getUserIndividualBestScore()>0 && user.getUserIndividualBestScore()>(score+score2))
+                                ?user.getUserIndividualBestScore():score+score2),
+                        user.getUserCombineBestScore(), user.getTeamPlayerName(), true,
+                        user.getChallengedBy(), user.isCombineGameRequest(), score+score2,
+                        user.getUserPendingCombineGameScore(), gameKey, user.getPendingCombineGameKey());
+                mRemoteClient.updateUserData(updatedUserData);
+                Log.e("remote", "username = " + user.getUserName());
+            }
+        }, 5000);
+    }
+
+    private void updatePlayer2DetailsOnP1FinishCombat() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UserData updatedUserData = new UserData(user2player.getUserId(),
+                        user2player.getUserName(),
+                        user2player.getUserIndividualBestScore(),
+                        user2player.getUserCombineBestScore(),
+                        user2player.getTeamPlayerName(),
+                        true,
+                        user2player.getChallengedBy(),
+                        user2player.isCombineGameRequest(),
+                        user2player.getUserPendingIndividualGameScore(),
+                        user2player.getUserPendingCombineGameScore(),
+                        gameKey,
+                        user2player.getPendingCombineGameKey());
+                mRemoteClient.updateUserData(updatedUserData);
+                Log.e("remote player2", "username2 = " + user2player.getUserName());
+            }
+        }, 5000);
     }
 }

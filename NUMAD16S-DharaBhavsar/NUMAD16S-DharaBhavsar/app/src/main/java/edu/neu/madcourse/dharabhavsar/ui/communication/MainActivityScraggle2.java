@@ -16,9 +16,9 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import edu.neu.madcourse.dharabhavsar.DetectInternetConn;
-import edu.neu.madcourse.dharabhavsar.RemoteClient;
-import edu.neu.madcourse.dharabhavsar.gcmcomm.CommunicationMain;
+import edu.neu.madcourse.dharabhavsar.utils.internetconncheck.DetectInternetConn;
+import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 

@@ -9,11 +9,11 @@ public class UserData {
     private String userName;
     private int userIndividualBestScore;
     private int userCombineBestScore;
-    private String teamPlayerName;      // name of the team player with whom the best score for
-                                        // combine game was scored
+    private String teamPlayerName;          // name of the team player with whom the best score for
+                                            // combine game was scored
     private boolean challengedGamePending;  // true if there is already pending game with the user
-    private String challengedBy;
-    private boolean combineGameRequest;   // true if there is a combine Play game request
+    private String challengedBy;            // name of the player1 for player2 else blank
+    private boolean combineGameRequest;     // true if there is a combine Play game request
     private int userPendingIndividualGameScore;
     private int userPendingCombineGameScore;
     private String pendingCombatGameKey;

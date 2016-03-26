@@ -888,7 +888,8 @@ public class ScraggleGameFragment extends Fragment {
     protected int getWordCount1() {
         int count = 0;
         for(int i = 0; i < wordMadeList.length; i++) {
-            if(wordMadeList[i] != null && !wordMadeList[i].equals("") && !wordMadeList[i].equals("null")) {
+            if(wordMadeList[i] != null && !wordMadeList[i].equals("")
+                    && !wordMadeList[i].equals("null") && isWord[i]) {
                 Log.e("getWordCount1", String.valueOf(i) + " : " +wordMadeList[i]);
                 count++;
             }

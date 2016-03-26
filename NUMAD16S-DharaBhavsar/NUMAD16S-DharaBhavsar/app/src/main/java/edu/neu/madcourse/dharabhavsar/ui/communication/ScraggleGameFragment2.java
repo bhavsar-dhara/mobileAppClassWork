@@ -212,7 +212,7 @@ public class ScraggleGameFragment2 extends Fragment {
                         if (!isPhaseTwo) {
 //                        if (isAvailable(smallTile)) {
                             if (isNextMove(smallTile)) {
-                                ((ScraggleGameActivity2) getActivity()).startThinking();
+//                                ((ScraggleGameActivity2) getActivity()).startThinking();
 //                                Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
                                 if (!smallTile.getIsSelected()) {
 //                                    Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
@@ -246,7 +246,7 @@ public class ScraggleGameFragment2 extends Fragment {
                             mLastSmall = fSmall;
                         } else {
                             Log.e("initViews", "inside PhaseTwo code");
-                            ((ScraggleGameActivity2) getActivity()).startThinking();
+//                            ((ScraggleGameActivity2) getActivity()).startThinking();
 //                            Log.e("initViews", "mLastLarge = " + mLastLarge);
 //                            Log.e("initViews", "fLarge = " + fLarge);
                             if (mLastLarge != fLarge) {
@@ -864,7 +864,8 @@ public class ScraggleGameFragment2 extends Fragment {
     protected int getWordCount1() {
         int count = 0;
         for(int i = 0; i < wordMadeList.length; i++) {
-            if(wordMadeList[i] != null && !wordMadeList[i].equals("") && !wordMadeList[i].equals("null")) {
+            if(wordMadeList[i] != null && !wordMadeList[i].equals("")
+                    && !wordMadeList[i].equals("null") && isWord[i]) {
                 Log.e("getWordCount1", String.valueOf(i) + " : " +wordMadeList[i]);
                 count++;
             }

@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.utils.internetConnCheck;
+package edu.neu.madcourse.dharabhavsar.utils.internetconncheck;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
