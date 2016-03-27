@@ -21,4 +21,10 @@ public class Constants {
     public static final String USER_DATA = "userData";
     public static final String GAME_DATA = "gameData";
 
+    /**
+     * Constants that are needed to be sent/received
+     */
+    public static String GAME_KEY = "";
+    public static String USER_KEY = "";
+
 }

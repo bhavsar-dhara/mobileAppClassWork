@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -17,20 +18,28 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
+import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
+import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.TrieLookup;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 
 public class ScraggleGameActivity2Combine extends Activity {
     public static final String KEY_RESTORE = "key_restore";
@@ -65,6 +74,25 @@ public class ScraggleGameActivity2Combine extends Activity {
     static final String STATE_SCORE = "playerScore";
     static final String STATE_LEVEL = "playerLevel";
 
+    private UserData user;
+    private RemoteClient mRemoteClient;
+    private SharedPreferences prefs;
+    private SharedPreferences prefs2;
+    private Timer timer;
+    private TimerTask timerTask;
+    private UserData user2player;
+    private Timer timer2;
+    private TimerTask timerTask2;
+    private String userKey;
+    private String userId;
+    private GameData gameDataFb;
+    private char[][] gameLetter = new char[9][9];
+    private CommunicationMain mCommMain = new CommunicationMain();
+    private String gameKey;
+    private String user2key;
+    private HashMap<String, UserData> current2UserMap = new HashMap<String, UserData>();
+    private UserData selected2PlayerData;
+    private GameData retrievedGameData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +117,10 @@ public class ScraggleGameActivity2Combine extends Activity {
 
 //         The below code didn't work for this activity
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+        prefs = appContext.getSharedPreferences(RemoteClient.class.getSimpleName(), Context.MODE_PRIVATE);
+        prefs2 = appContext.getSharedPreferences(CommunicationMain.class.getSimpleName(), Context.MODE_PRIVATE);
+        mRemoteClient = new RemoteClient(appContext);
 
         setContentView(R.layout.activity_game_scraggle2combine);
         mGameFragment = (ScraggleGameFragment2Combine) getFragmentManager()
@@ -518,5 +550,79 @@ public class ScraggleGameActivity2Combine extends Activity {
 
     public void setIsGameEnd(boolean isGameEndFlag) {
         isGameEnd = isGameEndFlag;
+    }
+
+    public void startTimer1(String key) {
+        //set a new Timer
+        timer = new Timer();
+        //initialize the TimerTask's job
+        initializeTimerTask1(key);
+        //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
+        // The values can be adjusted depending on the performance
+        timer.schedule(timerTask, 5000, 1000);
+    }
+
+    public void startTimer2(String key) {
+        //set a new Timer
+        timer2 = new Timer();
+        //initialize the TimerTask's job
+        initializeTimerTask2();
+        //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
+        // The values can be adjusted depending on the performance
+        timer2.schedule(timerTask2, 5000, 1000);
+    }
+
+    public void stoptimertask1() {
+        //stop the timer, if it's not already null
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    public void stoptimertask2() {
+        //stop the timer, if it's not already null
+        if (timer2 != null) {
+            timer2.cancel();
+            timer2 = null;
+        }
+    }
+
+    public void initializeTimerTask1(final String key) {
+        timerTask = new TimerTask() {
+            public void run() {
+                Log.e("GameActivity2", "isDataFetched >>>> " + mRemoteClient.isDataFetched());
+                if (mRemoteClient.isDataFetched()) {
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            user = mRemoteClient.getUserData(key);
+                            Log.e("GameActivity2", "Value >>>> " + user);
+                            Toast.makeText(ScraggleGameActivity2Combine.this, "Value 1  " + user.getUserName(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    stoptimertask1();
+                }
+            }
+        };
+    }
+
+    public void initializeTimerTask2() {
+        timerTask2 = new TimerTask() {
+            public void run() {
+                Log.e("GameActivity2", "isDataFetched >>>> " + mRemoteClient.isDataFetched());
+                if (mRemoteClient.isDataFetched()) {
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            current2UserMap = mRemoteClient.getFireBaseRandomUserData();
+                            Log.e("GameActivity2", "Value2 >>>> " + user);
+                            Toast.makeText(ScraggleGameActivity2Combine.this, "Value 2  " + user2player.getUserName(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    stoptimertask2();
+                }
+            }
+        };
     }
 }

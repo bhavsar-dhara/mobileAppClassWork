@@ -13,60 +13,62 @@ import edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class GcmIntentService extends IntentService {
-	public static final int NOTIFICATION_ID = 1;
-	private NotificationManager mNotificationManager;
-	NotificationCompat.Builder builder;
-	static final String TAG = "GCM_Communication";
+    public static final int NOTIFICATION_ID = 1;
+    private NotificationManager mNotificationManager;
+    NotificationCompat.Builder builder;
+    static final String TAG = "GCM_Communication";
 
-	public GcmIntentService() {
-		super("GcmIntentService");
-	}
+    public GcmIntentService() {
+        super("GcmIntentService");
+    }
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		Log.e("IN INTENT", "in onHandleIntent function");
-		String alertText = CommunicationConstants.alertText;
-		String titleText = CommunicationConstants.titleText;
-		String contentText = CommunicationConstants.contentText;
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Log.e("IN INTENT", "in onHandleIntent function");
+        String alertText = CommunicationConstants.alertText;
+        String titleText = CommunicationConstants.titleText;
+        String contentText = CommunicationConstants.contentText;
 
-		Bundle extras = intent.getExtras();
-		Log.d(String.valueOf(extras.size()), extras.toString());
-		if (!extras.isEmpty()) {
-			sendNotification(alertText, titleText, contentText);
-		}
-		// Release the wake lock provided by the WakefulBroadcastReceiver.
-		GcmBroadcastReceiver.completeWakefulIntent(intent);
-	}
+        Bundle extras = intent.getExtras();
+        Log.e(String.valueOf(extras.size()), extras.toString());
+        if (!extras.isEmpty()) {
+            sendNotification(alertText, titleText, contentText);
+        }
+        // Release the wake lock provided by the WakefulBroadcastReceiver.
+        GcmBroadcastReceiver.completeWakefulIntent(intent);
+    }
 
-	// Put the message into a notification and post it.
-	// This is just one simple example of what you might choose to do with
-	// a GCM message.
-	public void sendNotification(String alertText, String titleText,
-			String contentText) {
-		Log.e("IN INTENT", "in sending notification from intent");
-		mNotificationManager = (NotificationManager) this
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent notificationIntent;
-		notificationIntent = new Intent(this,
-				edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2.class);
-		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		notificationIntent.putExtra("show_response", "show_response");
-//		TODO more putExtra to pass the gameKey
-		PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
-						this, ScraggleGameActivity2.class),
-				PendingIntent.FLAG_UPDATE_CURRENT);
+    // Put the message into a notification and post it.
+    // This is just one simple example of what you might choose to do with
+    // a GCM message.
+    public void sendNotification(String alertText, String titleText,
+                                 String contentText) {
+        Log.e("IN INTENT", "in sending notification from intent");
+        mNotificationManager = (NotificationManager) this
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent notificationIntent;
+        notificationIntent = new Intent(this,
+                edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2.class);
+         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+         notificationIntent.putExtra("show_response", "show_response");
+//		TODO more putExtra to pass the gameKey - not working - find another way
+//        String gameKey = Constants.GAME_KEY;
+//        notificationIntent.putExtra(Constants.GAME_UNIQUE_KEY, gameKey);
+        PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
+                        this, ScraggleGameActivity2.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				this)
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(titleText)
-				.setStyle(
-						new NotificationCompat.BigTextStyle()
-								.bigText(contentText))
-				.setContentText(contentText).setTicker(alertText)
-				.setAutoCancel(true);
-		mBuilder.setContentIntent(intent);
-		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-	}
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(titleText)
+                .setStyle(
+                        new NotificationCompat.BigTextStyle()
+                                .bigText(contentText))
+                .setContentText(contentText).setTicker(alertText)
+                .setAutoCancel(true);
+        mBuilder.setContentIntent(intent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
 
 }

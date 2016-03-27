@@ -54,9 +54,9 @@ public class RemoteClient {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
-                    Log.d(TAG, "Data could not be saved. " + firebaseError.getMessage());
+                    Log.e(TAG, "Data could not be saved. " + firebaseError.getMessage());
                 } else {
-                    Log.d(TAG, "Data saved successfully.");
+                    Log.e(TAG, "Data saved successfully.");
                 }
             }
         });
@@ -79,7 +79,7 @@ public class RemoteClient {
 
     public void fetchValue(String key) {
 
-        Log.d(TAG, "Get Value for Key - " + key);
+        Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -88,11 +88,11 @@ public class RemoteClient {
                 // snapshot contains the key and value
                 isDataChanged = true;
                 if (snapshot.getValue() != null) {
-                    Log.d(TAG, "Data Received" + snapshot.getValue().toString());
+                    Log.e(TAG, "Data Received" + snapshot.getValue().toString());
                     // Adding the data to the HashMap
                     fireBaseData.put(snapshot.getKey(), snapshot.getValue().toString());
                 } else {
-                    Log.d(TAG, "Data Not Received");
+                    Log.e(TAG, "Data Not Received");
                     fireBaseData.put(snapshot.getKey(), null);
                 }
             }
@@ -114,9 +114,9 @@ public class RemoteClient {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
-                    Log.d(TAG, "Data could not be saved. " + firebaseError.getMessage());
+                    Log.e(TAG, "Data could not be saved. " + firebaseError.getMessage());
                 } else {
-                    Log.d(TAG, "Data saved successfully.");
+                    Log.e(TAG, "Data saved successfully.");
                 }
             }
         });
@@ -132,18 +132,18 @@ public class RemoteClient {
 
     public void updateUserData(UserData value) {
         Firebase ref = new Firebase(Constants.FIREBASE_DB);
+        Log.e(TAG, "updateUserData : Get Value for userKey - " + Constants.USER_KEY);
 //        TODO may not work properly correct the user unique key
-        Firebase usersRef = ref.child(Constants.USER_DATA).child(Constants.USER_UNIQUE_KEY);
+        Firebase usersRef = ref.child(Constants.USER_DATA).child(Constants.USER_KEY);
         usersRef.setValue(value);
     }
 
     public void fetchUserData(String key, final String userId) {
-        Log.e(TAG, "Get Value for Key - " + userId);
+        Log.e(TAG, "fetchUserData : Get Value for userKey - " + userId);
+        Log.e(TAG, "fetchUserData : Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB);
-//        Firebase ref = new Firebase(FIREBASE_DB + key);
         Firebase usersRef = ref.child(key);
         Query queryRef = usersRef.orderByKey();
-//        Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -189,9 +189,9 @@ public class RemoteClient {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
-                    Log.d(TAG, "Data could not be saved. " + firebaseError.getMessage());
+                    Log.e(TAG, "Data could not be saved. " + firebaseError.getMessage());
                 } else {
-                    Log.d(TAG, "Data saved successfully.");
+                    Log.e(TAG, "Data saved successfully.");
                 }
             }
         });
@@ -207,35 +207,38 @@ public class RemoteClient {
 
     public void updateGameData(GameData value) {
         Firebase ref = new Firebase(Constants.FIREBASE_DB);
+        Log.e(TAG, "updateGameData : Get Value for userKey - " + Constants.GAME_KEY);
 //        TODO may not work properly correct the game unique key
-        Firebase usersRef = ref.child(Constants.GAME_DATA).child(Constants.GAME_UNIQUE_KEY);
+        Firebase usersRef = ref.child(Constants.GAME_DATA).child(Constants.GAME_KEY);
         usersRef.setValue(value);
     }
 
     public void fetchGameData(String key, final String gameId) {
 //        TODO game data fetching for async play + combine play
-        Log.d(TAG, "Get Value for Key - " + key);
-        Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
-        Query queryRef = ref.orderByKey();
+        Log.e(TAG, "fetchGameData : Get Value for Key - " + key);
+        Log.e(TAG, "fetchGameData : Get Value for GameKey - " + gameId);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
+        Firebase gamesRef = ref.child(key);
+        Query queryRef = gamesRef.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                isDataChanged = true;
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
-                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " number of games created.");
+                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " number of games created.");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (postSnapshot.getKey().equals(gameId)) {
-                            String gameKey = postSnapshot.getKey();
                             GameData game = postSnapshot.getValue(GameData.class);
                             Log.e(TAG, game.getPlayer1ID() + " - " + game.isFirstCombatPlay()
                                     + " - " + game.isSecondCombatPlay()
                                     + " - " + game.getGameLetterState());
-                            fireBaseGameData.put(gameKey, game);
+                            fireBaseGameData.put(gameId, game);
                         }
                     }
                 } else {
-                    Log.d(TAG, "Data Not Received");
+                    Log.e(TAG, "Data Not Received");
                     fireBaseGameData.put(gameId, null);
                 }
             }
@@ -249,12 +252,14 @@ public class RemoteClient {
     }
 
     public GameData getGameData(String gameKey) {
+        Log.e(TAG, "getGameData : Get Value for GameKey - " + gameKey);
         return (fireBaseGameData.get(gameKey));
     }
 
     public void fetchRandomUsers(final String key, final String userId) {
 //        TODO users for 2player combat game
-        Log.d(TAG, "Get Value for Key - " + key);
+        Log.e(TAG, "fetchRandomUsers : Get Value for Key - " + key);
+        Log.e(TAG, "fetchRandomUsers : Get Value for userKey - " + userId);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -263,7 +268,7 @@ public class RemoteClient {
                 isRandomDataChanged = true;
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
-                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " number of users.");
+                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " number of users.");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (!postSnapshot.getKey().equals(userId)) {
@@ -282,7 +287,7 @@ public class RemoteClient {
                         }
                     }
                 } else {
-                    Log.d(TAG, "Data Not Received");
+                    Log.e(TAG, "Data Not Received");
                     fireBaseRandomUserData.put(userId, null);
                 }
             }
@@ -298,36 +303,23 @@ public class RemoteClient {
     public HashMap<String, UserData> getFireBaseRandomUserData() {
         Random random = new Random();
         List<String> keys = new ArrayList<String>(fireBaseRandomUserData.keySet());
-        String randomKey = keys.get( random.nextInt(keys.size()) );
+        String randomKey = keys.get(random.nextInt(keys.size()));
         UserData value = fireBaseRandomUserData.get(randomKey);
         fireBaseSelectedUserData.put(randomKey, value);
         return fireBaseSelectedUserData;
     }
 
-    public String getRandomUserKey() {
-        Random generator = new Random();
-        Object[] keys = fireBaseRandomUserData.keySet().toArray();
-        randomInt = generator.nextInt(keys.length);
-        Object randomKey = keys[generator.nextInt(randomInt)];
-        return (String)randomKey;
-    }
-
-    public UserData getRandomUserData() {
-        Object[] values = fireBaseRandomUserData.values().toArray();
-        Object randomValue = values[randomInt];
-        return (UserData)randomValue;
-    }
-
     public void updateUser2Data(String key, UserData value) {
         Firebase ref = new Firebase(Constants.FIREBASE_DB);
+        Log.e(TAG, "updateUser2Data : Get Value for Key - " + key);
 //        TODO may not work properly correct the user unique key -- NEED TO PASS THE KEY OF USER 2
-        Firebase usersRef = ref.child(Constants.USER_DATA).child(Constants.USER_UNIQUE_KEY);
+        Firebase usersRef = ref.child(Constants.USER_DATA).child(key);
         usersRef.setValue(value);
     }
 
     public void fetchAllUsers(String key, final String userId) {
 //        TODO users for combine play
-        Log.d(TAG, "Get Value for Key - " + key);
+        Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -335,7 +327,7 @@ public class RemoteClient {
             public void onDataChange(DataSnapshot snapshot) {
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
-                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (postSnapshot.getKey().equals(userId)) {
@@ -346,7 +338,7 @@ public class RemoteClient {
                         }
                     }
                 } else {
-                    Log.d(TAG, "Data Not Received");
+                    Log.e(TAG, "Data Not Received");
                 }
             }
 
@@ -360,7 +352,7 @@ public class RemoteClient {
 
     public void fetchScoreBoardData(String key, final String userId) {
 //        TODO score board data
-        Log.d(TAG, "Get Value for Key - " + key);
+        Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -368,7 +360,7 @@ public class RemoteClient {
             public void onDataChange(DataSnapshot snapshot) {
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
-                    Log.d(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (postSnapshot.getKey().equals(userId)) {
@@ -379,7 +371,7 @@ public class RemoteClient {
                         }
                     }
                 } else {
-                    Log.d(TAG, "Data Not Received");
+                    Log.e(TAG, "Data Not Received");
                 }
             }
 

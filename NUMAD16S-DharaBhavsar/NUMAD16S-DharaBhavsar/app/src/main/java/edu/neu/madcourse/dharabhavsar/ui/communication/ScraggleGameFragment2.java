@@ -38,7 +38,7 @@ public class ScraggleGameFragment2 extends Fragment {
     private ScraggleTile2 mLargeTiles[] = new ScraggleTile2[9];
     private ScraggleTile2 mSmallTiles[][] = new ScraggleTile2[9][9];
     private Set<ScraggleTile2> mAvailable = new HashSet<ScraggleTile2>();
-    private int mSoundX, mSoundO, mSoundMiss, mSoundRewind;
+    private int mSoundClick, mSoundMiss, mSoundRewind;
     private SoundPool mSoundPool;
     private float mVolume = 1f;
     private int mLastLarge;
@@ -85,8 +85,7 @@ public class ScraggleGameFragment2 extends Fragment {
         }
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
-        mSoundX = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
-        mSoundO = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
+        mSoundClick = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
         mSoundMiss = mSoundPool.load(getActivity(), R.raw.bertrof_game_sound_wrong_freesound_org, 1);
         mSoundRewind = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
         v = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
@@ -235,7 +234,7 @@ public class ScraggleGameFragment2 extends Fragment {
                                     inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_not_selected_scraggle));
 //                                gameScore -= getScore(smallTile.getInnerText().charAt(0));
                                 }
-                                mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
+                                mSoundPool.play(mSoundClick, mVolume, mVolume, 1, 0, 1f);
                                 // Vibrate for 25 milliseconds
                                 v.vibrate(25);
                                 think();
@@ -256,7 +255,7 @@ public class ScraggleGameFragment2 extends Fragment {
 //                                wordsMadePhase2 =
                                     wordCheck2 = makeWord(String.valueOf(smallTile.getInnerText()));
                                     inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
-                                    mSoundPool.play(mSoundX, mVolume, mVolume, 1, 0, 1f);
+                                    mSoundPool.play(mSoundClick, mVolume, mVolume, 1, 0, 1f);
                                     v.vibrate(25);
                                     think();
                                 }

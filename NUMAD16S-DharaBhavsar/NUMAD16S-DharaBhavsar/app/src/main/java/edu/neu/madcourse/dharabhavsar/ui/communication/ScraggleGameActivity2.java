@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
@@ -74,11 +71,7 @@ public class ScraggleGameActivity2 extends Activity {
     private RemoteClient mRemoteClient;
     private SharedPreferences prefs;
     private SharedPreferences prefs2;
-    private Timer timer;
-    private TimerTask timerTask;
     private UserData user2player;
-    private Timer timer2;
-    private TimerTask timerTask2;
     private String userKey;
     private String userId;
     private GameData gameDataFb;
@@ -111,8 +104,10 @@ public class ScraggleGameActivity2 extends Activity {
         mRemoteClient = new RemoteClient(appContext);
 
         userKey = prefs.getString(Constants.USER_UNIQUE_KEY, "");
+        Constants.USER_KEY = userKey;
         userId = prefs2.getString(Constants.PROPERTY_REG_ID, "");
         gameKey = prefs.getString(Constants.GAME_UNIQUE_KEY, "");
+//        Constants.GAME_KEY = gameKey;
 
         setContentView(R.layout.activity_game_scraggle2);
         mGameFragment = (ScraggleGameFragment2) getFragmentManager()
@@ -157,6 +152,7 @@ public class ScraggleGameActivity2 extends Activity {
                 fetchRandomPlayer2DetailsCombat();
 //                startTimer2(userKey);
 //                ... TODO add something aomething
+                fetchGameDetailsCombat();
             }
         } else {
             if (savedRemainingInterval > 0) {
@@ -328,10 +324,10 @@ public class ScraggleGameActivity2 extends Activity {
 //                TODO assign a random opponent to this player and save gameData in the gameData model class
                 /*String userKey = getPreferences(MODE_PRIVATE)
                         .getString(USER_UNIQUE_KEY, null);*/
-//                updatePlayer1DetailsOnFinishP1Combat();
-//                updatePlayer2DetailsOnFinishP1Combat();
-//                updateGameDetailsOnFinishP1Combat();
-
+                Constants.GAME_KEY = gameKey;
+                updatePlayer1DetailsOnFinishP1Combat();
+                updatePlayer2DetailsOnFinishP1Combat();
+                updateGameDetailsOnFinishP1Combat();
                 mCommMain.sendCombatGameRequest("TEST", user2player.getUserId());
 //                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
                 AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
@@ -571,81 +567,6 @@ public class ScraggleGameActivity2 extends Activity {
         isGameEnd = isGameEndFlag;
     }
 
-    public void startTimer1(String key) {
-        //set a new Timer
-        timer = new Timer();
-        //initialize the TimerTask's job
-        initializeTimerTask1(key);
-        //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
-        // The values can be adjusted depending on the performance
-        timer.schedule(timerTask, 5000, 1000);
-    }
-
-    public void startTimer2(String key) {
-        //set a new Timer
-        timer2 = new Timer();
-        //initialize the TimerTask's job
-        initializeTimerTask2();
-        //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
-        // The values can be adjusted depending on the performance
-        timer2.schedule(timerTask2, 5000, 1000);
-    }
-
-    public void stoptimertask1() {
-        //stop the timer, if it's not already null
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
-
-    public void stoptimertask2() {
-        //stop the timer, if it's not already null
-        if (timer2 != null) {
-            timer2.cancel();
-            timer2 = null;
-        }
-    }
-
-    public void initializeTimerTask1(final String key) {
-        timerTask = new TimerTask() {
-            public void run() {
-                Log.e("GameActivity2", "isDataFetched >>>> " + mRemoteClient.isDataFetched());
-                if (mRemoteClient.isDataFetched()) {
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            user = mRemoteClient.getUserData(key);
-                            Log.e("GameActivity2", "Value >>>> " + user);
-                            Toast.makeText(ScraggleGameActivity2.this, "Value 1  " + user.getUserName(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    stoptimertask1();
-                }
-            }
-        };
-    }
-
-    public void initializeTimerTask2() {
-        timerTask2 = new TimerTask() {
-            public void run() {
-                Log.e("GameActivity2", "isDataFetched >>>> " + mRemoteClient.isDataFetched());
-                if (mRemoteClient.isDataFetched()) {
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            current2UserMap = mRemoteClient.getFireBaseRandomUserData();
-                            Log.e("GameActivity2", "Value2 >>>> " + user);
-                            Toast.makeText(ScraggleGameActivity2.this, "Value 2  " + user2player.getUserName(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    stoptimertask2();
-                }
-            }
-        };
-    }
-
-
     // TODO functions to save and update and fetch user and game data
 
     private void saveInitialGameDataP1Combat() {
@@ -663,6 +584,7 @@ public class ScraggleGameActivity2 extends Activity {
     }
 
     private void fetchPlayerDetailsCombat() {
+        Log.e("remote", "userKey = " + userKey);
         mRemoteClient.fetchUserData(Constants.USER_DATA, userKey);
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -692,6 +614,18 @@ public class ScraggleGameActivity2 extends Activity {
         }, 10000);
     }
 
+    private void fetchGameDetailsCombat() {
+        Log.e("remote", "gameKey = " + gameKey);
+        mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKey);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                retrievedGameData = mRemoteClient.getGameData(gameKey);
+                Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
+            }
+        }, 10000);
+    }
+
     private void updatePlayer1DetailsOnFinishP1Combat() {
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -706,12 +640,10 @@ public class ScraggleGameActivity2 extends Activity {
                 mRemoteClient.updateUserData(updatedUserData);
                 Log.e("remote", "username = " + user.getUserName());
             }
-        }, 10000);
+        }, 5000);
     }
 
     private void updateGameDetailsOnFinishP1Combat() {
-        mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKey);
-        retrievedGameData = mRemoteClient.getGameData(gameKey);
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -723,14 +655,12 @@ public class ScraggleGameActivity2 extends Activity {
                         retrievedGameData.isFirstCombatPlay(), true,
                         retrievedGameData.isCombinePlay(), retrievedGameData.isGameOver());
                 mRemoteClient.updateGameData(updatedGameData);
-                Log.e("remote", "username = " + user.getUserName());
+                Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
-        }, 10000);
+        }, 15000);
     }
 
     private void updatePlayer2DetailsOnFinishP1Combat() {
-        fetchRandomPlayer2DetailsCombat();
-//        current2UserMap = mRemoteClient.getFireBaseRandomUserData();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -749,6 +679,6 @@ public class ScraggleGameActivity2 extends Activity {
                 mRemoteClient.updateUser2Data(user2key, updatedUserData);
                 Log.e("remote player2", "username2 = " + user2player.getUserName());
             }
-        }, 10000);
+        }, 15000);
     }
 }
