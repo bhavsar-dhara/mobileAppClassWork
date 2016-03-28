@@ -27,14 +27,16 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:id="@+id/scoreView"
-                android:gravity="left"/>
+                android:gravity="left"
+                android:textSize="@dimen/abc_text_size_subhead_material" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
                 android:id="@+id/timerView"
-                android:gravity="right"/>
+                android:gravity="right"
+                android:textSize="@dimen/abc_text_size_subhead_material" />
 
         </LinearLayout>
 

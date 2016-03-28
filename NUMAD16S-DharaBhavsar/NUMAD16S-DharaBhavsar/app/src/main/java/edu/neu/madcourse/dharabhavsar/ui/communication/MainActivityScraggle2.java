@@ -16,15 +16,14 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import edu.neu.madcourse.dharabhavsar.utils.internetconncheck.DetectInternetConn;
-import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
-import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.utils.Constants;
+import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
+import edu.neu.madcourse.dharabhavsar.utils.internetconncheck.DetectInternetConn;
 
 public class MainActivityScraggle2 extends Activity {
-    public static final String USER_UNIQUE_KEY = "user_key";
-    public static final String USER_DATA = "userData";
     MediaPlayer mMediaPlayer;
     CommunicationMain mCommObj = new CommunicationMain();
     Context context;
@@ -60,9 +59,9 @@ public class MainActivityScraggle2 extends Activity {
 //            retrieve the userData
                 if(DBG)
                     Log.e(LOG_TAG, "an existing user " + regId);
-                String userKey = prefs.getString(USER_UNIQUE_KEY, "");
+                String userKey = prefs.getString(Constants.USER_UNIQUE_KEY, "");
                 Log.e(LOG_TAG, "an existing user key " + userKey);
-//                mRemoteClient.fetchUserData(USER_DATA, userKey);
+//                mRemoteClient.fetchUserData(Constants.USER_DATA, userKey);
             } else {
 //            get and store the userData
                 if(DBG)

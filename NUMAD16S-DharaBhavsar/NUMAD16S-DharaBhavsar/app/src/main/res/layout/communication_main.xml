@@ -57,6 +57,14 @@
                 android:onClick="onClick"
                 android:text="@string/clear_label" />
         </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/communication_send_to"
+                android:onClick="onClick"
+                android:text="@string/send_to_label"/>
+        </TableRow>
     </TableLayout>
 
 </LinearLayout>

@@ -115,6 +115,8 @@ Help from: Dharam and Deryl\n\
     <string name="unregister">Unregister</string>
     <string name="send_label">Send</string>
     <string name="clear_label">Clear</string>
+    <string name="send_to_label">Send To ...</string>
+
 
     <string name="combine_play_label">Combine Play</string>
     <string name="challenged_play_label">Challenged Play</string>
@@ -197,5 +199,9 @@ Help from: Dharam and Deryl\n\
     <string name="net_lost_text"> There is no internet connection. The game requires one. </string>
 
     <string name="reconnect_label"> Try Reconnecting </string>
+
+    <string name="select_team_mate">Please select a team mate to play with...</string>
+    <string name="test_gcm_title">Send push notification to ...</string>
+    <string name="test_gcm_label">Test GCM</string>
 
 </resources>

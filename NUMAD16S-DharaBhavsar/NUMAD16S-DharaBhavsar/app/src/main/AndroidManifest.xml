@@ -19,6 +19,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication.ShowUserListDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+
         <activity android:name="edu.neu.madcourse.dharabhavsar.ui.communication.TabFragmentActivity" />
 
         <activity

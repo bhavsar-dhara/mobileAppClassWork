@@ -321,14 +321,17 @@ public class ScraggleGameActivity2 extends Activity {
                 mGameFragment.disableLetterGrid();
                 mControlFragment.getView().setVisibility(View.INVISIBLE);
                 gameData = null;
-//                TODO assign a random opponent to this player and save gameData in the gameData model class
-                /*String userKey = getPreferences(MODE_PRIVATE)
-                        .getString(USER_UNIQUE_KEY, null);*/
                 Constants.GAME_KEY = gameKey;
                 updatePlayer1DetailsOnFinishP1Combat();
                 updatePlayer2DetailsOnFinishP1Combat();
                 updateGameDetailsOnFinishP1Combat();
-                mCommMain.sendCombatGameRequest("TEST", user2player.getUserId());
+                //TODO
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCommMain.sendCombatGameRequest("TEST", user2player.getUserId());
+                    }
+                }, 5000);
 //                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
                 AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
 //                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);

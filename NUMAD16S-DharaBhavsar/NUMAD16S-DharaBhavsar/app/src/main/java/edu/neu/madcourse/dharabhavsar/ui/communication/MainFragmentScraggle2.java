@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 
 public class MainFragmentScraggle2 extends Fragment {
 
@@ -27,7 +28,15 @@ public class MainFragmentScraggle2 extends Fragment {
         View helpButton = rootView.findViewById(R.id.game_instructions_button);
         View scoreButton = rootView.findViewById(R.id.score_board_button);
         View combineButton = rootView.findViewById(R.id.combine_play_button);
+        View testGCMButton = rootView.findViewById(R.id.test_gcm);
 
+        testGCMButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CommunicationMain.class);
+                getActivity().startActivity(intent);
+            }
+        });
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,7 +47,8 @@ public class MainFragmentScraggle2 extends Fragment {
         combineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ScraggleGameActivity2Combine.class);
+//                Intent intent = new Intent(getActivity(), ScraggleGameActivity2Combine.class);
+                Intent intent = new Intent(getActivity(), ShowUserListDialogActivity.class);
                 getActivity().startActivity(intent);
             }
         });
