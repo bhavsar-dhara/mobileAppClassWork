@@ -31,6 +31,9 @@ public class GcmIntentService extends IntentService {
         Bundle extras = intent.getExtras();
         Log.e(String.valueOf(extras.size()), extras.toString());
         if (!extras.isEmpty()) {
+            alertText = extras.getString("alertText");
+            titleText = extras.getString("titleText");
+            contentText = extras.getString("contentText");
             sendNotification(alertText, titleText, contentText);
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
