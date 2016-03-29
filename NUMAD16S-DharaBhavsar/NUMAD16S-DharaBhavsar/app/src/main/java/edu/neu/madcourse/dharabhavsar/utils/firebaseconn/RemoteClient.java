@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -174,7 +173,7 @@ public class RemoteClient {
     }
 
     public UserData getUserData(String userId) {
-        return (fireBaseUserData.get(userId));
+        return fireBaseUserData.get(userId);
     }
 
     //    code to store gameData
@@ -250,11 +249,10 @@ public class RemoteClient {
 
     public GameData getGameData(String gameKey) {
         Log.e(TAG, "getGameData : Get Value for GameKey - " + gameKey);
-        return (fireBaseGameData.get(gameKey));
+        return fireBaseGameData.get(gameKey);
     }
 
     public void fetchRandomUsers(final String key, final String userId) {
-//        TODO users for 2player combat game
         Log.e(TAG, "fetchRandomUsers : Get Value for Key - " + key);
         Log.e(TAG, "fetchRandomUsers : Get Value for userKey - " + userId);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
@@ -314,7 +312,6 @@ public class RemoteClient {
     }
 
     public HashMap<String, UserData> fetchAllUsers(String key, final String userId) {
-//        TODO users for combine play
         Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
@@ -350,20 +347,19 @@ public class RemoteClient {
     }
 
     public void fetchCombineScoreBoardData(String key, final String userId) {
-//        TODO top 5 combine score board data
         Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
-        queryRef.addChildEventListener(new ChildEventListener() {
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot snapshot, String s) {
+            public void onDataChange(DataSnapshot snapshot) {
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
                     Log.e(TAG, "There are " + snapshot.getChildrenCount() + " users");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         fireBaseCombineScoreData.put(
-                                (Integer) postSnapshot.child("userPendingCombineGameScore").getValue(),
+                                ((Long) postSnapshot.child("userPendingCombineGameScore").getValue()).intValue(),
                                 postSnapshot.child("userName").getValue() + " - " +
                                         postSnapshot.child("teamPlayerName").getValue());
                     }
@@ -373,50 +369,52 @@ public class RemoteClient {
                 }
             }
 
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Log.e(TAG, firebaseError.getMessage());
                 Log.e(TAG, firebaseError.getDetails());
             }
         });
+    }
+
+    public HashMap<Integer, String> getCombineScore(String userId) {
+        Log.e(TAG, "getCombineScore : Get Score for userId - " + userId);
+        return fireBaseCombineScoreData;
     }
 
     public void fetchCombatScoreBoardData(String key, final String userId) {
-//        TODO top 5 combat score board data
         Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
-        queryRef.addChildEventListener(new ChildEventListener() {
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot snapshot, String s) {
-                // snapshot contains the key and value
-                if (snapshot.getValue() != null) {
-                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " users");
-                    // Adding the data to the HashMap
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        fireBaseCombineScoreData.put(
-                                (Integer) postSnapshot.child("userIndividualBestScore").getValue(),
-                                (String) postSnapshot.child("userName").getValue());
-                    }
-                } else {
-                    Log.e(TAG, "Data Not Received");
-                    fireBaseCombineScoreData.put(null, userId);
-                }
-            }
+            public void onDataChange(DataSnapshot snapshot) {
+               // snapshot contains the key and value
+               if (snapshot.getValue() != null) {
+                   Log.e(TAG, "There are " + snapshot.getChildrenCount() + " users");
+                   // Adding the data to the HashMap
+                   for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                       fireBaseCombatScoreData.put(
+                               ((Long) postSnapshot.child("userIndividualBestScore").getValue()).intValue(),
+                               (String) postSnapshot.child("userName").getValue());
+                   }
+               } else {
+                   Log.e(TAG, "Data Not Received");
+                   fireBaseCombatScoreData.put(null, userId);
+               }
+           }
 
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.e(TAG, firebaseError.getMessage());
-                Log.e(TAG, firebaseError.getDetails());
-            }
-        });
+           @Override
+           public void onCancelled(FirebaseError firebaseError) {
+               Log.e(TAG, firebaseError.getMessage());
+               Log.e(TAG, firebaseError.getDetails());
+           }
+       });
     }
+
+    public HashMap<Integer, String> getCombatScore(String userId) {
+        Log.e(TAG, "getCombatScore : Get Score for userId - " + userId);
+        return fireBaseCombatScoreData;
+    }
+
 }
