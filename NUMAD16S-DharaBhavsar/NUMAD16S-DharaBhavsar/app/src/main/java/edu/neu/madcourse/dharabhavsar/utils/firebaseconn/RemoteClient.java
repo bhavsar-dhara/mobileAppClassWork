@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -36,7 +37,8 @@ public class RemoteClient {
     private HashMap<String, GameData> fireBaseGameData = new HashMap<String, GameData>();
     private HashMap<String, UserData> fireBaseAllUserData = new HashMap<String, UserData>();
     private static boolean isRandomDataChanged = false;
-    private int randomInt;
+    private HashMap<Integer, String> fireBaseCombineScoreData = new HashMap<Integer, String>();
+    private HashMap<Integer, String> fireBaseCombatScoreData = new HashMap<Integer, String>();
 
     public RemoteClient(Context mContext) {
         this.mContext = mContext;
@@ -352,25 +354,28 @@ public class RemoteClient {
         Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        queryRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onChildAdded(DataSnapshot snapshot, String s) {
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
                     Log.e(TAG, "There are " + snapshot.getChildrenCount() + " users");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        if (postSnapshot.getKey().equals(userId)) {
-                            UserData user = postSnapshot.getValue(UserData.class);
-                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
-                                    + " - " + user.getUserCombineBestScore()
-                                    + " - " + user.getUserIndividualBestScore());
-                        }
+                        fireBaseCombineScoreData.put(
+                                (Integer) postSnapshot.child("userPendingCombineGameScore").getValue(),
+                                postSnapshot.child("userName").getValue() + " - " +
+                                        postSnapshot.child("teamPlayerName").getValue());
                     }
                 } else {
                     Log.e(TAG, "Data Not Received");
+                    fireBaseCombineScoreData.put(null, userId);
                 }
             }
+
+            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -385,25 +390,27 @@ public class RemoteClient {
         Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        queryRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onChildAdded(DataSnapshot snapshot, String s) {
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
                     Log.e(TAG, "There are " + snapshot.getChildrenCount() + " users");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        if (postSnapshot.getKey().equals(userId)) {
-                            UserData user = postSnapshot.getValue(UserData.class);
-                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
-                                    + " - " + user.getUserCombineBestScore()
-                                    + " - " + user.getUserIndividualBestScore());
-                        }
+                        fireBaseCombineScoreData.put(
+                                (Integer) postSnapshot.child("userIndividualBestScore").getValue(),
+                                (String) postSnapshot.child("userName").getValue());
                     }
                 } else {
                     Log.e(TAG, "Data Not Received");
+                    fireBaseCombineScoreData.put(null, userId);
                 }
             }
+
+            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {

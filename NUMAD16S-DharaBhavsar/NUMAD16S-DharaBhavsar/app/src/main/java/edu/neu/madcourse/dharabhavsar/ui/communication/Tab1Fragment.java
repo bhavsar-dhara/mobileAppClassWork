@@ -8,7 +8,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
@@ -42,6 +43,20 @@ public class Tab1Fragment extends Fragment {
             // the view hierarchy; it would just never be used.
             return null;
         }
-        return (LinearLayout)inflater.inflate(R.layout.tab1_layout, container, false);
+
+        View rootView = inflater.inflate(R.layout.tab1_layout, container, false);
+
+        // Get ListView object from xml
+        final ListView listView = (ListView) rootView.findViewById(R.id.listView);
+
+        // Create a new Adapter
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1);
+
+        // Assign adapter to ListView
+        listView.setAdapter(adapter);
+
+
+        return rootView;
     }
 }
