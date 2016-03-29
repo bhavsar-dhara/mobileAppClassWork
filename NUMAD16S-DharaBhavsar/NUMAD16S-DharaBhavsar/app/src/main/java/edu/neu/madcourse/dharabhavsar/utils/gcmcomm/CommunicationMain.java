@@ -108,32 +108,32 @@ public class CommunicationMain extends Activity implements OnClickListener {
     }
 
     private static void setRegisterValues() {
-        CommunicationConstants.alertText = "Register Notification";
+        CommunicationConstants.alertText = CommunicationConstants.regAlertText;
         CommunicationConstants.titleText = "Register";
         CommunicationConstants.contentText = "Registering Successful!";
     }
 
     private static void setUnregisterValues() {
-        CommunicationConstants.alertText = "Unregister Notification";
+        CommunicationConstants.alertText = CommunicationConstants.unregAlertText;
         CommunicationConstants.titleText = "Unregister";
         CommunicationConstants.contentText = "Unregistering Successful!";
     }
 
     private static void setSendMessageValues(String msg) {
-        CommunicationConstants.alertText = "Message Notification";
+        CommunicationConstants.alertText = CommunicationConstants.msgAlertText;
         CommunicationConstants.titleText = "Sending Message";
         CommunicationConstants.contentText = msg;
     }
 
     private static void setCombatGameRequestValues(String msg) {
-        CommunicationConstants.alertText = "Scraggle Combat Word Game";
-        CommunicationConstants.titleText = "Combat Game Request";
+        CommunicationConstants.alertText = CommunicationConstants.combatAlertText;
+        CommunicationConstants.titleText = "New Combat Game Request";
         CommunicationConstants.contentText = "default msg - " + msg;
     }
 
     private static void setCombineGameRequestValues(String msg) {
-        CommunicationConstants.alertText = "Scraggle Combine Word Game";
-        CommunicationConstants.titleText = "Combine Game Request";
+        CommunicationConstants.alertText = CommunicationConstants.combatAlertText;
+        CommunicationConstants.titleText = "New Combine Game Request";
         CommunicationConstants.contentText = "default msg - " + msg;
     }
 
@@ -181,8 +181,6 @@ public class CommunicationMain extends Activity implements OnClickListener {
                     }
                     setRegisterValues();
                     regid = gcm.register(CommunicationConstants.GCM_SENDER_ID);
-                    // implementation to store and keep track of registered devices here
-                    msg = "Device registered, registration ID=" + regid;
                     Log.e(TAG, "User GCM Id is : " + regid);
                     storeRegistrationId(context1, regid);
                 } catch (IOException ex) {
@@ -193,9 +191,6 @@ public class CommunicationMain extends Activity implements OnClickListener {
 
             @Override
             protected void onPostExecute(String msg) {
-//				TODO - A7 only
-//                mDisplay.append(msg + "\n");
-//				uncomment the above line
                 mRemoteClient = new RemoteClient(context1);
                 Log.e(TAG, "User GCM Id is : " + regid);
                 mUserData = new UserData(regid, userName, 0, 0, "", false, "", false, 0, 0, "", "");
@@ -205,7 +200,6 @@ public class CommunicationMain extends Activity implements OnClickListener {
     }
 
     public void sendRegistrationIdToBackend(Context context, String userName) {
-        // Your implementation here.
         registerInBackground(context, userName);
     }
 
@@ -465,8 +459,8 @@ public class CommunicationMain extends Activity implements OnClickListener {
                 int nType = CommunicationConstants.SIMPLE_NOTIFICATION;
                 Map<String, String> msgParams;
                 msgParams = new HashMap<String, String>();
-                msgParams.put("data.alertText", "Notification");
-                msgParams.put("data.titleText", "Notification Title");
+                msgParams.put("data.alertText", CommunicationConstants.combatAlertText);
+                msgParams.put("data.titleText", "New Combat Game Request");
                 msgParams.put("data.contentText", message);
                 msgParams.put("data.nIcon", String.valueOf(nIcon));
                 msgParams.put("data.nType", String.valueOf(nType));
@@ -512,8 +506,8 @@ public class CommunicationMain extends Activity implements OnClickListener {
                 int nType = CommunicationConstants.SIMPLE_NOTIFICATION;
                 Map<String, String> msgParams;
                 msgParams = new HashMap<String, String>();
-                msgParams.put("data.alertText", "Notification");
-                msgParams.put("data.titleText", "Notification Title");
+                msgParams.put("data.alertText", CommunicationConstants.combineAlertText);
+                msgParams.put("data.titleText", "New Combine Game Request");
                 msgParams.put("data.contentText", message);
                 msgParams.put("data.nIcon", String.valueOf(nIcon));
                 msgParams.put("data.nType", String.valueOf(nType));

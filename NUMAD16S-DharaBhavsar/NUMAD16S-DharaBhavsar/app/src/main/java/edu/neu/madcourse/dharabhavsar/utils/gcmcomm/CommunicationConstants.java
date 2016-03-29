@@ -15,4 +15,11 @@ public class CommunicationConstants
     public static String alertText = "";
     public static String titleText = "";
     public static String contentText = "";
+
+    public static final String regAlertText = "Register Notification";
+    public static final String unregAlertText = "Unregister Notification";
+    public static final String msgAlertText = "Message Notification";
+    public static final String combatAlertText = "Scraggle Combat Word Game";
+    public static final String combineAlertText = "Scraggle Combine Word Game";
+
 }

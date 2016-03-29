@@ -24,20 +24,20 @@ import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 import edu.neu.madcourse.dharabhavsar.utils.internetconncheck.DetectInternetConn;
 
 public class MainActivityScraggle2 extends Activity {
-    MediaPlayer mMediaPlayer;
-    CommunicationMain mCommObj = new CommunicationMain();
-    Context context;
-    RemoteClient mRemoteClient;
-    UserData mUserData;
-    String LOG_TAG = "MainActivityScraggle2";
-    String regId;
+    private MediaPlayer mMediaPlayer;
+    private CommunicationMain mCommObj = new CommunicationMain();
+    private Context context;
+    private RemoteClient mRemoteClient;
+    private UserData mUserData;
+    private String LOG_TAG = "MainActivityScraggle2";
+    private String regId;
     private Handler mHandler = new Handler();
     private AlertDialog mDialog;
     private static final int TEXT_ID = 0;
 
-    DetectInternetConn dic;
+    private DetectInternetConn dic;
     private static final boolean DBG = true;
-    SharedPreferences prefs;
+    private SharedPreferences prefs;
     // ...
 
     @Override
@@ -61,7 +61,6 @@ public class MainActivityScraggle2 extends Activity {
                     Log.e(LOG_TAG, "an existing user " + regId);
                 String userKey = prefs.getString(Constants.USER_UNIQUE_KEY, "");
                 Log.e(LOG_TAG, "an existing user key " + userKey);
-//                mRemoteClient.fetchUserData(Constants.USER_DATA, userKey);
             } else {
 //            get and store the userData
                 if(DBG)
@@ -133,10 +132,6 @@ public class MainActivityScraggle2 extends Activity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (!TextUtils.isEmpty(newName.getText().toString().trim())) {
                             String userName = newName.getText().toString().trim();
-                            /*String userId = mCommObj.sendRegistrationIdToBackend(context);
-                            Log.e(LOG_TAG, "User gcm reg id is : " + userId);
-                            mUserData = new UserData(userId, userName, 0, 0);
-                            mRemoteClient.saveUserData(mUserData);*/
                             mCommObj.sendRegistrationIdToBackend(context, userName);
                         } else {
                             newName.setError("Your name is required!");

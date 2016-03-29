@@ -325,10 +325,10 @@ public class ScraggleGameActivity2 extends Activity {
                 updatePlayer1DetailsOnFinishP1Combat();
                 updatePlayer2DetailsOnFinishP1Combat();
                 updateGameDetailsOnFinishP1Combat();
-                //TODO
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+//                        TODO - remove TEST and add meaningful msg
                         mCommMain.sendCombatGameRequest("TEST", user2player.getUserId());
                     }
                 }, 5000);
