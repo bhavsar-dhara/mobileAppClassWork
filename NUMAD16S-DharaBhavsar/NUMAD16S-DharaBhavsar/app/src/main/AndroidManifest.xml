@@ -20,11 +20,21 @@
         </activity>
 
         <activity
-            android:name="edu.neu.madcourse.dharabhavsar.ui.communication.ShowUserListDialogActivity"
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle3"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/wordgame_label"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle3" />
+        </activity>
+
+        <activity
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication2player.ShowUserListDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
 
-        <activity android:name="edu.neu.madcourse.dharabhavsar.ui.communication.TabFragmentActivity" />
+        <activity android:name="edu.neu.madcourse.dharabhavsar.ui.communication2player.TabFragmentActivity" />
 
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain"
@@ -43,13 +53,13 @@
         <service android:name="edu.neu.madcourse.dharabhavsar.utils.gcmcomm.GcmIntentService" />
 
         <activity
-            android:name="edu.neu.madcourse.dharabhavsar.ui.communication.MainActivityScraggle2"
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle2"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/wordgame_label"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.neu.madcourse.dharabhavsar.ui.communication.MainActivityScraggle2" />
+                android:value="edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle2" />
         </activity>
         <receiver android:name="edu.neu.madcourse.dharabhavsar.utils.internetconncheck.DetectInternetConnBroadcastReceiver">
             <intent-filter>
@@ -59,20 +69,20 @@
         </receiver>
 
         <activity
-            android:name="edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2"
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2" />
+                android:value="edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2" />
         </activity>
         <activity
-            android:name="edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2Combine"
+            android:name="edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2Combine"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2Combine" />
+                android:value="edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2Combine" />
         </activity>
 
         <activity

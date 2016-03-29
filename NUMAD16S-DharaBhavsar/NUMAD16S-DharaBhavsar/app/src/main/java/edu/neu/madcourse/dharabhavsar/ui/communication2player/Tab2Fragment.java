@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.ui.communication;
+package edu.neu.madcourse.dharabhavsar.ui.communication2player;
 
 //import android.app.Fragment;
 
@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Map;
 import java.util.TreeMap;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
@@ -28,29 +28,30 @@ import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
 /**
  * Created by Dhara on 3/17/2016.
  */
-public class Tab1Fragment extends Fragment {
+public class Tab2Fragment extends Fragment {
 
-    private static final String TAG = "Tab1Fragment";
+    private static final String TAG = "Tab2Fragment";
     final Handler handler = new Handler();
     private RemoteClient remoteClient;
 
     private Timer timer;
     private TimerTask timerTask;
 
-    private HashMap<Integer, String> combatScoreList;
+    private HashMap<Integer, String> combineScoreList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         remoteClient = new RemoteClient(getActivity());
 
-        TextView tv = new TextView(getActivity());
+        TextView tv=new TextView(getActivity());
         tv.setTextSize(25);
         tv.setGravity(Gravity.CENTER_VERTICAL);
-        tv.setText("This Is Tab1 Activity");
+        tv.setText("This Is Tab2 Activity");
 //        setContentView(tv);
 
-        remoteClient.fetchCombatScoreBoardData(Constants.USER_DATA, Constants.USER_KEY);
+        remoteClient.fetchCombineScoreBoardData(Constants.USER_DATA, Constants.USER_KEY);
 
         // any polling mechanism can be used
         startTimer(Constants.USER_KEY);
@@ -69,7 +70,7 @@ public class Tab1Fragment extends Fragment {
             return null;
         }
 
-        View rootView = inflater.inflate(R.layout.tab1_layout, container, false);
+        View rootView = inflater.inflate(R.layout.tab2_layout, container, false);
 
         // Get ListView object from xml
         final ListView listView = (ListView) rootView.findViewById(R.id.listView);
@@ -95,7 +96,7 @@ public class Tab1Fragment extends Fragment {
 
                         });
 
-                treeMap.putAll(combatScoreList);
+                treeMap.putAll(combineScoreList);
                 int i = 0;
 
                 for (Map.Entry<Integer, String> entry : treeMap.entrySet()) {
@@ -135,8 +136,8 @@ public class Tab1Fragment extends Fragment {
                 handler.post(new Runnable() {
 
                     public void run() {
-                        combatScoreList = remoteClient.getCombatScore(key);
-                        Log.d(TAG, "Value >>>> " + combatScoreList.size());
+                        combineScoreList = remoteClient.getCombineScore(key);
+                        Log.d(TAG, "Value >>>> " + combineScoreList.size());
                     }
                 });
                 stoptimertask();

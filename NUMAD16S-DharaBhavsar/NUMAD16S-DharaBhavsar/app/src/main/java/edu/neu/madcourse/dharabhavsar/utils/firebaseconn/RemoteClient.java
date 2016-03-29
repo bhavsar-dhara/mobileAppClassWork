@@ -360,7 +360,7 @@ public class RemoteClient {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         fireBaseCombineScoreData.put(
                                 ((Long) postSnapshot.child("userPendingCombineGameScore").getValue()).intValue(),
-                                postSnapshot.child("userName").getValue() + " - " +
+                                postSnapshot.child("userName").getValue() + " + " +
                                         postSnapshot.child("teamPlayerName").getValue());
                     }
                 } else {

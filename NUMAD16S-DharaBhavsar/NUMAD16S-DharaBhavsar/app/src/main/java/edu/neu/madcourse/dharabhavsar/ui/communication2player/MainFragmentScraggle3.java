@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.ui.communication;
+package edu.neu.madcourse.dharabhavsar.ui.communication2player;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
-import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 
-public class MainFragmentScraggle2 extends Fragment {
+public class MainFragmentScraggle3 extends Fragment {
 
     private AlertDialog mDialog;
 
@@ -20,7 +19,7 @@ public class MainFragmentScraggle2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView =
-                inflater.inflate(R.layout.fragment_main_scraggle2, container, false);
+                inflater.inflate(R.layout.fragment_main_scraggle3, container, false);
         // Handle buttons here...
         View newButton = rootView.findViewById(R.id.new_button);
 //        View continueButton = rootView.findViewById(R.id.continue_button);
@@ -28,15 +27,7 @@ public class MainFragmentScraggle2 extends Fragment {
         View helpButton = rootView.findViewById(R.id.game_instructions_button);
         View scoreButton = rootView.findViewById(R.id.score_board_button);
         View combineButton = rootView.findViewById(R.id.combine_play_button);
-        View testGCMButton = rootView.findViewById(R.id.test_gcm);
 
-        testGCMButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CommunicationMain.class);
-                getActivity().startActivity(intent);
-            }
-        });
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

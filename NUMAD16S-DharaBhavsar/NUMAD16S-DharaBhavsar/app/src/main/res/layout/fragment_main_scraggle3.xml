@@ -5,7 +5,7 @@
     android:elevation="@dimen/elevation_high"
     android:orientation="vertical"
     android:padding="@dimen/menu_padding"
-    tools:context="edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle2"
+    tools:context="edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle3"
     android:background="#326c90">
 
     <TextView
@@ -17,17 +17,6 @@
         android:textAppearance="?android:textAppearanceLarge"
         android:textSize="@dimen/menu_text_size"
         android:textColor="@color/scraggle_title_textColor" />
-
-    <Button
-        android:id="@+id/test_gcm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/menu_button_margin"
-        android:padding="@dimen/menu_button_padding"
-        android:text="@string/test_gcm_label"
-        android:textAllCaps="false"
-        android:textColor="@color/scraggle_btn_textColor"
-        android:background="@color/scraggle_btn_backgroundColor" />
 
     <Button
         android:id="@+id/continue_button"

@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.ui.communication;
+package edu.neu.madcourse.dharabhavsar.ui.communication2player;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,7 +23,7 @@ import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 import edu.neu.madcourse.dharabhavsar.utils.internetconncheck.DetectInternetConn;
 
-public class MainActivityScraggle2 extends Activity {
+public class MainActivityScraggle3 extends Activity {
     private MediaPlayer mMediaPlayer;
     private CommunicationMain mCommObj = new CommunicationMain();
     private Context context;
@@ -44,7 +44,7 @@ public class MainActivityScraggle2 extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_main_scraggle2);
+        setContentView(R.layout.activity_main_scraggle3);
         context = getApplicationContext();
         mRemoteClient = new RemoteClient(context);
         dic = new DetectInternetConn(getApplicationContext());
@@ -107,7 +107,7 @@ public class MainActivityScraggle2 extends Activity {
     public void startGameDialog(){
         if(DBG)
             Log.e(LOG_TAG, "in startGameDialog");
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle2.this,
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle3.this,
                 AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 
         builder.setTitle(getResources().getString(R.string.first_time_user));
@@ -147,7 +147,7 @@ public class MainActivityScraggle2 extends Activity {
     public void startReconnectNetDialog(){
         if(DBG)
             Log.e(LOG_TAG, "in startReconnectNetDialog");
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle2.this,
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityScraggle3.this,
                 AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 
         builder.setTitle(getResources().getString(R.string.net_lost_title));
@@ -160,7 +160,7 @@ public class MainActivityScraggle2 extends Activity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (dic.isNetworkAvailable()) {
 //                            TODO changed it - testing left
-                            Intent intent = new Intent(MainActivityScraggle2.this, MainActivityScraggle2.class);
+                            Intent intent = new Intent(MainActivityScraggle3.this, MainActivityScraggle3.class);
                             startActivity(intent);
                             finish();
                         } else {

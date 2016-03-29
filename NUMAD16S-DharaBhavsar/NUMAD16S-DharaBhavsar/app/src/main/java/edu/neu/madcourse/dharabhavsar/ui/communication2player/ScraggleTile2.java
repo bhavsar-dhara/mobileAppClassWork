@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.ui.communication;
+package edu.neu.madcourse.dharabhavsar.ui.communication2player;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;

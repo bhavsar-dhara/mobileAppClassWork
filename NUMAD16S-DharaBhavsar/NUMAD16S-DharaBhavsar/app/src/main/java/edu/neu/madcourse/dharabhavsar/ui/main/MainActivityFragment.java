@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import edu.neu.madcourse.dharabhavsar.ui.about.MainActivityAbout;
-import edu.neu.madcourse.dharabhavsar.ui.communication.MainActivityScraggle2;
+import edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle2;
+import edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle3;
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict;
 import edu.neu.madcourse.dharabhavsar.ui.scraggle.MainActivityScraggle;
 import edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivityUt3;
@@ -42,13 +43,7 @@ public class MainActivityFragment extends Fragment {
                         R.raw.short_ping_freesound_org);
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
-
-//                One way of going back to the App List
                 getActivity().finish();
-//                System.exit(0);
-
-//                Second way of going back to the App List
-//                getActivity().moveTaskToBack(true);
 
 //                Returning back to the Home Screen
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
@@ -69,8 +64,6 @@ public class MainActivityFragment extends Fragment {
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
 
-//                PackageManager pm = getActivity().getPackageManager();
-//                Intent intent = pm.getLaunchIntentForPackage("edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivityUt3");
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityUt3.class);
                 startActivity(intent);
             }});
@@ -90,91 +83,6 @@ public class MainActivityFragment extends Fragment {
                 PackageManager pm = getActivity().getPackageManager();
                 Intent intent = pm.getLaunchIntentForPackage("edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivity");
                 startActivity(intent);
-
-
-//                try {
-//                    PackageManager pm = getActivity().getPackageManager();
-//                    Intent intent = pm.getLaunchIntentForPackage("edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivity");
-//                    startActivity(intent);
-//                } catch (NullPointerException e) {
-////                    Log.d("MainActivityFragment", e.getMessage());
-//                    String err = (e.getMessage()==null) ? "Sorry something went wrong!" : e.getMessage();
-//                    Log.e("generate-error-button:", err);
-//
-////                    Try - Catch 2
-//                    /*AlertDialog alertDialog = new AlertDialog.Builder(
-//                            MainActivityFragment.this.getContext()).create();
-//                    alertDialog.setTitle("Sorry!");
-//                    alertDialog.setMessage("The application NUMAD16S-DharaBhavsar has stopped unexpectedly. " +
-//                            "Please try again.");
-//                    alertDialog.setIconAttribute(android.R.attr.alertDialogIcon);
-//                    alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Force Quit",
-//                            new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            getActivity().finish();
-////                            Returning back to the Home Screen
-//                            Intent startMain = new Intent(Intent.ACTION_MAIN);
-//                            startMain.addCategory(Intent.CATEGORY_HOME);
-//                            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(startMain);
-//                            Toast.makeText(MainActivityFragment.this.getContext().getApplicationContext(),
-//                                    "Quitting App NUMAD16S-DharaBhavsar", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Report",
-//                            new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            Toast.makeText(MainActivityFragment.this.getContext().getApplicationContext(),
-//                                    "Reporting App Error", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                    alertDialog.show();*/
-//
-////                    Try - Catch 1
-//                    /*MainActivityFragment.this.getActivity().runOnUiThread(new Runnable() {
-//                        public void run() {
-////                            ErrorDialog(e.getMessage());
-//
-//                            AlertDialog alertDialog = new AlertDialog.Builder(
-//                                    MainActivityFragment.this.getContext()).create();
-//                            alertDialog.setTitle("Sorry!");
-//                            alertDialog.setMessage("The application NUMAD16S-DharaBhavsar has stopped unexpectedly. " +
-//                                    "Please try again.");
-//                            alertDialog.setIcon(R.drawable.restart);
-//                            alertDialog.setButton("Force Quit", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    Toast.makeText(MainActivityFragment.this.getContext().getApplicationContext(),
-//                                            "You clicked on OK", Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
-////                            alertDialog.setButton("Report",  );
-//                            alertDialog.show();
-//
-//                            AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivityFragment.this.getContext());
-//                            builder1.setMessage("Write your message here.");
-//                            builder1.setCancelable(true);
-//
-//                            builder1.setPositiveButton(
-//                                    "Yes",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            dialog.cancel();
-//                                        }
-//                                    });
-//
-//                            builder1.setNegativeButton(
-//                                    "No",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            dialog.cancel();
-//                                        }
-//                                    });
-//
-//                            AlertDialog alert11 = builder1.create();
-//                            alert11.show();
-//                        }
-//                    });*/
-//                }
             }
         });
 
@@ -224,7 +132,7 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        Button btn7 = (Button) rootView.findViewById(R.id.wordgame2player_button);
+        Button btn7 = (Button) rootView.findViewById(R.id.communication_button);
         btn7.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,6 +143,22 @@ public class MainActivityFragment extends Fragment {
                 mMediaPlayer.start();
 
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle2.class);
+//                Intent intent = new Intent(MainActivityFragment.this.getActivity(), CommunicationMain.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btn8 = (Button) rootView.findViewById(R.id.wordgame2player_button);
+        btn8.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.short_ping_freesound_org);
+                mMediaPlayer.setVolume(0.5f, 0.5f);
+                mMediaPlayer.start();
+
+                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle3.class);
 //                Intent intent = new Intent(MainActivityFragment.this.getActivity(), CommunicationMain.class);
                 startActivity(intent);
             }

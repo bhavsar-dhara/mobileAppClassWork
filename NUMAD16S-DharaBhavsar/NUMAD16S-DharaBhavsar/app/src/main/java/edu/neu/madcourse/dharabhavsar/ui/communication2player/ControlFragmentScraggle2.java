@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.ui.communication;
+package edu.neu.madcourse.dharabhavsar.ui.communication2player;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
-import edu.neu.madcourse.dharabhavsar.ui.scraggle.ScraggleGameActivity;
 
 public class ControlFragmentScraggle2 extends Fragment {
 

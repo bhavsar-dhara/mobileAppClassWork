@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2;
-import edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2Combine;
+import edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2;
+import edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2Combine;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class GcmIntentService extends IntentService {
@@ -96,7 +96,7 @@ public class GcmIntentService extends IntentService {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent;
         notificationIntent = new Intent(this,
-                edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2.class);
+                edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra("show_response", "show_response");
         PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
@@ -123,7 +123,7 @@ public class GcmIntentService extends IntentService {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent;
         notificationIntent = new Intent(this,
-                edu.neu.madcourse.dharabhavsar.ui.communication.ScraggleGameActivity2Combine.class);
+                edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2Combine.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra("show_response", "show_response");
         PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
