@@ -572,7 +572,7 @@ public class ScraggleGameActivity2Combine extends Activity {
         timer2.schedule(timerTask2, 5000, 1000);
     }
 
-    public void stoptimertask1() {
+    public void stopTimerTask1() {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
@@ -580,7 +580,7 @@ public class ScraggleGameActivity2Combine extends Activity {
         }
     }
 
-    public void stoptimertask2() {
+    public void stopTimerTask2() {
         //stop the timer, if it's not already null
         if (timer2 != null) {
             timer2.cancel();
@@ -601,7 +601,7 @@ public class ScraggleGameActivity2Combine extends Activity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
-                    stoptimertask1();
+                    stopTimerTask1();
                 }
             }
         };
@@ -620,7 +620,7 @@ public class ScraggleGameActivity2Combine extends Activity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
-                    stoptimertask2();
+                    stopTimerTask2();
                 }
             }
         };

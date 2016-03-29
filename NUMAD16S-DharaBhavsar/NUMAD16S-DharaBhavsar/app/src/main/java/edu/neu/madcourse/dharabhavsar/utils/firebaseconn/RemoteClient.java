@@ -347,8 +347,8 @@ public class RemoteClient {
         return fireBaseAllUserData;
     }
 
-    public void fetchScoreBoardData(String key, final String userId) {
-//        TODO score board data
+    public void fetchCombineScoreBoardData(String key, final String userId) {
+//        TODO top 5 combine score board data
         Log.e(TAG, "Get Value for Key - " + key);
         Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
         Query queryRef = ref.orderByKey();
@@ -357,7 +357,40 @@ public class RemoteClient {
             public void onDataChange(DataSnapshot snapshot) {
                 // snapshot contains the key and value
                 if (snapshot.getValue() != null) {
-                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " blog posts");
+                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " users");
+                    // Adding the data to the HashMap
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (postSnapshot.getKey().equals(userId)) {
+                            UserData user = postSnapshot.getValue(UserData.class);
+                            Log.e(TAG, user.getUserId() + " - " + user.getUserName()
+                                    + " - " + user.getUserCombineBestScore()
+                                    + " - " + user.getUserIndividualBestScore());
+                        }
+                    }
+                } else {
+                    Log.e(TAG, "Data Not Received");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(TAG, firebaseError.getMessage());
+                Log.e(TAG, firebaseError.getDetails());
+            }
+        });
+    }
+
+    public void fetchCombatScoreBoardData(String key, final String userId) {
+//        TODO top 5 combat score board data
+        Log.e(TAG, "Get Value for Key - " + key);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB + key);
+        Query queryRef = ref.orderByKey();
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // snapshot contains the key and value
+                if (snapshot.getValue() != null) {
+                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " users");
                     // Adding the data to the HashMap
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (postSnapshot.getKey().equals(userId)) {
