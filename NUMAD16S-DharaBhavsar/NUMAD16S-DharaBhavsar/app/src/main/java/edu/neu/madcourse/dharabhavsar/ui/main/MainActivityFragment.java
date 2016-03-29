@@ -159,7 +159,6 @@ public class MainActivityFragment extends Fragment {
                 mMediaPlayer.start();
 
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle3.class);
-//                Intent intent = new Intent(MainActivityFragment.this.getActivity(), CommunicationMain.class);
                 startActivity(intent);
             }
         });
