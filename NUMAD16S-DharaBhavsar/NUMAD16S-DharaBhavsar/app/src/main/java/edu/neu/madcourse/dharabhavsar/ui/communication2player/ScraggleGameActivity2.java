@@ -83,6 +83,17 @@ public class ScraggleGameActivity2 extends Activity {
     private UserData selected2PlayerData;
     private GameData retrievedGameData;
 
+    /*private TextView xcordview;
+    private TextView ycordview;
+    private TextView buttonIndicator;
+    private FrameLayout touchview;
+    private static int defaultStates[];
+    private Button mLastButton;
+    private final static int[] STATE_PRESSED = {
+            android.R.attr.state_pressed,
+            android.R.attr.state_focused
+                    | android.R.attr.state_enabled };*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +104,60 @@ public class ScraggleGameActivity2 extends Activity {
             isPhaseTwo = b.getBoolean("isTwoFlag");
             gameData = b.getString("gameData");
         }
+
+        /*xcordview = (TextView) findViewById(R.id.textView4);
+        ycordview = (TextView) findViewById(R.id.textView3);
+        buttonIndicator = (TextView) findViewById(R.id.button_indicator);
+        touchview = (FrameLayout) findViewById(R.id.frameLayout);
+
+        touchview.setOnTouchListener(new View.OnTouchListener() {
+
+            private boolean isInside = false;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+
+                Log.e("Touch testing", "X = " + x);
+                Log.e("Touch testing", "Y = " + y);
+
+                xcordview.setText(String.valueOf(x));
+                ycordview.setText(String.valueOf(y));
+
+                for (int i = 0; i < touchview.getChildCount(); i++) {
+                    View current = touchview.getChildAt(i);
+                    Log.e("Touch testing", "inside for");
+
+                    if (current instanceof Button) {
+                        Button b = (Button) current;
+                        Log.e("Touch testing", "inside if");
+
+                        if (!isPointWithin(x, y, b.getLeft(), b.getRight(), b.getTop(),
+                                b.getBottom())) {
+                            b.getBackground().setState(defaultStates);
+                            Log.e("Touch testing", "inside if if");
+                        }
+
+                        if (isPointWithin(x, y, b.getLeft(), b.getRight(), b.getTop(),
+                                b.getBottom())) {
+                            Log.e("Touch testing", "inside fif if");
+                            b.getBackground().setState(STATE_PRESSED);
+                            if (b != mLastButton) {
+                                Log.e("Touch testing", "inside if if if");
+                                mLastButton = b;
+                                buttonIndicator.setText(mLastButton.getText());
+                            }
+                        }
+
+                    }
+                }
+                return true;
+            }
+
+        });*/
+
 //        Log.e("ScraggleActivity", "isPhaseTwo = " + isPhaseTwo);
 //        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
 
@@ -147,11 +212,7 @@ public class ScraggleGameActivity2 extends Activity {
             Log.e("onFinish phase2", "in prefs, userKey = " + userKey);
             if (userKey != null) {
                 fetchPlayerDetailsCombat();
-                // any polling mechanism can be used
-//                startTimer1(userKey);
                 fetchRandomPlayer2DetailsCombat();
-//                startTimer2(userKey);
-//                ... TODO add something aomething
                 fetchGameDetailsCombat();
             }
         } else {
@@ -165,6 +226,10 @@ public class ScraggleGameActivity2 extends Activity {
 //            TODO initializing game data at the start of the game
             saveInitialGameDataP1Combat();
         }
+    }
+
+    static boolean isPointWithin(int x, int y, int x1, int x2, int y1, int y2) {
+        return (x <= x2 && x >= x1 && y <= y2 && y >= y1);
     }
 
     public List<String> methodCallToAsyncTaskRunner() {

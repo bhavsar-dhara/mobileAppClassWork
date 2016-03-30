@@ -10,10 +10,10 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,17 +64,6 @@ public class ScraggleGameFragment2 extends Fragment {
     private int countWordFound = 0;
     private int gameScore2 = 0;
 
-    private TextView xcordview;
-    private TextView ycordview;
-    private TextView buttonIndicator;
-    private RelativeLayout touchview;
-    private static int defaultStates[];
-    private Button mLastButton;
-    private final static int[] STATE_PRESSED = {
-            android.R.attr.state_pressed,
-            android.R.attr.state_focused
-                    | android.R.attr.state_enabled };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,17 +90,6 @@ public class ScraggleGameFragment2 extends Fragment {
         mSoundMiss = mSoundPool.load(getActivity(), R.raw.bertrof_game_sound_wrong_freesound_org, 1);
         mSoundRewind = mSoundPool.load(getActivity(), R.raw.shnur_drum_freesound_org, 1);
         v = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-    }
-
-    private boolean checkInterSection(View vw, float rawX, float rawY) {
-        int[] location = new int[2];
-        vw.getLocationOnScreen(location);
-        int x = location[0];
-        int y = location[1];
-        int width = vw.getWidth();
-        int height = vw.getHeight();
-        //Check the intersection of point with rectangle achieved
-        return (!(rawX < x || rawY > x + width || rawY < y || rawY > y + height));
     }
 
     private void clearAvailable() {
@@ -157,25 +135,29 @@ public class ScraggleGameFragment2 extends Fragment {
         }
         updateAllTiles();
 
-        /*buttonIndicator = (TextView) rootView.findViewById(R.id.button_indicator);
-        xcordview = (TextView) rootView.findViewById(R.id.textViewX);
-        ycordview = (TextView) rootView.findViewById(R.id.textViewY);
-        touchview = (RelativeLayout) rootView.findViewById(R.id.relativeLayout);
-        touchview.setOnTouchListener(new View.OnTouchListener() {
+        rootView.setOnTouchListener(new View.OnTouchListener(){
+
+            @Override
+            public boolean onInterceptTouchEvent(MotionEvent event) {
+
+                return false;
+            }
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                *//*xcordview.setText(String.valueOf(event.getX()));
-                ycordview.setText(String.valueOf(event.getY()));*//*
-                for (int i = 0; i < touchview.getChildCount(); i++) {
-                    if (checkInterSection(touchview.getChildAt(i), event.getRawX(), event.getRawY())) {
-                        Button button = (Button) rootView.findViewById(R.id.button);
-                        button.setBackgroundColor(Color.BLUE);
-                        break;
-                    }
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+
+                Log.e("Testing Touch", "X = " + x);
+                Log.e("Testing Touch", "Y = " + y);
+
+                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                    //do something
+                    Log.e("Testing Touch", "in action move");
                 }
                 return true;
             }
-        });*/
+        });
 
         return rootView;
     }
