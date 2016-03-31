@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Timer;
@@ -38,6 +39,7 @@ import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.TrieLookup;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.utils.Constants;
 import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 
@@ -47,7 +49,7 @@ public class ScraggleGameActivity2Combine extends Activity {
     private MediaPlayer mMediaPlayer;
     private Handler mHandler = new Handler();
     private ScraggleGameFragment2Combine mGameFragment;
-    private ControlFragmentScraggle2 mControlFragment;
+    private ControlFragmentScraggle2Combine mControlFragment;
     List<String> nineWords = new ArrayList<>();
     TextView mTextField;
     private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
@@ -93,27 +95,18 @@ public class ScraggleGameActivity2Combine extends Activity {
     private HashMap<String, UserData> current2UserMap = new HashMap<String, UserData>();
     private UserData selected2PlayerData;
     private GameData retrievedGameData;
+    private boolean isTeamPlayerSelected = false;
+    private static HashMap<String, UserData> fireBaseAllUserList = new HashMap<String, UserData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check whether we're recreating a previously destroyed instance
-        /*if (savedInstanceState != null) {
-            // Restore value of members from saved state
-//            score = savedInstanceState.getInt(STATE_SCORE);
-            isPhaseTwo = savedInstanceState.getBoolean(STATE_LEVEL);
-        } else {
-            // Probably initialize members with default values for a new instance
-        }
-        Log.e("GAMEActivity", "isPhaseTwo = " + isPhaseTwo);*/
         Bundle b = this.getIntent().getExtras();
         if (b != null) {
             isPhaseTwo = b.getBoolean("isTwoFlag");
             gameData = b.getString("gameData");
         }
-//        Log.e("ScraggleActivity", "isPhaseTwo = " + isPhaseTwo);
-//        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
 
 //         The below code didn't work for this activity
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -125,7 +118,7 @@ public class ScraggleGameActivity2Combine extends Activity {
         setContentView(R.layout.activity_game_scraggle2combine);
         mGameFragment = (ScraggleGameFragment2Combine) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
-        mControlFragment = (ControlFragmentScraggle2) getFragmentManager()
+        mControlFragment = (ControlFragmentScraggle2Combine) getFragmentManager()
                 .findFragmentById(R.id.fragment_control_scraggle);
         mTextField = (TextView) findViewById(R.id.timerView);
         mScoreTextField = (TextView) findViewById(R.id.scoreView);
@@ -141,72 +134,24 @@ public class ScraggleGameActivity2Combine extends Activity {
         }
         Log.e("Scraggle", "restore = " + restore);
 
-//        mScoreTextField.setText("Score = " + String.valueOf(score));
-        if (!isPhaseTwo) {
+        if(!isTeamPlayerSelected) {
+//            TODO
+            startUserListDialog();
+        } else {
             mScoreTextField.setText("Score = " + String.valueOf(score));
-        } else {
-            mScoreTextField.setText("Score = " + String.valueOf(score + score2));
-        }
-
-//        Log.e("ScraggleActivity", "savedRemainingInterval = " + savedRemainingInterval);
-        if (isPhaseTwo) {
-            if (savedRemainingInterval < 2000) {
-                Log.e("PhaseTwo Timer", "interval and gameEndFlag = " + String.valueOf(isGameEnd) );
-//                if(!isGameEnd) {
-                    counter = new MyCount(interval, 1000);
-                /*} else {
-                    Log.e("inGameEndFlag", "GameHasEnded");
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-                            builder.setTitle(R.string.no_saved_game_title);
-                            builder.setMessage(R.string.no_saved_game_text);
-                            builder.setCancelable(false);
-                            builder.setPositiveButton(R.string.ok_label,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            Intent home = new Intent(getApplicationContext(), MainActivityScraggle.class);
-                                            startActivity(home);
-                                            finish();
-                                        }
-                                    });
-                            mDialog = builder.show();
-                        }
-                    }, 4000);
-                }*/
-            } else {
-//                Log.e("PhaseTwo Timer", "savedRemainingInterval");
-                counter = new MyCount(savedRemainingInterval, 1000);
-            }
-        } else {
             if (savedRemainingInterval > 0) {
-//                Log.e("PhaseOne Timer", "savedRemainingInterval");
+    //                Log.e("PhaseOne Timer", "savedRemainingInterval");
                 counter = new MyCount(savedRemainingInterval, 1000);
             } else {
-//                Log.e("PhaseOne Timer", "interval");
+    //                Log.e("PhaseOne Timer", "interval");
                 counter = new MyCount(interval, 1000);
             }
         }
     }
 
-    /*@Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        Log.e("onSaveInstanceState", "isPhaseTwo = " + isPhaseTwo);
-        // Save the user's current game state
-//        savedInstanceState.putInt(STATE_SCORE, score);
-        savedInstanceState.putBoolean(STATE_LEVEL, isPhaseTwo);
-
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }*/
-
     public List<String> methodCallToAsyncTaskRunner() {
         try {
-            if (!isPhaseTwo) {
-                new AsyncTaskRunner().execute().get();
-            }
+            new AsyncTaskRunner().execute().get();
 //            Log.e("nineWords size", String.valueOf(nineWords.size()));
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -226,11 +171,7 @@ public class ScraggleGameActivity2Combine extends Activity {
     }
 
     public void stopThinking() {
-        if (!isPhaseTwo) {
-            mScoreTextField.setText("Score = " + String.valueOf(score));
-        } else {
-            mScoreTextField.setText("Score = " + String.valueOf(score + score2));
-        }
+        mScoreTextField.setText("Score = " + String.valueOf(score));
         View thinkView = findViewById(R.id.thinking_scraggle);
         thinkView.setVisibility(View.GONE);
     }
@@ -241,12 +182,14 @@ public class ScraggleGameActivity2Combine extends Activity {
         Log.e("onResume", "inside resume");
         if (!isResumeFlag) {
             isResumeFlag = true;
-            if (savedRemainingInterval > 0 && isResumeFlag) {
+            if(counter != null) {
+                if (savedRemainingInterval > 0 && isResumeFlag) {
 //                counter = new MyCount(savedRemainingInterval, 1000);
-                counter.start();
-            } else {
+                    counter.start();
+                } else {
 //                counter = new MyCount(interval, 1000);
-                counter.start();
+                    counter.start();
+                }
             }
         }
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
@@ -254,11 +197,7 @@ public class ScraggleGameActivity2Combine extends Activity {
         mMediaPlayer.setLooping(true);
 //        Log.e("onResume", "score = " + score);
 //        Log.e("onResume", "score2 = " + score2);
-        if (!isPhaseTwo) {
-            mScoreTextField.setText("Score = " + String.valueOf(score));
-        } else {
-            mScoreTextField.setText("Score = " + String.valueOf(score + score2));
-        }
+        mScoreTextField.setText("Score = " + String.valueOf(score));
     }
 
     @Override
@@ -269,16 +208,18 @@ public class ScraggleGameActivity2Combine extends Activity {
         mMediaPlayer.stop();
         mMediaPlayer.reset();
         mMediaPlayer.release();
-        counter.cancel();
+        if(counter != null) {
+            counter.cancel();
+        }
         if (isResumeFlag) {
             isResumeFlag = false;
         }
 //        if(!isGameEnd) {
-            String gameData = mGameFragment.getState();
-            getPreferences(MODE_PRIVATE).edit()
-                    .putString(PREF_RESTORE, gameData)
-                    .commit();
-            Log.d("Scraggle", "state = " + gameData);
+        String gameData = mGameFragment.getState();
+        getPreferences(MODE_PRIVATE).edit()
+                .putString(PREF_RESTORE, gameData)
+                .commit();
+        Log.d("Scraggle", "state = " + gameData);
 //        }
         // Get rid of the about dialog if it's still up
         if (mDialog != null)
@@ -304,24 +245,24 @@ public class ScraggleGameActivity2Combine extends Activity {
 
         @Override
         public void onFinish() {
-                Log.e("onFinish p1", String.valueOf(mGameFragment.getWordCount1()));
-                if(mGameFragment.getWordCount1() > 1) {
-                    Log.e("onFinish", "Game Over Phase 1");
-                    mTextField.setText("            GAME OVER");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+            Log.e("onFinish p1", String.valueOf(mGameFragment.getWordCount1()));
+            if (mGameFragment.getWordCount1() > 1) {
+                Log.e("onFinish", "Game Over Phase 1");
+                mTextField.setText("            GAME OVER");
+                AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
 //                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
-                    builder.setTitle(R.string.game_end_title);
-                    builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score));
-                    builder.setCancelable(false);
-                    builder.setPositiveButton(R.string.ok_label,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                }
-                            });
-                    mDialog = builder.show();
-                }
+                builder.setTitle(R.string.game_end_title);
+                builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score));
+                builder.setCancelable(false);
+                builder.setPositiveButton(R.string.ok_label,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        });
+                mDialog = builder.show();
+            }
         }
 
         @Override
@@ -348,7 +289,9 @@ public class ScraggleGameActivity2Combine extends Activity {
 
     protected void onPauseGame() {
         Log.e("onPauseGame", "inside pause");
-        counter.cancel();
+        if(counter != null) {
+            counter.cancel();
+        }
         mMediaPlayer.pause();
         mGameFragment.disableLetterGrid();
         isResumeFlag = false;
@@ -356,8 +299,10 @@ public class ScraggleGameActivity2Combine extends Activity {
 
     protected void onResumeGame() {
         Log.e("onResumeGame", "inside pause");
-        counter = new MyCount(savedRemainingInterval, 1000);
-        counter.start();
+        if(counter != null) {
+            counter = new MyCount(savedRemainingInterval, 1000);
+            counter.start();
+        }
         mMediaPlayer.start();
         mGameFragment.enableLetterGrid();
         isResumeFlag = true;
@@ -365,7 +310,9 @@ public class ScraggleGameActivity2Combine extends Activity {
 
     protected void onQuitGame() {
         Log.e("onQuit", "inside pause");
-        counter.cancel();
+        if(counter != null) {
+            counter.cancel();
+        }
         mMediaPlayer.pause();
         isResumeFlag = false;
     }
@@ -553,27 +500,18 @@ public class ScraggleGameActivity2Combine extends Activity {
     }
 
     public void startTimer1(String key) {
-        //set a new Timer
         timer = new Timer();
-        //initialize the TimerTask's job
         initializeTimerTask1(key);
-        //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
-        // The values can be adjusted depending on the performance
         timer.schedule(timerTask, 5000, 1000);
     }
 
     public void startTimer2(String key) {
-        //set a new Timer
         timer2 = new Timer();
-        //initialize the TimerTask's job
         initializeTimerTask2();
-        //schedule the timer, after the first 5000ms the TimerTask will run every 1000ms
-        // The values can be adjusted depending on the performance
         timer2.schedule(timerTask2, 5000, 1000);
     }
 
     public void stopTimerTask1() {
-        //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
             timer = null;
@@ -581,7 +519,6 @@ public class ScraggleGameActivity2Combine extends Activity {
     }
 
     public void stopTimerTask2() {
-        //stop the timer, if it's not already null
         if (timer2 != null) {
             timer2.cancel();
             timer2 = null;
@@ -597,7 +534,8 @@ public class ScraggleGameActivity2Combine extends Activity {
                         public void run() {
                             user = mRemoteClient.getUserData(key);
                             Log.e("GameActivity2", "Value >>>> " + user);
-                            Toast.makeText(ScraggleGameActivity2Combine.this, "Value 1  " + user.getUserName(),
+                            Toast.makeText(ScraggleGameActivity2Combine.this, "Value 1  "
+                                            + user.getUserName(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -616,7 +554,8 @@ public class ScraggleGameActivity2Combine extends Activity {
                         public void run() {
                             current2UserMap = mRemoteClient.getFireBaseRandomUserData();
                             Log.e("GameActivity2", "Value2 >>>> " + user);
-                            Toast.makeText(ScraggleGameActivity2Combine.this, "Value 2  " + user2player.getUserName(),
+                            Toast.makeText(ScraggleGameActivity2Combine.this, "Value 2  "
+                                            + user2player.getUserName(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -624,5 +563,43 @@ public class ScraggleGameActivity2Combine extends Activity {
                 }
             }
         };
+    }
+
+    private void startUserListDialog() {
+        Log.e("COMBINE GAME DIALOG", "showing dialog!");
+        fireBaseAllUserList = mRemoteClient.fetchAllUsers(Constants.USER_DATA, userKey);
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String[] keys = new String[fireBaseAllUserList.size()];
+                UserData[] values = new UserData[fireBaseAllUserList.size()];
+                final String[] userNameList = new String[fireBaseAllUserList.size()];
+                final String[] userIdList = new String[fireBaseAllUserList.size()];
+                int index = 0;
+                for (Map.Entry<String, UserData> mapEntry : fireBaseAllUserList.entrySet()) {
+                    keys[index] = mapEntry.getKey();
+                    values[index] = mapEntry.getValue();
+                    userNameList[index] = mapEntry.getValue().getUserName();
+                    userIdList[index] = mapEntry.getValue().getUserId();
+                    index++;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        ScraggleGameActivity2Combine.this,
+                        AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                builder.setTitle(R.string.select_team_mate)
+                        .setItems(userNameList, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO - calling the game activity and getting it's gameKey
+                                // and then passing this push notification
+                                mCommMain.sendCombineGameRequest("TEST", userIdList[which]);
+                            }
+                        });
+                builder.create().show();
+            }
+        }, 5000);
+
+        isTeamPlayerSelected = true;
     }
 }

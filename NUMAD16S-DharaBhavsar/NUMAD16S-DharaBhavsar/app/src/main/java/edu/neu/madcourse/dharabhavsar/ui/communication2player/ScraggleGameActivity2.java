@@ -340,45 +340,55 @@ public class ScraggleGameActivity2 extends Activity {
                     Log.e("onFinish", "Done");
                     mTextField.setText("            DONE");
                     mGameFragment.disableLetterGrid();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
-                    builder.setTitle(R.string.phase_change_title);
-                    builder.setMessage(R.string.phase_change_text);
-                    builder.setCancelable(false);
-                    builder.setPositiveButton(R.string.ok_label,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    // take to Phase 2
-                                    isPhaseTwo = true;
-                                    savedRemainingInterval = 0;
-//                                mGameFragment.setIsPhaseTwo(true);
-//                                startActivity(new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class));
-                                    Intent intent = new Intent(ScraggleGameActivity2.this, ScraggleGameActivity2.class);
-                                    intent.putExtra("gameData", mGameFragment.getState());
-                                    intent.putExtra("isTwoFlag", isPhaseTwo);
-//                                intent.putExtra("isTwoFlagFrag", isPhaseTwo);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
-                    mDialog = builder.show();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+//                          AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+                            builder.setTitle(R.string.phase_change_title);
+                            builder.setMessage(R.string.phase_change_text);
+                            builder.setCancelable(false);
+                            builder.setPositiveButton(R.string.ok_label,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            // take to Phase 2
+                                            isPhaseTwo = true;
+                                            savedRemainingInterval = 0;
+//                                          mGameFragment.setIsPhaseTwo(true);
+//                                          startActivity(new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class));
+                                            Intent intent = new Intent(ScraggleGameActivity2.this, ScraggleGameActivity2.class);
+                                            intent.putExtra("gameData", mGameFragment.getState());
+                                            intent.putExtra("isTwoFlag", isPhaseTwo);
+//                                          intent.putExtra("isTwoFlagFrag", isPhaseTwo);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    });
+                            mDialog = builder.show();
+                        }
+                    }, 2000);
                 } else {
                     Log.e("onFinish", "Game Over Phase 1");
                     mTextField.setText("            GAME OVER");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
-                    builder.setTitle(R.string.game_end_title);
-                    builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score));
-                    builder.setCancelable(false);
-                    builder.setPositiveButton(R.string.ok_label,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                }
-                            });
-                    mDialog = builder.show();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+//                          AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+                            builder.setTitle(R.string.game_end_title);
+                            builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score));
+                            builder.setCancelable(false);
+                            builder.setPositiveButton(R.string.ok_label,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            finish();
+                                        }
+                                    });
+                            mDialog = builder.show();
+                        }
+                    }, 2000);
                 }
             } else {
                 Log.e("onFinish", "Game Over");
@@ -394,25 +404,30 @@ public class ScraggleGameActivity2 extends Activity {
                     @Override
                     public void run() {
 //                        TODO - remove TEST and add meaningful msg
-                        mCommMain.sendCombatGameRequest("TEST", user2player.getUserId());
+                        mCommMain.sendCombatGameRequest("Challenged by " + user.getUserName(), user2player.getUserId());
                     }
                 }, 5000);
 //                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
-                AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
-                builder.setTitle(R.string.game_end_title);
-                builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score + score2));
-                builder.setCancelable(false);
-                builder.setPositiveButton(R.string.ok_label,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                            }
-                        });
-                mDialog = builder.show();
-                isGameEnd = true;
-//                Log.e("null game state 2", (gameData!=null?String.valueOf(gameData):"null"));
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+//                      AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+                        builder.setTitle(R.string.game_end_title);
+                        builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score + score2));
+                        builder.setCancelable(false);
+                        builder.setPositiveButton(R.string.ok_label,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        finish();
+                                    }
+                                });
+                        mDialog = builder.show();
+                        isGameEnd = true;
+//                      Log.e("null game state 2", (gameData!=null?String.valueOf(gameData):"null"));
+                    }
+                }, 2000);
             }
         }
 

@@ -47,8 +47,8 @@ public class MainFragmentScraggle2 extends Fragment {
         combineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), ScraggleGameActivity2Combine.class);
-                Intent intent = new Intent(getActivity(), ShowUserListDialogActivity.class);
+                Intent intent = new Intent(getActivity(), ScraggleGameActivity2Combine.class);
+//                Intent intent = new Intent(getActivity(), ShowUserListDialogActivity.class);
                 getActivity().startActivity(intent);
             }
         });

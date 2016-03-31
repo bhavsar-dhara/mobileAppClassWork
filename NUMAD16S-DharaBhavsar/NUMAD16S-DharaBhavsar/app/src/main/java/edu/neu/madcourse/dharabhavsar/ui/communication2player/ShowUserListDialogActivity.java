@@ -47,45 +47,28 @@ public class ShowUserListDialogActivity extends Activity {
             public void run() {
                 String[] keys = new String[fireBaseAllUserList.size()];
                 UserData[] values = new UserData[fireBaseAllUserList.size()];
-                String[] userNameList = new String[fireBaseAllUserList.size()];
+                final String[] userNameList = new String[fireBaseAllUserList.size()];
+                final String[] userIdList = new String[fireBaseAllUserList.size()];
                 int index = 0;
                 for (Map.Entry<String, UserData> mapEntry : fireBaseAllUserList.entrySet()) {
                     keys[index] = mapEntry.getKey();
                     values[index] = mapEntry.getValue();
                     userNameList[index] = mapEntry.getValue().getUserName();
+                    userIdList[index] = mapEntry.getValue().getUserId();
                     index++;
                 }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ShowUserListDialogActivity.this,
                         AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-                // Set the dialog title
                 builder.setTitle(R.string.select_team_mate)
                             .setItems(userNameList, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // The 'which' argument contains the index position
-                                    // of the selected item
-                                    // TODO
+                                    // TODO - calling the game activity and getting it's gameKey and then passing this push notification
+                                    mCommMain.sendCombineGameRequest("TEST", userIdList[which]);
                                 }
                             });
                 builder.create().show();
             }
         }, 5000);
-        /*Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.select_dialog_user_list);
-        dialog.setTitle("Please select a team mate to play with...");
-        dialog.setCancelable(true);
-//        dialog.setCanceledOnTouchOutside(true);
-        TextView text = (TextView) dialog.findViewById(R.id.text1);
-        text.setText("Message");
-
-        dialog.show();
-        //
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-            public void onCancel(DialogInterface arg0) {
-                finish();
-            }
-
-        });*/
     }
 }
