@@ -138,12 +138,6 @@ public class ScraggleGameFragment2 extends Fragment {
         rootView.setOnTouchListener(new View.OnTouchListener(){
 
             @Override
-            public boolean onInterceptTouchEvent(MotionEvent event) {
-
-                return false;
-            }
-
-            @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
@@ -151,10 +145,41 @@ public class ScraggleGameFragment2 extends Fragment {
                 Log.e("Testing Touch", "X = " + x);
                 Log.e("Testing Touch", "Y = " + y);
 
-                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                /*if(event.getAction() == MotionEvent.ACTION_MOVE){
                     //do something
                     Log.e("Testing Touch", "in action move");
+                }*/
+
+                // get pointer index from the event object
+                int pointerIndex = event.getActionIndex();
+
+                // get pointer ID
+                int pointerId = event.getPointerId(pointerIndex);
+
+                // get masked (not specific to a pointer) action
+                int maskedAction = event.getActionMasked();
+
+                switch (maskedAction) {
+
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_POINTER_DOWN: {
+                        // TODO use data
+                        Log.e("Testing Touch", "in action pointer down");
+                        break;
+                    }
+                    case MotionEvent.ACTION_MOVE: { // a pointer was moved
+                        // TODO use data
+                        Log.e("Testing Touch", "in action move");
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_POINTER_UP:
+                    case MotionEvent.ACTION_CANCEL: {
+                        // TODO use data
+                        break;
+                    }
                 }
+
                 return true;
             }
         });
