@@ -63,6 +63,9 @@ public class ScraggleGameFragment2Combine extends Fragment {
     private int countWordFound = 0;
     private int gameScore2 = 0;
 
+    private List<Integer> arrInt = new ArrayList<Integer>();
+    int randomInt;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +85,7 @@ public class ScraggleGameFragment2Combine extends Fragment {
 //        Method call to the asyncTaskRunner
             stringLst = ((ScraggleGameActivity2Combine) getActivity()).methodCallToAsyncTaskRunner();
             setLettersOnBoard();
+//            setLettersOnBoggleBoard();
         }
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
@@ -718,6 +722,59 @@ public class ScraggleGameFragment2Combine extends Fragment {
             int rnd = new Random().nextInt(myList.size());
             resultList.add(myList.get(rnd));
         }
+    }
+
+    private void setLettersOnBoggleBoard() {
+
+        /*int[] arr = {0,1,2,3,4,5,6,7,8};
+        List arrInt = new ArrayList(9);
+        arrInt = Arrays.asList(arr);
+        Vector v = new Vector(arrInt);*/
+
+        randomInt = (int) Math.random()*9;
+        arrInt.add(randomInt);
+//        List neighborLst = getNeighbors(randomInt);
+        shuffleLetterBoggleStyle(randomInt);
+
+        /*while(neighborLst.size() > 0) {
+            int rnd = new Random().nextInt(neighborLst.size());
+            int newInt = (int) neighborLst.get(rnd);
+        }
+
+        for(int i = 0; i < 9; i++) {
+            neighborLst = getNeighbors(randomInt);
+            int rnd = new Random().nextInt(neighborLst.size());
+            int newInt = (int) neighborLst.get(rnd);
+            if (!arrInt.contains(newInt))
+                arrInt.add(newInt);
+        }*/
+    }
+
+    private List shuffleLetterBoggleStyle(int i) {
+//        if(arrInt.size() < 10) {
+            Log.e("test boggle shuffle", "array element " + i);
+            List neighborLst = getNeighbors(i);
+            /*int rnd = new Random().nextInt(neighborLst.size());
+            int newInt = (int) neighborLst.get(rnd);
+            if (!arrInt.contains(newInt)) {
+                arrInt.add(newInt);
+                shuffleLetterBoggleStyle(newInt);
+            } else {
+                shuffleLetterBoggleStyle(randomInt);
+            }*/
+            if (neighborLst.size() > 0 && arrInt.size() < 10) {
+                int rnd = new Random().nextInt(neighborLst.size());
+                int newInt = (int) neighborLst.get(rnd);
+                if (!arrInt.contains(newInt)) {
+                    arrInt.add(newInt);
+                    shuffleLetterBoggleStyle(newInt);
+                } else {
+                    shuffleLetterBoggleStyle(i);
+                }
+            }
+            shuffleLetterBoggleStyle(randomInt);
+//        }
+        return arrInt;
     }
 
     private List<Integer> getNeighbors(Integer i) {

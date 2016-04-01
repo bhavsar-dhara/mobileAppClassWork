@@ -7,6 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +21,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,6 +99,11 @@ public class ScraggleGameActivity2 extends Activity {
             android.R.attr.state_focused
                     | android.R.attr.state_enabled };*/
 
+    private SensorManager mSensorManager;
+    private float mAccel;
+    private float mAccelCurrent;
+    private float mAccelLast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +114,14 @@ public class ScraggleGameActivity2 extends Activity {
             isPhaseTwo = b.getBoolean("isTwoFlag");
             gameData = b.getString("gameData");
         }
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager.registerListener(mSensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                                                SensorManager.SENSOR_DELAY_NORMAL);
+        mAccel = 0.00f;
+        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+        mAccelLast = SensorManager.GRAVITY_EARTH;
 
         /*xcordview = (TextView) findViewById(R.id.textView4);
         ycordview = (TextView) findViewById(R.id.textView3);
@@ -267,6 +285,9 @@ public class ScraggleGameActivity2 extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        mSensorManager.registerListener(mSensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
         Log.e("onResume", "inside resume");
         if (!isResumeFlag) {
             isResumeFlag = true;
@@ -293,6 +314,7 @@ public class ScraggleGameActivity2 extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        mSensorManager.unregisterListener(mSensorListener);
         Log.e("onPause", "inside pause");
         mHandler.removeCallbacks(null);
         mMediaPlayer.stop();
@@ -762,4 +784,25 @@ public class ScraggleGameActivity2 extends Activity {
             }
         }, 15000);
     }
+
+    private final SensorEventListener mSensorListener = new SensorEventListener() {
+
+        public void onSensorChanged(SensorEvent se) {
+            float x = se.values[0];
+            float y = se.values[1];
+            float z = se.values[2];
+            mAccelLast = mAccelCurrent;
+            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            float delta = mAccelCurrent - mAccelLast;
+            mAccel = mAccel * 0.9f + delta;
+            if (mAccel > 12) {
+//                TODO - add method to reshuffle the letters on the board
+                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
 }
