@@ -403,7 +403,8 @@ public class ScraggleGameActivity2 extends Activity {
                     @Override
                     public void run() {
 //                        TODO - remove TEST and add meaningful msg
-                        mCommMain.sendCombatGameRequest("Challenged by " + user.getUserName(), user2player.getUserId());
+                        mCommMain.sendCombatGameRequest("Challenged by " + user.getUserName(),
+                                user2player.getUserId());
                     }
                 }, 5000);
 //                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));

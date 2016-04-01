@@ -464,6 +464,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
                 msgParams.put("data.contentText", message);
                 msgParams.put("data.nIcon", String.valueOf(nIcon));
                 msgParams.put("data.nType", String.valueOf(nType));
+                msgParams.put("data.gameKey", Constants.GAME_UNIQUE_KEY);
                 setCombatGameRequestValues(message);
                 GcmNotification gcmNotification = new GcmNotification();
                 regIds.clear();
@@ -511,6 +512,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
                 msgParams.put("data.contentText", message);
                 msgParams.put("data.nIcon", String.valueOf(nIcon));
                 msgParams.put("data.nType", String.valueOf(nType));
+                msgParams.put("data.gameKey", Constants.COMBINE_GAME_UNIQUE_KEY);
                 setCombineGameRequestValues(message);
                 GcmNotification gcmNotification = new GcmNotification();
                 regIds.clear();

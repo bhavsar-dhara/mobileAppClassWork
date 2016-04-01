@@ -115,6 +115,11 @@ public class ScraggleGameActivity2Combine extends Activity {
         prefs2 = appContext.getSharedPreferences(CommunicationMain.class.getSimpleName(), Context.MODE_PRIVATE);
         mRemoteClient = new RemoteClient(appContext);
 
+        userKey = prefs.getString(Constants.USER_UNIQUE_KEY, "");
+        Constants.USER_KEY = userKey;
+        userId = prefs2.getString(Constants.PROPERTY_REG_ID, "");
+        fetchPlayerDetailsCombat();
+
         setContentView(R.layout.activity_game_scraggle2combine);
         mGameFragment = (ScraggleGameFragment2Combine) getFragmentManager()
                 .findFragmentById(R.id.fragment_game_scraggle);
@@ -133,6 +138,10 @@ public class ScraggleGameActivity2Combine extends Activity {
             }
         }
         Log.e("Scraggle", "restore = " + restore);
+        saveInitialGameDataP1Combine();
+        gameKey = prefs.getString(Constants.COMBINE_GAME_UNIQUE_KEY, "");
+        Constants.COMBINE_GAME_KEY = gameKey;
+        mGameFragment.disableLetterGrid();
 
         if(!isTeamPlayerSelected) {
 //            TODO
@@ -590,16 +599,88 @@ public class ScraggleGameActivity2Combine extends Activity {
                         AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
                 builder.setTitle(R.string.select_team_mate)
                         .setItems(userNameList, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(DialogInterface dialog, final int which) {
                                 // TODO - calling the game activity and getting it's gameKey
                                 // and then passing this push notification
-                                mCommMain.sendCombineGameRequest("TEST", userIdList[which]);
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mCommMain.sendCombineGameRequest("Play along with " +
+                                                user.getUserName(), userIdList[which]);
+
+                                            /*updateP1DetailsOnP2SelectionCombine();
+                                            updateGameDetailsOnP2Combine();*/
+                                    }
+                                }, 3000);
+                                isTeamPlayerSelected = true;
+                                mGameFragment.enableLetterGrid();
                             }
                         });
                 builder.create().show();
             }
         }, 5000);
+    }
 
-        isTeamPlayerSelected = true;
+    private void saveInitialGameDataP1Combine() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                gameLetter = mGameFragment.getGameLetterState();
+                Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
+                gameDataFb = new GameData(0, 0, 0, 0, 0, userKey, "", gameLetter, false, false, true, false);
+                mRemoteClient.saveGameData(gameDataFb);
+            }
+        }, 3000);
+    }
+
+    private void updateP1DetailsOnP2SelectionCombine() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                String gameKey = prefs.getString(Constants.GAME_UNIQUE_KEY, "");
+                UserData updatedUserData = new UserData(user.getUserId(), user.getUserName(),
+                        ((user.getUserIndividualBestScore()>0 && user.getUserIndividualBestScore()>(score+score2))
+                                ?user.getUserIndividualBestScore():score+score2),
+                        user.getUserCombineBestScore(), user.getTeamPlayerName(), true,
+                        user.getChallengedBy(), user.isCombineGameRequest(), score+score2,
+                        user.getUserPendingCombineGameScore(), gameKey, user.getPendingCombineGameKey());
+                mRemoteClient.updateUserData(updatedUserData);
+                Log.e("remote", "username = " + user.getUserName());
+            }
+        }, 5000);
+    }
+
+    private void updateGameDetailsOnP2Combine() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                GameData updatedGameData = new GameData(retrievedGameData.getScoreCombinePlay(),
+                        retrievedGameData.getP1Score1(),
+                        retrievedGameData.getP1Score2(),
+                        retrievedGameData.getP2Score1(),
+                        retrievedGameData.getP2Score1(),
+                        retrievedGameData.getPlayer1ID(),
+                        user2key,
+                        retrievedGameData.getGameLetterState(),
+                        retrievedGameData.isFirstCombatPlay(),
+                        retrievedGameData.isSecondCombatPlay(),
+                        retrievedGameData.isCombinePlay(),
+                        retrievedGameData.isGameOver());
+                mRemoteClient.updateGameData(updatedGameData);
+                Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
+            }
+        }, 15000);
+    }
+
+    private void fetchPlayerDetailsCombat() {
+        Log.e("remote", "userKey = " + userKey);
+        mRemoteClient.fetchUserData(Constants.USER_DATA, userKey);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                user = mRemoteClient.getUserData(userKey);
+                Log.e("remote", "username = " + user.getUserName());
+            }
+        }, 10000);
     }
 }
