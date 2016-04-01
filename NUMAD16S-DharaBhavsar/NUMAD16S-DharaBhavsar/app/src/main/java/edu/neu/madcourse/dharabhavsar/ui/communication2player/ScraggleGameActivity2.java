@@ -223,7 +223,6 @@ public class ScraggleGameActivity2 extends Activity {
 //                Log.e("PhaseOne Timer", "interval");
                 counter = new MyCount(interval, 1000);
             }
-//            TODO initializing game data at the start of the game
             saveInitialGameDataP1Combat();
         }
     }
@@ -653,8 +652,6 @@ public class ScraggleGameActivity2 extends Activity {
     // TODO functions to save and update and fetch user and game data
 
     private void saveInitialGameDataP1Combat() {
-        /*mRemoteClient.fetchUserData(Constants.USER_DATA, userKey);
-        user = mRemoteClient.getUserData(userKey);*/
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

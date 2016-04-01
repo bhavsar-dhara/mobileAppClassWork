@@ -200,8 +200,8 @@ public class ScraggleGameActivity extends Activity {
         } else {
             mScoreTextField.setText("Score = " + String.valueOf(score + score2));
         }
-        View thinkView = findViewById(R.id.thinking_scraggle);
-        thinkView.setVisibility(View.GONE);
+//        View thinkView = findViewById(R.id.thinking_scraggle);
+//        thinkView.setVisibility(View.GONE);
     }
 
     @Override

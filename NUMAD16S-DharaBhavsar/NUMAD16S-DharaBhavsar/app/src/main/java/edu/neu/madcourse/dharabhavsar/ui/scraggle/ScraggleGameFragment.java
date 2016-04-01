@@ -214,7 +214,7 @@ public class ScraggleGameFragment extends Fragment {
                         if (!isPhaseTwo) {
 //                        if (isAvailable(smallTile)) {
                             if (isNextMove(smallTile)) {
-                                ((ScraggleGameActivity) getActivity()).startThinking();
+//                                ((ScraggleGameActivity) getActivity()).startThinking();
 //                                Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
                                 if (!smallTile.getIsSelected()) {
 //                                    Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
@@ -248,7 +248,7 @@ public class ScraggleGameFragment extends Fragment {
                             mLastSmall = fSmall;
                         } else {
                             Log.e("initViews", "inside PhaseTwo code");
-                            ((ScraggleGameActivity) getActivity()).startThinking();
+//                            ((ScraggleGameActivity) getActivity()).startThinking();
 //                            Log.e("initViews", "mLastLarge = " + mLastLarge);
 //                            Log.e("initViews", "fLarge = " + fLarge);
                             if (mLastLarge != fLarge) {
