@@ -190,47 +190,39 @@ public class ScraggleGameFragment2 extends Fragment {
     private void initAddLetters(View rootView) {
         Log.e("initAddLetters", "inside : " + isPhaseTwo);
         mEntireBoard.setView(rootView);
+        String str;
         for (int large = 0; large < 9; large++) {
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
 //            to add letters of the words
             List<Integer> posnList = resultList.get(large);
-            String str = stringLst.get(large);
+            str = stringLst.get(large);
 //            Log.e("nineWords", str);
             for (int small = 0; small < 9; small++) {
                 if (!isPhaseTwo) {
-//                    Log.e("isRestore", String.valueOf(((ScraggleGameActivity2) getActivity()).isRestore()));
-//                    if(!((ScraggleGameActivity2) getActivity()).isRestore()) {
-//                to add letters of the words
                     int i = posnList.get(small);
                     Button innerText = (Button) outer.findViewById
                             (mSmallIdList[i]);
                     innerText.setText(String.valueOf(str.charAt(small)));
                     final ScraggleTile2 smallTileText = mSmallTiles[large][i];
                     gameLetterState[large][i] = str.charAt(small);
-//                if(smallTileText.getInnerText != null) {
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
-//                to add letters of the words
-//                }
-//                    } else {
-//                        Button innerText = (Button) outer.findViewById
-//                                (mSmallIdList[small]);
-//                        final ScraggleTile2 smallTileText = mSmallTiles[large][small];
-//                        if(smallTileText.getIsSelected() && isWord[large]) {
-//                            innerText.setText(String.valueOf(gameLetterState[large][small]));
-//                            smallTileText.setInnerText(String.valueOf(gameLetterState[large][small]));
-//                        }
-//                    }
-                } /*else {
-                    Log.e("Phase-2", "inside initAddLetters");
+                } else if (((ScraggleGameActivity2Combine) getActivity()).isPhoneShaked()) {
+                    int i = posnList.get(small);
+//                    Log.e("nineWords ", i + " = " + str);
                     Button innerText = (Button) outer.findViewById
-                            (mSmallIdList[small]);
-                    final ScraggleTile2 smallTileText = mSmallTiles[large][small];
-                    if(smallTileText.getIsSelected() && isWord[large]) {
-                        innerText.setText(String.valueOf(gameLetterState[large][small]));
-                        smallTileText.setInnerText(String.valueOf(gameLetterState[large][small]));
+                            (mSmallIdList[i]);
+                    innerText.setText(String.valueOf(str.charAt(small)));
+                    final ScraggleTile2 smallTileText = mSmallTiles[large][i];
+                    gameLetterState[large][i] = str.charAt(small);
+                    smallTileText.setInnerText(String.valueOf(str.charAt(small)));
+                    smallTileText.setIsSelected(false);
+                    if (!isPhaseTwo) {
+                        gameScore = 0;
+                    } else {
+                        gameScore2 = 0;
                     }
-                }*/
+                }
             }
         }
     }
@@ -926,6 +918,12 @@ public class ScraggleGameFragment2 extends Fragment {
 
     public char[][] getGameLetterState() {
         return gameLetterState;
+    }
+
+    public void reshuffleLettersOnShake(){
+        resultList.clear();
+        setLettersOnBoard();
+        initAddLetters(mView);
     }
 }
 

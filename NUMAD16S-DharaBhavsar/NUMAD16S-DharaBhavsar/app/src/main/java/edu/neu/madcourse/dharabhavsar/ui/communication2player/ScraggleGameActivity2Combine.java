@@ -106,6 +106,7 @@ public class ScraggleGameActivity2Combine extends Activity {
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+    private boolean isPhoneShaked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +220,8 @@ public class ScraggleGameActivity2Combine extends Activity {
 //                counter = new MyCount(interval, 1000);
                     counter.start();
                 }
-            }
+            } else
+                Log.e("Counter NULL", "counter is null error");
         }
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
         mMediaPlayer.start();
@@ -240,7 +242,8 @@ public class ScraggleGameActivity2Combine extends Activity {
         mMediaPlayer.release();
         if(counter != null) {
             counter.cancel();
-        }
+        } else
+            Log.e("Counter NULL", "counter is null error");
         if (isResumeFlag) {
             isResumeFlag = false;
         }
@@ -321,7 +324,8 @@ public class ScraggleGameActivity2Combine extends Activity {
         Log.e("onPauseGame", "inside pause");
         if(counter != null) {
             counter.cancel();
-        }
+        } else
+            Log.e("Counter NULL", "counter is null error");
         mMediaPlayer.pause();
         mGameFragment.disableLetterGrid();
         isResumeFlag = false;
@@ -332,7 +336,8 @@ public class ScraggleGameActivity2Combine extends Activity {
         if(counter != null) {
             counter = new MyCount(savedRemainingInterval, 1000);
             counter.start();
-        }
+        } else
+            Log.e("Counter NULL", "counter is null error");
         mMediaPlayer.start();
         mGameFragment.enableLetterGrid();
         isResumeFlag = true;
@@ -342,7 +347,8 @@ public class ScraggleGameActivity2Combine extends Activity {
         Log.e("onQuit", "inside pause");
         if(counter != null) {
             counter.cancel();
-        }
+        } else
+            Log.e("Counter NULL", "counter is null error");
         mMediaPlayer.pause();
         isResumeFlag = false;
     }
@@ -510,6 +516,14 @@ public class ScraggleGameActivity2Combine extends Activity {
 
     public void setIsPhaseTwo(boolean isPhaseTwoFlag) {
         isPhaseTwo = isPhaseTwoFlag;
+    }
+
+    public boolean isPhoneShaked() {
+        return this.isPhoneShaked;
+    }
+
+    public void setIsShaked(boolean isShaked) {
+        isPhoneShaked = isShaked;
     }
 
     private void animator() {
@@ -716,9 +730,15 @@ public class ScraggleGameActivity2Combine extends Activity {
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 12) {
-//                TODO - add method to reshuffle the letters on the board
+                isPhoneShaked = true;
+                mGameFragment.reshuffleLettersOnShake();
+//                TODO - add method to reshuffle the letters on the board -
+//                reset the counter and the tiles selected
+//                SCORE to be set 0 as per the phase and
+//                wordLists to be cleared as well
                 Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
                 toast.show();
+                setIsShaked(false);
             }
         }
 

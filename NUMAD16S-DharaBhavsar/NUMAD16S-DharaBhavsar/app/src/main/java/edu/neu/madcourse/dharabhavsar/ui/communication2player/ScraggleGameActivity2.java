@@ -103,6 +103,7 @@ public class ScraggleGameActivity2 extends Activity {
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+    private boolean isPhoneShaked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -672,6 +673,14 @@ public class ScraggleGameActivity2 extends Activity {
         isGameEnd = isGameEndFlag;
     }
 
+    public boolean isPhoneShaked() {
+        return this.isPhoneShaked;
+    }
+
+    public void setIsShaked(boolean isShaked) {
+        isPhoneShaked = isShaked;
+    }
+
     // TODO functions to save and update and fetch user and game data
 
     private void saveInitialGameDataP1Combat() {
@@ -796,9 +805,13 @@ public class ScraggleGameActivity2 extends Activity {
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 12) {
-//                TODO - add method to reshuffle the letters on the board
+                isPhoneShaked = true;
+                mGameFragment.reshuffleLettersOnShake();
+//                TODO - add method to reshuffle the letters on the board -
+//                reset the counter and the tiles selected
                 Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
                 toast.show();
+                setIsShaked(false);
             }
         }
 
