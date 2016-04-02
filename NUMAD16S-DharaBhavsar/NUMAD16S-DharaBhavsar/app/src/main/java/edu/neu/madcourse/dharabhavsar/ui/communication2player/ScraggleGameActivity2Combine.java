@@ -108,8 +108,6 @@ public class ScraggleGameActivity2Combine extends Activity {
     private float mAccelLast;
     private boolean isPhoneShaked = false;
 
-    private String[] boggledWords = new String[9];
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -683,7 +681,7 @@ public class ScraggleGameActivity2Combine extends Activity {
                 Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
 //                TODO - change the last null but in update game data
                 gameDataFb = new GameData(0, 0, 0, 0, 0, userKey, "", gameLetter, false,
-                        false, true, false, null, boggledWords);
+                        false, true, false, null, mGameFragment.getBoggledWords());
                 mRemoteClient.saveGameData(gameDataFb);
             }
         }, 3000);

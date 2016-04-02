@@ -241,8 +241,8 @@ public class ScraggleGameFragment2 extends Fragment {
                     innerText.setText(String.valueOf(str.charAt(small)));
                     final ScraggleTile2 smallTileText = mSmallTiles[large][i];
                     gameLetterState[large][i] = str.charAt(small);
-                    Log.e("boggledWords", boggledWords[large]);
                     boggledWords[large] += str.charAt(small);
+                    Log.e("boggledWords " + large, boggledWords[large]);
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
                 }
                 if (((ScraggleGameActivity2) getActivity()).isPhoneShaked()) {

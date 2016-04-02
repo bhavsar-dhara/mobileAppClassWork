@@ -104,8 +104,6 @@ public class ScraggleGameActivity2 extends Activity {
     private float mAccelLast;
     private boolean isPhoneShaked = false;
 
-    private String[] boggledWords = new String[]{"", "", "", "", "", "", "", "", ""};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -237,7 +235,6 @@ public class ScraggleGameActivity2 extends Activity {
                 fetchRandomPlayer2DetailsCombat();
                 fetchGameDetailsCombat();
             }
-            boggledWords = mGameFragment.getBoggledWords();
         } else {
             if (savedRemainingInterval > 0) {
 //                Log.e("PhaseOne Timer", "savedRemainingInterval");
@@ -701,7 +698,7 @@ public class ScraggleGameActivity2 extends Activity {
                 gameLetter = mGameFragment.getGameLetterState();
                 Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
                 gameDataFb = new GameData(0, 0, 0, 0, 0, userKey, "", gameLetter, true, false,
-                        false, false, null, boggledWords);
+                        false, false, null, mGameFragment.getBoggledWords());
                 mRemoteClient.saveGameData(gameDataFb);
             }
         }, 5000);
