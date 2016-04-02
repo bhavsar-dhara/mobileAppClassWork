@@ -199,8 +199,8 @@ public class ScraggleGameActivity2Combine extends Activity {
 
     public void stopThinking() {
         mScoreTextField.setText("Score = " + String.valueOf(score));
-        View thinkView = findViewById(R.id.thinking_scraggle);
-        thinkView.setVisibility(View.GONE);
+//        View thinkView = findViewById(R.id.thinking_scraggle);
+//        thinkView.setVisibility(View.GONE);
     }
 
     @Override
@@ -732,12 +732,13 @@ public class ScraggleGameActivity2Combine extends Activity {
             if (mAccel > 12) {
                 isPhoneShaked = true;
                 mGameFragment.reshuffleLettersOnShake();
+                restartCounter();
 //                TODO - add method to reshuffle the letters on the board -
 //                reset the counter and the tiles selected
 //                SCORE to be set 0 as per the phase and
 //                wordLists to be cleared as well
-                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
-                toast.show();
+//                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
+//                toast.show();
                 setIsShaked(false);
             }
         }
@@ -745,4 +746,15 @@ public class ScraggleGameActivity2Combine extends Activity {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
     };
+
+    private void restartCounter() {
+        if(counter != null) {
+            counter.cancel();
+            savedRemainingInterval = interval;
+            Log.e("intervals", "savedRemainingInterval = " + savedRemainingInterval);
+            Log.e("intervals", "interval = " + interval);
+            counter.start();
+        } else
+            Log.e("Counter NULL", "counter is null error");
+    }
 }

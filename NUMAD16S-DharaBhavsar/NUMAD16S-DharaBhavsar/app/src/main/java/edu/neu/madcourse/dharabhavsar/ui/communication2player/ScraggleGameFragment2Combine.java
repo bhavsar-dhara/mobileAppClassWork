@@ -168,8 +168,11 @@ public class ScraggleGameFragment2Combine extends Fragment {
 //                    Log.e("nineWords ", i + " = " + str);
                     Button innerText = (Button) outer.findViewById
                             (mSmallIdList[i]);
-                    innerText.setText(String.valueOf(str.charAt(small)));
                     final ScraggleTile2 smallTileText = mSmallTiles[large][i];
+                    smallTileText.setView(innerText);
+                    innerText.setText(String.valueOf(str.charAt(small)));
+                    innerText.setBackgroundDrawable(getResources().getDrawable
+                            (R.drawable.tile_not_selected_scraggle));
                     gameLetterState[large][i] = str.charAt(small);
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
                     smallTileText.setIsSelected(false);
@@ -178,6 +181,14 @@ public class ScraggleGameFragment2Combine extends Fragment {
                     } else {
                         gameScore2 = 0;
                     }
+                }
+            }
+            if (((ScraggleGameActivity2Combine) getActivity()).isPhoneShaked()) {
+                wordScores = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+                if(isPhaseTwo) {
+                    wordsMadePhase2 = new String[100];
+                } else {
+                    wordMadeList = new String[wordMadeList.length];
                 }
             }
         }
@@ -210,7 +221,7 @@ public class ScraggleGameFragment2Combine extends Fragment {
                         if (!isPhaseTwo) {
 //                        if (isAvailable(smallTile)) {
                             if (isNextMove(smallTile)) {
-                                ((ScraggleGameActivity2Combine) getActivity()).startThinking();
+//                                ((ScraggleGameActivity2Combine) getActivity()).startThinking();
 //                                Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
                                 if (!smallTile.getIsSelected()) {
 //                                    Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
@@ -244,7 +255,7 @@ public class ScraggleGameFragment2Combine extends Fragment {
                             mLastSmall = fSmall;
                         } else {
                             Log.e("initViews", "inside PhaseTwo code");
-                            ((ScraggleGameActivity2Combine) getActivity()).startThinking();
+//                            ((ScraggleGameActivity2Combine) getActivity()).startThinking();
 //                            Log.e("initViews", "mLastLarge = " + mLastLarge);
 //                            Log.e("initViews", "fLarge = " + fLarge);
                             if (mLastLarge != fLarge) {

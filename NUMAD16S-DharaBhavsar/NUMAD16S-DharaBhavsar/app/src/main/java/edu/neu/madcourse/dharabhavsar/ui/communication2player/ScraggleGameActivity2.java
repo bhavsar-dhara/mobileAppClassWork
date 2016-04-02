@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -807,10 +806,11 @@ public class ScraggleGameActivity2 extends Activity {
             if (mAccel > 12) {
                 isPhoneShaked = true;
                 mGameFragment.reshuffleLettersOnShake();
+                restartCounter();
 //                TODO - add method to reshuffle the letters on the board -
 //                reset the counter and the tiles selected
-                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
-                toast.show();
+//                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
+//                toast.show();
                 setIsShaked(false);
             }
         }
@@ -818,4 +818,12 @@ public class ScraggleGameActivity2 extends Activity {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
     };
+
+    private void restartCounter() {
+        counter.cancel();
+        savedRemainingInterval = interval;
+        Log.e("intervals", "savedRemainingInterval = " + savedRemainingInterval);
+        Log.e("intervals", "interval = " + interval);
+        counter.start();
+    }
 }
