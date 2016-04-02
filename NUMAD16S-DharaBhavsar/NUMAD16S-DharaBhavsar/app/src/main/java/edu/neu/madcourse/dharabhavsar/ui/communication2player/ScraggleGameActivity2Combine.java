@@ -656,7 +656,19 @@ public class ScraggleGameActivity2Combine extends Activity {
                                 mGameFragment.enableLetterGrid();
                             }
                         });
-                builder.create().show();
+                try {
+//                    TODO - find out the real reason - handled temporarily
+                    builder.create().show();
+                } catch (ClassCastException e) {
+                    throw new ClassCastException(this.toString()
+                            + " must implement NoticeDialogListener");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("DIALOG ERROR", this.toString() + " threw exception");
+                }
+                /*mdialog = builder.create();
+                  if(getApplicationContext() != null)
+                    mDialog.show();*/
             }
         }, 5000);
     }
@@ -743,10 +755,7 @@ public class ScraggleGameActivity2Combine extends Activity {
                 isPhoneShaked = true;
                 mGameFragment.reshuffleLettersOnShake();
                 restartCounter();
-//                TODO - add method to reshuffle the letters on the board -
-//                reset the counter and the tiles selected
-//                SCORE to be set 0 as per the phase and
-//                wordLists to be cleared as well
+//                TODO - deselect the selected tiles on shake
 //                Toast toast = Toast.makeText(getApplicationContext(),
 //                                             "Device has shaken.", Toast.LENGTH_LONG);
 //                toast.show();

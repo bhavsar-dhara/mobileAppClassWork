@@ -820,8 +820,7 @@ public class ScraggleGameActivity2 extends Activity {
                 isPhoneShaked = true;
                 mGameFragment.reshuffleLettersOnShake();
                 restartCounter();
-//                TODO - add method to reshuffle the letters on the board -
-//                reset the counter and the tiles selected
+//                TODO - deselect the selected tiles on shake
 //                Toast toast = Toast.makeText(getApplicationContext(),
 //                                            "Device has shaken.", Toast.LENGTH_LONG);
 //                toast.show();
@@ -839,5 +838,18 @@ public class ScraggleGameActivity2 extends Activity {
         Log.e("intervals", "savedRemainingInterval = " + savedRemainingInterval);
         Log.e("intervals", "interval = " + interval);
         counter.start();
+    }
+
+    public char[][] fetchGameDetailsCombat(final String gameKey) {
+        Log.e("remote", "gameKey = " + gameKey);
+        mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKey);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                retrievedGameData = mRemoteClient.getGameData(gameKey);
+                Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
+            }
+        }, 5000);
+        return retrievedGameData.getGameLetterState();
     }
 }

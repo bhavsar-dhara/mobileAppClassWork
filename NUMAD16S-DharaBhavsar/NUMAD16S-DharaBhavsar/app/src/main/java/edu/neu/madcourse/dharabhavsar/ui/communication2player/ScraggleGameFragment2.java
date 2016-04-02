@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.Set;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;
 
 public class ScraggleGameFragment2 extends Fragment {
     static private int mLargeIdList[] = {R.id.wglarge1, R.id.wglarge2, R.id.wglarge3,
@@ -83,6 +84,9 @@ public class ScraggleGameFragment2 extends Fragment {
 //        Method call to the asyncTaskRunner
             stringLst = ((ScraggleGameActivity2) getActivity()).methodCallToAsyncTaskRunner();
             setLettersOnBoard();
+        } else if (CommunicationConstants.gameKey != null) {
+            gameLetterState = ((ScraggleGameActivity2) getActivity()).
+                    fetchGameDetailsCombat(CommunicationConstants.gameKey);
         }
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
@@ -207,7 +211,8 @@ public class ScraggleGameFragment2 extends Fragment {
                     final ScraggleTile2 smallTileText = mSmallTiles[large][i];
                     gameLetterState[large][i] = str.charAt(small);
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
-                } else if (((ScraggleGameActivity2) getActivity()).isPhoneShaked()) {
+                }
+                if (((ScraggleGameActivity2) getActivity()).isPhoneShaked()) {
                     int i = posnList.get(small);
 //                    Log.e("nineWords ", i + " = " + str);
                     Button innerText = (Button) outer.findViewById
@@ -233,6 +238,8 @@ public class ScraggleGameFragment2 extends Fragment {
                     wordsMadePhase2 = new String[100];
                 } else {
                     wordMadeList = new String[wordMadeList.length];
+                    mLastLarge = -1;
+                    mLastSmall = -1;
                 }
             }
         }

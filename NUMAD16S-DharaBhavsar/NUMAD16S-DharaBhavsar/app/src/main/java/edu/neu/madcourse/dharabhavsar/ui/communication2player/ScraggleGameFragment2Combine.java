@@ -163,7 +163,8 @@ public class ScraggleGameFragment2Combine extends Fragment {
                     final ScraggleTile2 smallTileText = mSmallTiles[large][i];
                     gameLetterState[large][i] = str.charAt(small);
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
-                } else if (((ScraggleGameActivity2Combine) getActivity()).isPhoneShaked()) {
+                }
+                if (((ScraggleGameActivity2Combine) getActivity()).isPhoneShaked()) {
                     int i = posnList.get(small);
 //                    Log.e("nineWords ", i + " = " + str);
                     Button innerText = (Button) outer.findViewById
@@ -189,6 +190,8 @@ public class ScraggleGameFragment2Combine extends Fragment {
                     wordsMadePhase2 = new String[100];
                 } else {
                     wordMadeList = new String[wordMadeList.length];
+                    mLastLarge = -1;
+                    mLastSmall = -1;
                 }
             }
         }
