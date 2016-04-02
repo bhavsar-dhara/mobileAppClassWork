@@ -18,26 +18,29 @@ public class GameData {
     private boolean secondCombatPlay;       // true when P2's turn starts
     private boolean combinePlay;            // true if it is a combine play
     private boolean gameOver;               // true if both the players have played it
+    private int[][] lettersSelected;        // for combine play - to get the knowledge of the word
+                                            // being made by other team player
 
     public GameData() {
     }
 
-    public GameData(int scoreCombinePlay, int score1P1, int score2P1, int score1P2, int score2P2,
+    public GameData(int scoreCombinePlay, int p1Score1, int p1Score2, int p2Score1, int p2Score2,
                     String player1ID, String player2ID, char[][] gameLetterState,
-                    boolean isFirstCombatPlay, boolean isSecondCombatPlay, boolean isCombinePlay,
-                    boolean isGameOver) {
+                    boolean firstCombatPlay, boolean secondCombatPlay, boolean combinePlay,
+                    boolean gameOver, int[][] lettersSelected) {
         this.scoreCombinePlay = scoreCombinePlay;
-        this.p1Score1 = score1P1;
-        this.p1Score2 = score2P1;
-        this.p2Score1 = score1P2;
-        this.p2Score2 = score2P2;
+        this.p1Score1 = p1Score1;
+        this.p1Score2 = p1Score2;
+        this.p2Score1 = p2Score1;
+        this.p2Score2 = p2Score2;
         this.player1ID = player1ID;
         this.player2ID = player2ID;
         this.gameLetterState = gameLetterState;
-        this.firstCombatPlay = isFirstCombatPlay;
-        this.secondCombatPlay = isSecondCombatPlay;
-        this.combinePlay = isCombinePlay;
-        this.gameOver = isGameOver;
+        this.firstCombatPlay = firstCombatPlay;
+        this.secondCombatPlay = secondCombatPlay;
+        this.combinePlay = combinePlay;
+        this.gameOver = gameOver;
+        this.lettersSelected = lettersSelected;
     }
 
     public int getScoreCombinePlay() {
@@ -86,5 +89,9 @@ public class GameData {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+
+    public int[][] getLettersSelected() {
+        return lettersSelected;
     }
 }
