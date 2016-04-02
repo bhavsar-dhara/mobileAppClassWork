@@ -65,6 +65,8 @@ public class ScraggleGameFragment2 extends Fragment {
     private int countWordFound = 0;
     private int gameScore2 = 0;
 
+    private String[] boggledWords = new String[]{"", "", "", "", "", "", "", "", ""};
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,9 +86,9 @@ public class ScraggleGameFragment2 extends Fragment {
 //        Method call to the asyncTaskRunner
             stringLst = ((ScraggleGameActivity2) getActivity()).methodCallToAsyncTaskRunner();
             setLettersOnBoard();
-        } else if (CommunicationConstants.gameKey != null) {
-            gameLetterState = ((ScraggleGameActivity2) getActivity()).
-                    fetchGameDetailsCombat(CommunicationConstants.gameKey);
+        } else if (CommunicationConstants.gameKey != null && CommunicationConstants.gameKey != "") {
+            boggledWords = ((ScraggleGameActivity2) getActivity()).
+                    fetchGameWordDetailsCombat(CommunicationConstants.gameKey);
         }
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
@@ -134,6 +136,13 @@ public class ScraggleGameFragment2 extends Fragment {
         initViews(rootView);
         if (gameData != "" && gameData != null) {
             putState(gameData);
+        } else if (CommunicationConstants.gameKey != null && CommunicationConstants.gameKey != "") {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initAddAsyncGameLetters(rootView);
+                }
+            }, 15000);
         } else {
             initAddLetters(rootView);
         }
@@ -191,10 +200,32 @@ public class ScraggleGameFragment2 extends Fragment {
         return rootView;
     }
 
+    private void initAddAsyncGameLetters(View rootView) {
+        Log.e("initAddAsyncGameLetters", "inside");
+        mEntireBoard.setView(rootView);
+        String str;
+        for (int large = 0; large < 9; large++) {
+            View outer = rootView.findViewById(mLargeIdList[large]);
+            mLargeTiles[large].setView(outer);
+            str = boggledWords[large];
+            for (int small = 0; small < 9; small++) {
+                Button innerText = (Button) outer.findViewById
+                        (mSmallIdList[small]);
+                final ScraggleTile2 smallTileText = mSmallTiles[large][small];
+                smallTileText.setView(innerText);
+                Log.e("initAddAsyncGameLetters", "inside : " + str.charAt(small));
+                innerText.setText(String.valueOf(str.charAt(small)));
+                innerText.setBackgroundDrawable(getResources().getDrawable
+                        (R.drawable.tile_not_selected_scraggle));
+            }
+        }
+    }
+
     private void initAddLetters(View rootView) {
         Log.e("initAddLetters", "inside : " + isPhaseTwo);
         mEntireBoard.setView(rootView);
         String str;
+        String strChar = "";
         for (int large = 0; large < 9; large++) {
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
@@ -210,6 +241,8 @@ public class ScraggleGameFragment2 extends Fragment {
                     innerText.setText(String.valueOf(str.charAt(small)));
                     final ScraggleTile2 smallTileText = mSmallTiles[large][i];
                     gameLetterState[large][i] = str.charAt(small);
+                    Log.e("boggledWords", boggledWords[large]);
+                    boggledWords[large] += str.charAt(small);
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
                 }
                 if (((ScraggleGameActivity2) getActivity()).isPhoneShaked()) {
@@ -390,7 +423,7 @@ public class ScraggleGameFragment2 extends Fragment {
                                 TextView text = (TextView) customToastRoot.findViewById(R.id.textView1);
                                 String str = String.format(getResources().getString(R.string.custom_toast_text),
                                         wordMadeList[mLastLarge]);
-//                                Log.e("WordFound", str);
+                                Log.e("WordFound phase1", str);
                                 text.setText(str);
 
                                 Toast customtoast = new Toast(getActivity().getApplicationContext());
@@ -429,7 +462,7 @@ public class ScraggleGameFragment2 extends Fragment {
                                 TextView text = (TextView) customToastRoot.findViewById(R.id.textView1);
                                 String str = String.format(getResources().getString(R.string.custom_toast_text),
                                         wordCheck2);
-//                                Log.e("WordFound", str);
+                                Log.e("WordFound phase2", str);
                                 text.setText(str);
 
                                 Toast customtoast = new Toast(getActivity().getApplicationContext());
@@ -942,6 +975,10 @@ public class ScraggleGameFragment2 extends Fragment {
         resultList.clear();
         setLettersOnBoard();
         initAddLetters(mView);
+    }
+
+    public String[] getBoggledWords() {
+        return boggledWords;
     }
 }
 

@@ -104,6 +104,8 @@ public class ScraggleGameActivity2 extends Activity {
     private float mAccelLast;
     private boolean isPhoneShaked = false;
 
+    private String[] boggledWords = new String[]{"", "", "", "", "", "", "", "", ""};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -235,6 +237,7 @@ public class ScraggleGameActivity2 extends Activity {
                 fetchRandomPlayer2DetailsCombat();
                 fetchGameDetailsCombat();
             }
+            boggledWords = mGameFragment.getBoggledWords();
         } else {
             if (savedRemainingInterval > 0) {
 //                Log.e("PhaseOne Timer", "savedRemainingInterval");
@@ -698,7 +701,7 @@ public class ScraggleGameActivity2 extends Activity {
                 gameLetter = mGameFragment.getGameLetterState();
                 Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
                 gameDataFb = new GameData(0, 0, 0, 0, 0, userKey, "", gameLetter, true, false,
-                        false, false, null);
+                        false, false, null, boggledWords);
                 mRemoteClient.saveGameData(gameDataFb);
             }
         }, 5000);
@@ -777,7 +780,8 @@ public class ScraggleGameActivity2 extends Activity {
                         retrievedGameData.getGameLetterState(),
                         retrievedGameData.isFirstCombatPlay(), true,
                         retrievedGameData.isCombinePlay(), retrievedGameData.isGameOver(),
-                        retrievedGameData.getLettersSelected());
+                        retrievedGameData.getLettersSelected(),
+                        retrievedGameData.getBoggledWords());
                 mRemoteClient.updateGameData(updatedGameData);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
@@ -840,16 +844,16 @@ public class ScraggleGameActivity2 extends Activity {
         counter.start();
     }
 
-    public char[][] fetchGameDetailsCombat(final String gameKey) {
-        Log.e("remote", "gameKey = " + gameKey);
-        mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKey);
+    public String[] fetchGameWordDetailsCombat(final String gameKy) {
+        Log.e("remote", "gameKey = " + gameKy);
+        mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKy);
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                retrievedGameData = mRemoteClient.getGameData(gameKey);
+                retrievedGameData = mRemoteClient.getGameData(gameKy);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
         }, 5000);
-        return retrievedGameData.getGameLetterState();
+        return retrievedGameData.getBoggledWords();
     }
 }

@@ -66,6 +66,8 @@ public class ScraggleGameFragment2Combine extends Fragment {
     private List<Integer> arrInt = new ArrayList<Integer>();
     int randomInt;
 
+    private String[] boggledWords = new String[9];
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -946,6 +948,10 @@ public class ScraggleGameFragment2Combine extends Fragment {
         resultList.clear();
         setLettersOnBoard();
         initAddLetters(mView);
+    }
+
+    public String[] getBoggledWords() {
+        return boggledWords;
     }
 }
 
