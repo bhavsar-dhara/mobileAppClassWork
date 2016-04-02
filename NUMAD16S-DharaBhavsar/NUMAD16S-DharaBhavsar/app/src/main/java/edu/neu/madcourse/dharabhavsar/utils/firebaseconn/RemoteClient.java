@@ -7,6 +7,7 @@ import android.util.Log;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.GenericTypeIndicator;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
@@ -38,6 +39,7 @@ public class RemoteClient {
     private static boolean isRandomDataChanged = false;
     private HashMap<Integer, String> fireBaseCombineScoreData = new HashMap<Integer, String>();
     private HashMap<Integer, String> fireBaseCombatScoreData = new HashMap<Integer, String>();
+    private String[] boggledWords = new String[9];
 
     public RemoteClient(Context mContext) {
         this.mContext = mContext;
@@ -215,8 +217,8 @@ public class RemoteClient {
 
     public void fetchGameData(String key, final String gameId) {
 //        TODO game data fetching for async play + combine play
-//        Log.e(TAG, "fetchGameData : Get Value for Key - " + key);
-//        Log.e(TAG, "fetchGameData : Get Value for GameKey - " + gameId);
+        Log.e(TAG, "fetchGameData : Get Value for Key - " + key);
+        Log.e(TAG, "fetchGameData : Get Value for GameKey - " + gameId);
         Firebase ref = new Firebase(Constants.FIREBASE_DB);
         Firebase gamesRef = ref.child(key);
         Query queryRef = gamesRef.orderByKey();
@@ -231,9 +233,10 @@ public class RemoteClient {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         if (postSnapshot.getKey().equals(gameId)) {
                             GameData game = postSnapshot.getValue(GameData.class);
-                            /*Log.e(TAG, game.getPlayer1ID() + " - " + game.isFirstCombatPlay()
+                            Log.e(TAG, game.getPlayer1ID() + " - " + game.isFirstCombatPlay()
                                     + " - " + game.isSecondCombatPlay()
-                                    + " - " + game.getGameLetterState());*/
+                                    + " - " + game.getBoggledWords());
+                            boggledWords = game.getBoggledWords().clone();
                             fireBaseGameData.put(gameId, game);
                         }
                     }
@@ -252,7 +255,7 @@ public class RemoteClient {
     }
 
     public GameData getGameData(String gameKey) {
-//        Log.e(TAG, "getGameData : Get Value for GameKey - " + gameKey);
+        Log.e(TAG, "getGameData : Get Value for GameKey - " + gameKey);
         return fireBaseGameData.get(gameKey);
     }
 
@@ -421,4 +424,51 @@ public class RemoteClient {
         return fireBaseCombatScoreData;
     }
 
+    public void fetchBoardWords(String key, final String gameId) {
+//        TODO game data fetching for async play + combine play
+        Log.e(TAG, "fetchGameData : Get Value for Key - " + key);
+        Log.e(TAG, "fetchGameData : Get Value for GameKey - " + gameId);
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
+        Firebase gamesRef = ref.child(key).child(gameId).child("boggledWords");
+        Query queryRef = gamesRef;
+        queryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                isDataChanged = true;
+                // snapshot contains the key and value
+                if (snapshot.getValue() != null) {
+                    Log.e(TAG, "There are " + snapshot.getChildrenCount() + " number of words.");
+                    int i = 0;
+                    // Adding the data to the HashMap
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {};
+                        List<String> boggledWordList = postSnapshot.getValue(t);
+                            /*if (postSnapshot.getKey().equals("boggledWords")) {
+                                String[] boggleWordList = postSnapshot.getKey().equals("boggledWords");
+                            }*/
+                        boggledWords = new String[boggledWordList.size()];
+                        boggledWords = boggledWordList.toArray(boggledWords);
+                        /*Log.e(TAG, game.getPlayer1ID() + " - " + game.isFirstCombatPlay()
+                                + " - " + game.isSecondCombatPlay()
+                                + " - " + game.getGameLetterState());
+                        fireBaseGameData.put(gameId, game);*/
+                    }
+                } else {
+                    Log.e(TAG, "Data Not Received");
+                    fireBaseGameData.put(gameId, null);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(TAG, firebaseError.getMessage());
+                Log.e(TAG, firebaseError.getDetails());
+            }
+        });
+    }
+
+    public String[] getBoardWords(String gameKey) {
+        Log.e(TAG, "getGameData : Get Value for GameKey - " + gameKey);
+        return boggledWords;
+    }
 }

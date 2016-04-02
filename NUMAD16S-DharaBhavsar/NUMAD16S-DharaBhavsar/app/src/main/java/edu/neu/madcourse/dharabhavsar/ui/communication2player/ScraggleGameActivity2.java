@@ -782,7 +782,7 @@ public class ScraggleGameActivity2 extends Activity {
                 mRemoteClient.updateGameData(updatedGameData);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
-        }, 15000);
+        }, 10000);
     }
 
     private void updatePlayer2DetailsOnFinishP1Combat() {
@@ -804,7 +804,7 @@ public class ScraggleGameActivity2 extends Activity {
                 mRemoteClient.updateUser2Data(user2key, updatedUserData);
                 Log.e("remote player2", "username2 = " + user2player.getUserName());
             }
-        }, 15000);
+        }, 10000);
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
@@ -841,7 +841,8 @@ public class ScraggleGameActivity2 extends Activity {
         counter.start();
     }
 
-    public String[] fetchGameWordDetailsCombat(final String gameKy) {
+//    public String[] fetchGameWordDetailsCombat(final String gameKy) {
+    public GameData fetchGameWordDetailsCombat(final String gameKy) {
         Log.e("remote", "gameKey = " + gameKy);
         mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKy);
         mHandler.postDelayed(new Runnable() {
@@ -851,6 +852,21 @@ public class ScraggleGameActivity2 extends Activity {
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
         }, 5000);
-        return retrievedGameData.getBoggledWords();
+//        return retrievedGameData.getBoggledWords();
+        return retrievedGameData;
     }
+
+    /*public String[] fetchWordArray(final String gameKy) {
+        String[] wordArr = new String[9];
+        Log.e("remote", "gameKey = " + gameKy);
+        mRemoteClient.fetchBoardWords(Constants.GAME_DATA, gameKy);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                wordArr = mRemoteClient.getBoardWords(gameKy);
+                Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
+            }
+        }, 5000);
+        return wordArr;
+    }*/
 }

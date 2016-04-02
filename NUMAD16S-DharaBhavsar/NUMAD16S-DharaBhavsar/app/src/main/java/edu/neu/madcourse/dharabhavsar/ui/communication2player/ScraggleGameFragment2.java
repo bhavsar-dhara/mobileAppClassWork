@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;
 
@@ -66,6 +67,8 @@ public class ScraggleGameFragment2 extends Fragment {
     private int gameScore2 = 0;
 
     private String[] boggledWords = new String[]{"", "", "", "", "", "", "", "", ""};
+    private GameData fireBaseGameData;
+    private String[] boggledWordsRetrieved = new String[9];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,9 +89,15 @@ public class ScraggleGameFragment2 extends Fragment {
 //        Method call to the asyncTaskRunner
             stringLst = ((ScraggleGameActivity2) getActivity()).methodCallToAsyncTaskRunner();
             setLettersOnBoard();
-        } else if (CommunicationConstants.gameKey != null && CommunicationConstants.gameKey != "") {
-            boggledWords = ((ScraggleGameActivity2) getActivity()).
+        }
+        if (CommunicationConstants.gameKey != null && CommunicationConstants.gameKey != "") {
+            Log.e("RetrieveDATAP2", CommunicationConstants.gameKey);
+            fireBaseGameData = ((ScraggleGameActivity2) getActivity()).
                     fetchGameWordDetailsCombat(CommunicationConstants.gameKey);
+            Log.e("RetrieveDATAP2", fireBaseGameData.getPlayer1ID()
+                    + " - " + fireBaseGameData.isFirstCombatPlay()
+                    + " - " + fireBaseGameData.isSecondCombatPlay()
+                    + " - " + fireBaseGameData.getBoggledWords());
         }
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
@@ -204,10 +213,11 @@ public class ScraggleGameFragment2 extends Fragment {
         Log.e("initAddAsyncGameLetters", "inside");
         mEntireBoard.setView(rootView);
         String str;
+        boggledWordsRetrieved = Arrays.copyOf(fireBaseGameData.getBoggledWords(), 9);
         for (int large = 0; large < 9; large++) {
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
-            str = boggledWords[large];
+            str = boggledWordsRetrieved[large];
             for (int small = 0; small < 9; small++) {
                 Button innerText = (Button) outer.findViewById
                         (mSmallIdList[small]);
@@ -241,7 +251,7 @@ public class ScraggleGameFragment2 extends Fragment {
                     innerText.setText(String.valueOf(str.charAt(small)));
                     final ScraggleTile2 smallTileText = mSmallTiles[large][i];
                     gameLetterState[large][i] = str.charAt(small);
-                    boggledWords[large] += str.charAt(small);
+//                    boggledWords[large] += str.charAt(small);
                     Log.e("boggledWords " + large, boggledWords[large]);
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
                 }
@@ -264,6 +274,9 @@ public class ScraggleGameFragment2 extends Fragment {
                         gameScore2 = 0;
                     }
                 }
+            }
+            for (int small = 0; small < 9; small++) {
+                boggledWords[large] += gameLetterState[large][small];
             }
             if (((ScraggleGameActivity2) getActivity()).isPhoneShaked()) {
                 wordScores = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
