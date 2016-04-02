@@ -182,8 +182,10 @@ public class ScraggleGameActivity2 extends Activity {
 //         The below code didn't work for this activity
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
-        prefs = appContext.getSharedPreferences(RemoteClient.class.getSimpleName(), Context.MODE_PRIVATE);
-        prefs2 = appContext.getSharedPreferences(CommunicationMain.class.getSimpleName(), Context.MODE_PRIVATE);
+        prefs = appContext.getSharedPreferences(RemoteClient.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+        prefs2 = appContext.getSharedPreferences(CommunicationMain.class.getSimpleName(),
+                Context.MODE_PRIVATE);
         mRemoteClient = new RemoteClient(appContext);
 
         userKey = prefs.getString(Constants.USER_UNIQUE_KEY, "");
@@ -347,7 +349,6 @@ public class ScraggleGameActivity2 extends Activity {
         }
     }
 
-    //    http://stackoverflow.com/questions/9630398/how-can-i-pause-the-timer-in-android/9663508#9663508
     public class MyCount extends CountDownTimer {
         public MyCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
@@ -365,7 +366,8 @@ public class ScraggleGameActivity2 extends Activity {
                         @Override
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                          AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+//                          AlertDialog.Builder builder = new AlertDialog.Builder
+//                                                              (ScraggleGameActivity.this);
                             builder.setTitle(R.string.phase_change_title);
                             builder.setMessage(R.string.phase_change_text);
                             builder.setCancelable(false);
@@ -377,8 +379,10 @@ public class ScraggleGameActivity2 extends Activity {
                                             isPhaseTwo = true;
                                             savedRemainingInterval = 0;
 //                                          mGameFragment.setIsPhaseTwo(true);
-//                                          startActivity(new Intent(ScraggleGameActivity.this, ScraggleGameActivity.class));
-                                            Intent intent = new Intent(ScraggleGameActivity2.this, ScraggleGameActivity2.class);
+//                                          startActivity(new Intent(ScraggleGameActivity.this,
+//                                                                  ScraggleGameActivity.class));
+                                            Intent intent = new Intent(ScraggleGameActivity2.this,
+                                                    ScraggleGameActivity2.class);
                                             intent.putExtra("gameData", mGameFragment.getState());
                                             intent.putExtra("isTwoFlag", isPhaseTwo);
 //                                          intent.putExtra("isTwoFlagFrag", isPhaseTwo);
@@ -396,7 +400,8 @@ public class ScraggleGameActivity2 extends Activity {
                         @Override
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                          AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+//                          AlertDialog.Builder builder = new AlertDialog.Builder
+//                                                              (ScraggleGameActivity.this);
                             builder.setTitle(R.string.game_end_title);
                             builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score));
                             builder.setCancelable(false);
@@ -434,7 +439,8 @@ public class ScraggleGameActivity2 extends Activity {
                     @Override
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                      AlertDialog.Builder builder = new AlertDialog.Builder(ScraggleGameActivity.this);
+//                      AlertDialog.Builder builder = new AlertDialog.Builder
+//                                                          (ScraggleGameActivity.this);
                         builder.setTitle(R.string.game_end_title);
                         builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score + score2));
                         builder.setCancelable(false);
@@ -459,11 +465,13 @@ public class ScraggleGameActivity2 extends Activity {
             int seconds = secs % 60;
             int minutes = secs / 60;
             String stringTime = String.format("%02d:%02d", minutes, seconds);
-            if (stringTime.equals("00:05") || stringTime.equals("00:04") || stringTime.equals("00:03") ||
+            if (stringTime.equals("00:05") || stringTime.equals("00:04") ||
+                    stringTime.equals("00:03") ||
                     stringTime.equals("00:02") || stringTime.equals("00:01")) {
 //                Log.e("onTick", "in animation");
 //                mTextField.animator();
-                Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.gametimer);
+                Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.gametimer);
                 mTextField.startAnimation(animation1);
                 mTextField.setText("            Time: " + stringTime);
             } else {
@@ -512,7 +520,8 @@ public class ScraggleGameActivity2 extends Activity {
                     char c = (char) (random.nextInt(26) + 'a');
                     InputStream in_s = null;
 
-                    int resID = getResources().getIdentifier(String.valueOf(c), "raw", getPackageName());
+                    int resID = getResources().getIdentifier(String.valueOf(c),
+                            "raw", getPackageName());
                     in_s = getResources().openRawResource(resID);
 
                     byte[] b = new byte[in_s.available()];
@@ -688,7 +697,8 @@ public class ScraggleGameActivity2 extends Activity {
             public void run() {
                 gameLetter = mGameFragment.getGameLetterState();
                 Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
-                gameDataFb = new GameData(0, 0, 0, 0, 0, userKey, "", gameLetter, true, false, false, false);
+                gameDataFb = new GameData(0, 0, 0, 0, 0, userKey, "", gameLetter, true, false,
+                        false, false, null);
                 mRemoteClient.saveGameData(gameDataFb);
             }
         }, 5000);
@@ -743,11 +753,13 @@ public class ScraggleGameActivity2 extends Activity {
             public void run() {
 //                String gameKey = prefs.getString(Constants.GAME_UNIQUE_KEY, "");
                 UserData updatedUserData = new UserData(user.getUserId(), user.getUserName(),
-                        ((user.getUserIndividualBestScore()>0 && user.getUserIndividualBestScore()>(score+score2))
+                        ((user.getUserIndividualBestScore()>0
+                                && user.getUserIndividualBestScore()>(score+score2))
                                 ?user.getUserIndividualBestScore():score+score2),
                         user.getUserCombineBestScore(), user.getTeamPlayerName(), true,
                         user.getChallengedBy(), user.isCombineGameRequest(), score+score2,
-                        user.getUserPendingCombineGameScore(), gameKey, user.getPendingCombineGameKey());
+                        user.getUserPendingCombineGameScore(), gameKey,
+                        user.getPendingCombineGameKey());
                 mRemoteClient.updateUserData(updatedUserData);
                 Log.e("remote", "username = " + user.getUserName());
             }
@@ -764,7 +776,8 @@ public class ScraggleGameActivity2 extends Activity {
                         retrievedGameData.getPlayer1ID(), user2key,
                         retrievedGameData.getGameLetterState(),
                         retrievedGameData.isFirstCombatPlay(), true,
-                        retrievedGameData.isCombinePlay(), retrievedGameData.isGameOver());
+                        retrievedGameData.isCombinePlay(), retrievedGameData.isGameOver(),
+                        retrievedGameData.getLettersSelected());
                 mRemoteClient.updateGameData(updatedGameData);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
@@ -809,7 +822,8 @@ public class ScraggleGameActivity2 extends Activity {
                 restartCounter();
 //                TODO - add method to reshuffle the letters on the board -
 //                reset the counter and the tiles selected
-//                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
+//                Toast toast = Toast.makeText(getApplicationContext(),
+//                                            "Device has shaken.", Toast.LENGTH_LONG);
 //                toast.show();
                 setIsShaked(false);
             }
