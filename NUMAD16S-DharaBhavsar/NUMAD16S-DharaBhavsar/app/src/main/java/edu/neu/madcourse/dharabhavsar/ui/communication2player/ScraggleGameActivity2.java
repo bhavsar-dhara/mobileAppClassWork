@@ -39,6 +39,7 @@ import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 import edu.neu.madcourse.dharabhavsar.utils.Constants;
 import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 
 public class ScraggleGameActivity2 extends Activity {
@@ -103,6 +104,8 @@ public class ScraggleGameActivity2 extends Activity {
     private float mAccelCurrent;
     private float mAccelLast;
     private boolean isPhoneShaked = false;
+
+    private boolean isPlayer2 = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +216,10 @@ public class ScraggleGameActivity2 extends Activity {
         }
         Log.e("Scraggle", "restore = " + restore);
 
+        if(CommunicationConstants.gameKey != null && CommunicationConstants.gameKey != "") {
+            isPlayer2 = true;
+        }
+
 //        mScoreTextField.setText("Score = " + String.valueOf(score));
         if (!isPhaseTwo) {
             mScoreTextField.setText("Score = " + String.valueOf(score));
@@ -243,7 +250,9 @@ public class ScraggleGameActivity2 extends Activity {
 //                Log.e("PhaseOne Timer", "interval");
                 counter = new MyCount(interval, 1000);
             }
-            saveInitialGameDataP1Combat();
+            if(!isPlayer2) {
+                saveInitialGameDataP1Combat();
+            }
         }
     }
 
@@ -841,8 +850,9 @@ public class ScraggleGameActivity2 extends Activity {
         counter.start();
     }
 
-//    public String[] fetchGameWordDetailsCombat(final String gameKy) {
-    public GameData fetchGameWordDetailsCombat(final String gameKy) {
+    public void fetchGameWordDetailsCombat(final String gameKy) {
+//    public GameData fetchGameWordDetailsCombat(final String gameKy) {
+//    public char[][] fetchGameWordDetailsCombat(final String gameKy) {
         Log.e("remote", "gameKey = " + gameKy);
         mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKy);
         mHandler.postDelayed(new Runnable() {
@@ -851,9 +861,10 @@ public class ScraggleGameActivity2 extends Activity {
                 retrievedGameData = mRemoteClient.getGameData(gameKy);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
-        }, 5000);
+        }, 2000);
 //        return retrievedGameData.getBoggledWords();
-        return retrievedGameData;
+//        return retrievedGameData;
+//        return retrievedGameData.getGameLetterState();
     }
 
     /*public String[] fetchWordArray(final String gameKy) {
@@ -869,4 +880,8 @@ public class ScraggleGameActivity2 extends Activity {
         }, 5000);
         return wordArr;
     }*/
+
+    public GameData getRetrievedGameData() {
+        return retrievedGameData;
+    }
 }

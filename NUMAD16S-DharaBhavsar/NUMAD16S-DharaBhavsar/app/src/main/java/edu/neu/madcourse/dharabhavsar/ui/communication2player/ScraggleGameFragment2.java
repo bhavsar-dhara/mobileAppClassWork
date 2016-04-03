@@ -69,6 +69,7 @@ public class ScraggleGameFragment2 extends Fragment {
     private String[] boggledWords = new String[]{"", "", "", "", "", "", "", "", ""};
     private GameData fireBaseGameData;
     private String[] boggledWordsRetrieved = new String[9];
+    private char[][] retrievedWordList = new char[9][9];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,12 +93,22 @@ public class ScraggleGameFragment2 extends Fragment {
         }
         if (CommunicationConstants.gameKey != null && CommunicationConstants.gameKey != "") {
             Log.e("RetrieveDATAP2", CommunicationConstants.gameKey);
-            fireBaseGameData = ((ScraggleGameActivity2) getActivity()).
+            ((ScraggleGameActivity2) getActivity()).
                     fetchGameWordDetailsCombat(CommunicationConstants.gameKey);
-            Log.e("RetrieveDATAP2", fireBaseGameData.getPlayer1ID()
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    boggledWordsRetrieved = ((ScraggleGameActivity2) getActivity()).
+                            getRetrievedGameData().getBoggledWords();
+                    Log.e("RetrieveDATAP2", String.valueOf(boggledWordsRetrieved.length));
+                }
+            }, 3000);
+            /*retrievedWordList = ((ScraggleGameActivity2) getActivity()).
+                    fetchGameWordDetailsCombat(CommunicationConstants.gameKey);*/
+            /*Log.e("RetrieveDATAP2", fireBaseGameData.getPlayer1ID()
                     + " - " + fireBaseGameData.isFirstCombatPlay()
                     + " - " + fireBaseGameData.isSecondCombatPlay()
-                    + " - " + fireBaseGameData.getBoggledWords());
+                    + " - " + fireBaseGameData.getBoggledWords());*/
         }
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
@@ -151,7 +162,7 @@ public class ScraggleGameFragment2 extends Fragment {
                 public void run() {
                     initAddAsyncGameLetters(rootView);
                 }
-            }, 15000);
+            }, 7000);
         } else {
             initAddLetters(rootView);
         }
@@ -213,7 +224,7 @@ public class ScraggleGameFragment2 extends Fragment {
         Log.e("initAddAsyncGameLetters", "inside");
         mEntireBoard.setView(rootView);
         String str;
-        boggledWordsRetrieved = Arrays.copyOf(fireBaseGameData.getBoggledWords(), 9);
+//        boggledWordsRetrieved = Arrays.copyOf(fireBaseGameData.getBoggledWords(), 9);
         for (int large = 0; large < 9; large++) {
             View outer = rootView.findViewById(mLargeIdList[large]);
             mLargeTiles[large].setView(outer);
@@ -223,6 +234,7 @@ public class ScraggleGameFragment2 extends Fragment {
                         (mSmallIdList[small]);
                 final ScraggleTile2 smallTileText = mSmallTiles[large][small];
                 smallTileText.setView(innerText);
+//                str = String.valueOf(retrievedWordList[large][small]);
                 Log.e("initAddAsyncGameLetters", "inside : " + str.charAt(small));
                 innerText.setText(String.valueOf(str.charAt(small)));
                 innerText.setBackgroundDrawable(getResources().getDrawable
