@@ -77,6 +77,7 @@ public class ScraggleGameActivity2 extends Activity {
     private SharedPreferences prefs;
     private SharedPreferences prefs2;
     private UserData user2player;
+    private UserData user1player;
     private String userKey;
     private String userId;
     private GameData gameDataFb;
@@ -125,6 +126,10 @@ public class ScraggleGameActivity2 extends Activity {
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
+
+        if(CommunicationConstants.gameKey != null && CommunicationConstants.gameKey != "") {
+            isPlayer2 = true;
+        }
 
         /*xcordview = (TextView) findViewById(R.id.textView4);
         ycordview = (TextView) findViewById(R.id.textView3);
@@ -216,10 +221,6 @@ public class ScraggleGameActivity2 extends Activity {
         }
         Log.e("Scraggle", "restore = " + restore);
 
-        if(CommunicationConstants.gameKey != null && CommunicationConstants.gameKey != "") {
-            isPlayer2 = true;
-        }
-
 //        mScoreTextField.setText("Score = " + String.valueOf(score));
         if (!isPhaseTwo) {
             mScoreTextField.setText("Score = " + String.valueOf(score));
@@ -239,8 +240,14 @@ public class ScraggleGameActivity2 extends Activity {
             Log.e("onFinish phase2", "in prefs, userKey = " + userKey);
             if (userKey != null) {
                 fetchPlayerDetailsCombat();
-                fetchRandomPlayer2DetailsCombat();
-                fetchGameDetailsCombat();
+                if(!isPlayer2) {
+                    fetchGameDetailsCombat(gameKey);
+                    fetchRandomPlayer2DetailsCombat();
+                } else {
+//                    ...
+                    fetchGameDetailsCombat(CommunicationConstants.gameKey);
+                    fetchPlayer1DetailsCombat();
+                }
             }
         } else {
             if (savedRemainingInterval > 0) {
@@ -265,7 +272,6 @@ public class ScraggleGameActivity2 extends Activity {
             if (!isPhaseTwo) {
                 new AsyncTaskRunner().execute().get();
             }
-//            Log.e("nineWords size", String.valueOf(nineWords.size()));
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -303,18 +309,14 @@ public class ScraggleGameActivity2 extends Activity {
         if (!isResumeFlag) {
             isResumeFlag = true;
             if (savedRemainingInterval > 0 && isResumeFlag) {
-//                counter = new MyCount(savedRemainingInterval, 1000);
                 counter.start();
             } else {
-//                counter = new MyCount(interval, 1000);
                 counter.start();
             }
         }
         mMediaPlayer = MediaPlayer.create(this, R.raw.erokia_timelift_rhodes_piano_freesound_org);
         mMediaPlayer.start();
         mMediaPlayer.setLooping(true);
-//        Log.e("onResume", "score = " + score);
-//        Log.e("onResume", "score2 = " + score2);
         if (!isPhaseTwo) {
             mScoreTextField.setText("Score = " + String.valueOf(score));
         } else {
@@ -348,12 +350,9 @@ public class ScraggleGameActivity2 extends Activity {
     }
 
     public void toogleMute() {
-//        Log.e("Mute TEST toogleMute", "inside func");
         if (mMediaPlayer.isPlaying()) {
-//            Log.e("Mute TEST toogleMute", "inside for pause");
             mMediaPlayer.pause();
         } else {
-//            Log.e("Mute TEST toogleMute", "inside for start");
             mMediaPlayer.start();
         }
     }
@@ -366,7 +365,7 @@ public class ScraggleGameActivity2 extends Activity {
         @Override
         public void onFinish() {
             if (!isPhaseTwo) {
-                Log.e("onFinish p1", String.valueOf(mGameFragment.getWordCount1()));
+                Log.e("onFinish p1", "Phase 1 Over");
                 if (mGameFragment.getWordCount1() > 1) {
                     Log.e("onFinish", "Done");
                     mTextField.setText("            DONE");
@@ -375,8 +374,6 @@ public class ScraggleGameActivity2 extends Activity {
                         @Override
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                          AlertDialog.Builder builder = new AlertDialog.Builder
-//                                                              (ScraggleGameActivity.this);
                             builder.setTitle(R.string.phase_change_title);
                             builder.setMessage(R.string.phase_change_text);
                             builder.setCancelable(false);
@@ -387,14 +384,10 @@ public class ScraggleGameActivity2 extends Activity {
                                             // take to Phase 2
                                             isPhaseTwo = true;
                                             savedRemainingInterval = 0;
-//                                          mGameFragment.setIsPhaseTwo(true);
-//                                          startActivity(new Intent(ScraggleGameActivity.this,
-//                                                                  ScraggleGameActivity.class));
                                             Intent intent = new Intent(ScraggleGameActivity2.this,
                                                     ScraggleGameActivity2.class);
                                             intent.putExtra("gameData", mGameFragment.getState());
                                             intent.putExtra("isTwoFlag", isPhaseTwo);
-//                                          intent.putExtra("isTwoFlagFrag", isPhaseTwo);
                                             startActivity(intent);
                                             finish();
                                         }
@@ -409,8 +402,6 @@ public class ScraggleGameActivity2 extends Activity {
                         @Override
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                          AlertDialog.Builder builder = new AlertDialog.Builder
-//                                                              (ScraggleGameActivity.this);
                             builder.setTitle(R.string.game_end_title);
                             builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score));
                             builder.setCancelable(false);
@@ -431,25 +422,37 @@ public class ScraggleGameActivity2 extends Activity {
                 mGameFragment.disableLetterGrid();
                 mControlFragment.getView().setVisibility(View.INVISIBLE);
                 gameData = null;
-                Constants.GAME_KEY = gameKey;
-                updatePlayer1DetailsOnFinishP1Combat();
-                updatePlayer2DetailsOnFinishP1Combat();
-                updateGameDetailsOnFinishP1Combat();
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//                        TODO - remove TEST and add meaningful msg
-                        mCommMain.sendCombatGameRequest("Challenged by " + user.getUserName(),
-                                user2player.getUserId());
-                    }
-                }, 5000);
-//                Log.e("null game state 1", (gameData!=null?String.valueOf(gameData):"null"));
+                if(!isPlayer2) {
+                    Constants.GAME_KEY = gameKey;
+                    updatePlayer1DetailsOnFinishP1Combat();
+                    updatePlayer2DetailsOnFinishP1Combat();
+                    updateGameDetailsOnFinishP1Combat();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCommMain.sendCombatGameRequest("Challenged by " + user.getUserName(),
+                                    user2player.getUserId());
+                        }
+                    }, 5000);
+                } else {
+//                    ...
+                    updatePlayer2DetailsOnFinishP2Combat();
+                    updateGameDetailsOnFinishP2Combat();
+                    updatePlayer1DetailsOnFinishP2Combat();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+//                            TODO change it
+                            mCommMain.sendCombatGameOver("Game Over " + user.getUserName() + " won",
+                                    user1player.getUserId());
+                            CommunicationConstants.gameKey = "";
+                        }
+                    }, 5000);
+                }
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-//                      AlertDialog.Builder builder = new AlertDialog.Builder
-//                                                          (ScraggleGameActivity.this);
                         builder.setTitle(R.string.game_end_title);
                         builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score + score2));
                         builder.setCancelable(false);
@@ -462,7 +465,6 @@ public class ScraggleGameActivity2 extends Activity {
                                 });
                         mDialog = builder.show();
                         isGameEnd = true;
-//                      Log.e("null game state 2", (gameData!=null?String.valueOf(gameData):"null"));
                     }
                 }, 2000);
             }
@@ -477,17 +479,13 @@ public class ScraggleGameActivity2 extends Activity {
             if (stringTime.equals("00:05") || stringTime.equals("00:04") ||
                     stringTime.equals("00:03") ||
                     stringTime.equals("00:02") || stringTime.equals("00:01")) {
-//                Log.e("onTick", "in animation");
-//                mTextField.animator();
                 Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(),
                         R.anim.gametimer);
                 mTextField.startAnimation(animation1);
                 mTextField.setText("            Time: " + stringTime);
             } else {
-//                Log.e("onTick", "no");
                 mTextField.setText("            Time: " + stringTime);
             }
-//            mTextField.setText("Seconds Remaining: " + millisUntilFinished / 1000);
             savedRemainingInterval = millisUntilFinished;
         }
     }
@@ -521,7 +519,6 @@ public class ScraggleGameActivity2 extends Activity {
         @Override
         protected List<String> doInBackground(Void... params) {
             String word = null;
-//            to handle or restrict word repetition
             HashSet<String> wordSet = new HashSet<>();
             try {
                 while (wordSet.size() < 9) {
@@ -546,7 +543,6 @@ public class ScraggleGameActivity2 extends Activity {
                     Random yourRandom = new Random();
                     int index = yourRandom.nextInt(stringList.size());
                     word = stringList.get(index);
-//                    Log.e("nineLetter", word + " " + String.valueOf(word.length()));
                     wordSet.add(word);
                 }
             } catch (Exception e) {
@@ -563,7 +559,6 @@ public class ScraggleGameActivity2 extends Activity {
             String word = params[0];
             try {
                 try {
-//                    Log.e("Inside AS0", "Inside AS0");
                     InputStream in_s = null;
                     String fileName = String.valueOf(word.charAt(0));
                     int resID = getResources().getIdentifier(fileName, "raw", getPackageName());
@@ -575,7 +570,6 @@ public class ScraggleGameActivity2 extends Activity {
                     for (String s : strings) {
                         vocabList.add(s);
                     }
-//                    Log.e("INSERT", "inserted");
                 } catch (IOException e) {
                     Log.e("ERROR", "not inserted");
                 }
@@ -594,7 +588,6 @@ public class ScraggleGameActivity2 extends Activity {
             String resp = "";
             boolean isThereInDict = false;
             try {
-//                Log.e("AsyncTaskRunner2", "insertedText = " + insertedText);
                 for (String s : vocabList) {
                     if (insertedText.equals(s.trim())) {
                         resp = insertedText;
@@ -606,7 +599,6 @@ public class ScraggleGameActivity2 extends Activity {
             } catch (Exception e) {
                 Log.e("AsyncTaskRunner2", "Error encountered");
             }
-//            Log.e("AsyncTaskRunner2", "result = " + resp);
             return isThereInDict;
         }
     }
@@ -615,20 +607,16 @@ public class ScraggleGameActivity2 extends Activity {
     public Boolean searchWord(String str) {
         String result1 = "";
         String word = str;
-//        Log.e("searchWord WORD LEN", "afterTextChanged: " + word.length() + " word = " + word);
         if (word.length() >= 3) {
             try {
                 new AsyncTaskRunner0().execute(word).get();
                 resFlag = new AsyncTaskRunner2().execute(word).get();
-//                Log.e("searchWord", "resFlag = " + resFlag);
-//                Log.e("searchWord", finalResult);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
             result1 = resultStr;
-//            Log.e("searchWord RESULT STR", "afterTextChanged: RESULT STRING = " + result1);
         } else {
             List<String> list = Arrays.asList(resultStr.split("\n"));
             Set<String> uniqueWords = new HashSet<String>(list);
@@ -637,7 +625,6 @@ public class ScraggleGameActivity2 extends Activity {
                 System.out.println(word + ": " + Collections.frequency(list, s1));
                 finalResult = finalResult + s1 + "\n";
             }
-//            Log.e("searchWord", "finalResult = " + finalResult);
         }
         return resFlag;
     }
@@ -737,14 +724,25 @@ public class ScraggleGameActivity2 extends Activity {
                         user2player = current2UserMap.get(key);
                     }
                 }
-//                user2key = mRemoteClient.getRandomUserKey();
-//                user2player = mRemoteClient.getRandomUserData();
                 Log.e("remote", "username 2 = " + user2player.getUserName());
             }
         }, 10000);
     }
 
-    private void fetchGameDetailsCombat() {
+    public void fetchPlayer1DetailsCombat() {
+        final String player1 = retrievedGameData.getPlayer1ID();
+        Log.e("remote", "userKey = " + player1);
+        mRemoteClient.fetchUserData(Constants.USER_DATA, player1);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                user1player = mRemoteClient.getUserData(player1);
+                Log.e("remote", "username = " + user.getUserName());
+            }
+        }, 15000);
+    }
+
+    private void fetchGameDetailsCombat(final String gameKey) {
         Log.e("remote", "gameKey = " + gameKey);
         mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKey);
         mHandler.postDelayed(new Runnable() {
@@ -753,14 +751,13 @@ public class ScraggleGameActivity2 extends Activity {
                 retrievedGameData = mRemoteClient.getGameData(gameKey);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
-        }, 10000);
+        }, 8000);
     }
 
     private void updatePlayer1DetailsOnFinishP1Combat() {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                String gameKey = prefs.getString(Constants.GAME_UNIQUE_KEY, "");
                 UserData updatedUserData = new UserData(user.getUserId(), user.getUserName(),
                         ((user.getUserIndividualBestScore()>0
                                 && user.getUserIndividualBestScore()>(score+score2))
@@ -781,7 +778,7 @@ public class ScraggleGameActivity2 extends Activity {
             public void run() {
                 GameData updatedGameData = new GameData(retrievedGameData.getScoreCombinePlay(),
                         score, score2, retrievedGameData.getP2Score1(),
-                        retrievedGameData.getP2Score1(),
+                        retrievedGameData.getP2Score2(),
                         retrievedGameData.getPlayer1ID(), user2key,
                         retrievedGameData.getGameLetterState(),
                         retrievedGameData.isFirstCombatPlay(), true,
@@ -817,7 +814,6 @@ public class ScraggleGameActivity2 extends Activity {
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
-
         public void onSensorChanged(SensorEvent se) {
             float x = se.values[0];
             float y = se.values[1];
@@ -830,10 +826,6 @@ public class ScraggleGameActivity2 extends Activity {
                 isPhoneShaked = true;
                 mGameFragment.reshuffleLettersOnShake();
                 restartCounter();
-//                TODO - deselect the selected tiles on shake
-//                Toast toast = Toast.makeText(getApplicationContext(),
-//                                            "Device has shaken.", Toast.LENGTH_LONG);
-//                toast.show();
                 setIsShaked(false);
             }
         }
@@ -851,8 +843,6 @@ public class ScraggleGameActivity2 extends Activity {
     }
 
     public void fetchGameWordDetailsCombat(final String gameKy) {
-//    public GameData fetchGameWordDetailsCombat(final String gameKy) {
-//    public char[][] fetchGameWordDetailsCombat(final String gameKy) {
         Log.e("remote", "gameKey = " + gameKy);
         mRemoteClient.fetchGameData(Constants.GAME_DATA, gameKy);
         mHandler.postDelayed(new Runnable() {
@@ -862,26 +852,84 @@ public class ScraggleGameActivity2 extends Activity {
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
         }, 2000);
-//        return retrievedGameData.getBoggledWords();
-//        return retrievedGameData;
-//        return retrievedGameData.getGameLetterState();
     }
-
-    /*public String[] fetchWordArray(final String gameKy) {
-        String[] wordArr = new String[9];
-        Log.e("remote", "gameKey = " + gameKy);
-        mRemoteClient.fetchBoardWords(Constants.GAME_DATA, gameKy);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                wordArr = mRemoteClient.getBoardWords(gameKy);
-                Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
-            }
-        }, 5000);
-        return wordArr;
-    }*/
 
     public GameData getRetrievedGameData() {
         return retrievedGameData;
+    }
+
+    public boolean isPlayer2() {
+        return isPlayer2;
+    }
+
+    private void updatePlayer2DetailsOnFinishP2Combat() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UserData updatedUserData = new UserData(user.getUserId(),
+                        user.getUserName(),
+                        ((user.getUserIndividualBestScore()>0
+                                && user.getUserIndividualBestScore()>(score+score2))
+                                ?user.getUserIndividualBestScore():score+score2),
+                        user.getUserCombineBestScore(),
+                        user.getTeamPlayerName(),
+                        false,
+                        user.getChallengedBy(),
+                        user.isCombineGameRequest(),
+                        score+score2,
+                        user.getUserPendingCombineGameScore(),
+                        user.getPendingCombatGameKey(),
+                        user.getPendingCombineGameKey());
+                mRemoteClient.updateUserData(updatedUserData);
+//                ...
+                Log.e("remote", "username = " + user.getUserName());
+            }
+        }, 5000);
+    }
+
+    private void updateGameDetailsOnFinishP2Combat() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                GameData updatedGameData = new GameData(retrievedGameData.getScoreCombinePlay(),
+                        retrievedGameData.getP1Score1(),
+                        retrievedGameData.getP1Score2(),
+                        score, score2,
+                        retrievedGameData.getPlayer1ID(),
+                        retrievedGameData.getPlayer2ID(),
+                        retrievedGameData.getGameLetterState(),
+                        retrievedGameData.isFirstCombatPlay(),
+                        retrievedGameData.isSecondCombatPlay(),
+                        retrievedGameData.isCombinePlay(), true,
+                        retrievedGameData.getLettersSelected(),
+                        retrievedGameData.getBoggledWords());
+                mRemoteClient.updateGameData(updatedGameData);
+                Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
+            }
+        }, 10000);
+    }
+
+    private void updatePlayer1DetailsOnFinishP2Combat() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UserData updatedUserData = new UserData(
+                        user1player.getUserId(),
+                        user1player.getUserName(),
+                        user1player.getUserIndividualBestScore(),
+                        user1player.getUserCombineBestScore(),
+                        user1player.getTeamPlayerName(),
+                        false,
+                        user1player.getChallengedBy(),
+                        user1player.isCombineGameRequest(),
+                        user1player.getUserPendingIndividualGameScore(),
+                        user1player.getUserPendingCombineGameScore(),
+                        user1player.getPendingCombatGameKey(),
+                        user1player.getPendingCombineGameKey());
+//                ...
+                mRemoteClient.updateUser2Data(retrievedGameData.getPlayer1ID(), updatedUserData);
+                Log.e("remote player2", "username2 = " + user2player.getUserName());
+            }
+        }, 10000);
     }
 }

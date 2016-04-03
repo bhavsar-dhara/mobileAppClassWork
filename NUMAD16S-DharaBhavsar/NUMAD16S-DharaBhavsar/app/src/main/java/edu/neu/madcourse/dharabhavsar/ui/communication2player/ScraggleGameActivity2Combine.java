@@ -45,6 +45,7 @@ import edu.neu.madcourse.dharabhavsar.ui.dictionary.TrieLookup;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 import edu.neu.madcourse.dharabhavsar.utils.Constants;
 import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 
 public class ScraggleGameActivity2Combine extends Activity {
@@ -108,6 +109,8 @@ public class ScraggleGameActivity2Combine extends Activity {
     private float mAccelLast;
     private boolean isPhoneShaked = false;
 
+    private boolean isPlayer2Game = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +128,11 @@ public class ScraggleGameActivity2Combine extends Activity {
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
+
+        if(CommunicationConstants.combineGameKey != null
+                && CommunicationConstants.combineGameKey != "") {
+            isPlayer2Game = true;
+        }
 
 //         The below code didn't work for this activity
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);

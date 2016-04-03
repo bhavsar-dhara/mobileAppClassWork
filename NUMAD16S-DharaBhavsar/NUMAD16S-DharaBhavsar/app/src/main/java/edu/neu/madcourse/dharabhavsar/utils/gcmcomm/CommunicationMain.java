@@ -526,7 +526,103 @@ public class CommunicationMain extends Activity implements OnClickListener {
             @Override
             protected void onPostExecute(String msg) {
 //				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "sendCombatGameRequest : in onPostExecute");
+                Log.e(TAG, "sendCombineGameRequest : in onPostExecute");
+            }
+        }.execute(null, null, null);
+    }
+
+    @SuppressLint("NewApi")
+    public void sendCombatGameOver(final String message, final String regid) {
+        if (regid == null || regid.equals("")) {
+			/*Toast.makeText(this, "You must register first", Toast.LENGTH_LONG)
+					.show();*/
+            Log.e(TAG, "sendCombatGameOver : regid is null");
+            return;
+        }
+        if (message.isEmpty()) {
+			/*Toast.makeText(this, "Empty Message", Toast.LENGTH_LONG).show();*/
+            Log.e(TAG, "sendCombatGameOver : message is null");
+            return;
+        }
+        Log.e(TAG, "sendCombatGameOver : regid : " + regid);
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                List<String> regIds = new ArrayList<String>();
+                String reg_device = regid;
+                int nIcon = R.drawable.ic_launcher;
+                int nType = CommunicationConstants.SIMPLE_NOTIFICATION;
+                Map<String, String> msgParams;
+                msgParams = new HashMap<String, String>();
+                msgParams.put("data.alertText", CommunicationConstants.combatAlertText);
+                msgParams.put("data.titleText", "Previous Combat Game Over");
+                msgParams.put("data.contentText", message);
+                msgParams.put("data.nIcon", String.valueOf(nIcon));
+                msgParams.put("data.nType", String.valueOf(nType));
+                msgParams.put("data.gameKey", "");
+                setSendMessageValues(message);
+                GcmNotification gcmNotification = new GcmNotification();
+                regIds.clear();
+                regIds.add(reg_device);
+                gcmNotification.sendNotification(msgParams, regIds,
+                        edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain.this);
+                msg = "sending information...";
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+//				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "sendCombatGameOver : in onPostExecute");
+            }
+        }.execute(null, null, null);
+    }
+
+    @SuppressLint("NewApi")
+    public void sendCombineGameOver(final String message, final String regid) {
+        if (regid == null || regid.equals("")) {
+			/*Toast.makeText(this, "You must register first", Toast.LENGTH_LONG)
+					.show();*/
+            Log.e(TAG, "sendCombineGameOver : regid is null");
+            return;
+        }
+        if (message.isEmpty()) {
+			/*Toast.makeText(this, "Empty Message", Toast.LENGTH_LONG).show();*/
+            Log.e(TAG, "sendCombineGameOver : message is null");
+            return;
+        }
+        Log.e(TAG, "sendCombineGameOver : regid : " + regid);
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                List<String> regIds = new ArrayList<String>();
+                String reg_device = regid;
+                int nIcon = R.drawable.ic_launcher;
+                int nType = CommunicationConstants.SIMPLE_NOTIFICATION;
+                Map<String, String> msgParams;
+                msgParams = new HashMap<String, String>();
+                msgParams.put("data.alertText", CommunicationConstants.combineAlertText);
+                msgParams.put("data.titleText", "PRevious Combine Game Over");
+                msgParams.put("data.contentText", message);
+                msgParams.put("data.nIcon", String.valueOf(nIcon));
+                msgParams.put("data.nType", String.valueOf(nType));
+                msgParams.put("data.gameKey", "");
+                setSendMessageValues(message);
+                GcmNotification gcmNotification = new GcmNotification();
+                regIds.clear();
+                regIds.add(reg_device);
+                gcmNotification.sendNotification(msgParams, regIds,
+                        edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain.this);
+                msg = "sending information...";
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+//				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "sendCombineGameOver : in onPostExecute");
             }
         }.execute(null, null, null);
     }

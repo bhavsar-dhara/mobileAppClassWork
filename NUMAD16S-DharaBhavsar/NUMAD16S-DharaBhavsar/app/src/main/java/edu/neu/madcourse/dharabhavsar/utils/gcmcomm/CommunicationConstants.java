@@ -23,5 +23,6 @@ public class CommunicationConstants
     public static final String combineAlertText = "Scraggle Combine Word Game";
 
     public static String gameKey = "";
+    public static String combineGameKey = "";
 
 }

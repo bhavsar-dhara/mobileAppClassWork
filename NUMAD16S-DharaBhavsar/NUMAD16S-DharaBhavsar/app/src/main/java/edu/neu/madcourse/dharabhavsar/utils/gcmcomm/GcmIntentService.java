@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2;
-import edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2Combine;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class GcmIntentService extends IntentService {
@@ -76,9 +74,13 @@ public class GcmIntentService extends IntentService {
                 edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra("show_response", "show_response");
-        PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
+        int requestID = (int) System.currentTimeMillis();
+        PendingIntent intent = PendingIntent.getActivity(this, requestID, new Intent(
                         this, CommunicationMain.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
+        /*PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
+                        this, CommunicationMain.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);*/
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 this)
@@ -90,12 +92,13 @@ public class GcmIntentService extends IntentService {
                 .setContentText(contentText).setTicker(alertText)
                 .setAutoCancel(true);
         mBuilder.setContentIntent(intent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mNotificationManager.notify(requestID, mBuilder.build());
+//        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     public void sendGameNotification(String alertText, String titleText,
                                  String contentText) {
-        Log.e(TAG, "in sending notification from intent");
+        Log.e(TAG, "in sendGameNotification");
         mNotificationManager = (NotificationManager) this
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent;
@@ -103,9 +106,13 @@ public class GcmIntentService extends IntentService {
                 edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra("show_response", "show_response");
-        PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
-                        this, ScraggleGameActivity2.class),
+        int requestID = (int) System.currentTimeMillis();
+        PendingIntent intent = PendingIntent.getActivity(this, requestID, new Intent(
+                        this, CommunicationMain.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
+        /*PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
+                        this, ScraggleGameActivity2.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);*/
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 this)
@@ -117,12 +124,13 @@ public class GcmIntentService extends IntentService {
                 .setContentText(contentText).setTicker(alertText)
                 .setAutoCancel(true);
         mBuilder.setContentIntent(intent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mNotificationManager.notify(requestID, mBuilder.build());
+//        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     public void sendCombineGameNotification(String alertText, String titleText,
                                      String contentText) {
-        Log.e(TAG, "in sending notification from intent");
+        Log.e(TAG, "in sendCombineGameNotification");
         mNotificationManager = (NotificationManager) this
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent;
@@ -130,9 +138,13 @@ public class GcmIntentService extends IntentService {
                 edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2Combine.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra("show_response", "show_response");
-        PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
-                        this, ScraggleGameActivity2Combine.class),
+        int requestID = (int) System.currentTimeMillis();
+        PendingIntent intent = PendingIntent.getActivity(this, requestID, new Intent(
+                        this, CommunicationMain.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
+        /*PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
+                        this, ScraggleGameActivity2Combine.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);*/
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 this)
@@ -144,7 +156,8 @@ public class GcmIntentService extends IntentService {
                 .setContentText(contentText).setTicker(alertText)
                 .setAutoCancel(true);
         mBuilder.setContentIntent(intent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mNotificationManager.notify(requestID, mBuilder.build());
+//        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
 }
