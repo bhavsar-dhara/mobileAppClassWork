@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2;
+import edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2Combine;
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class GcmIntentService extends IntentService {
@@ -108,7 +110,7 @@ public class GcmIntentService extends IntentService {
         notificationIntent.putExtra("show_response", "show_response");
         int requestID = (int) System.currentTimeMillis();
         PendingIntent intent = PendingIntent.getActivity(this, requestID, new Intent(
-                        this, CommunicationMain.class),
+                        this, ScraggleGameActivity2.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
         /*PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
                         this, ScraggleGameActivity2.class),
@@ -140,7 +142,7 @@ public class GcmIntentService extends IntentService {
         notificationIntent.putExtra("show_response", "show_response");
         int requestID = (int) System.currentTimeMillis();
         PendingIntent intent = PendingIntent.getActivity(this, requestID, new Intent(
-                        this, CommunicationMain.class),
+                        this, ScraggleGameActivity2Combine.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
         /*PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(
                         this, ScraggleGameActivity2Combine.class),
