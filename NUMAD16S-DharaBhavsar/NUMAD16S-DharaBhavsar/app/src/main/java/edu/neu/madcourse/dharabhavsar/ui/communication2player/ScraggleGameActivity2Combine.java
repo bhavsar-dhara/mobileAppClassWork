@@ -665,7 +665,7 @@ public class ScraggleGameActivity2Combine extends Activity {
                             }
                         });
                 try {
-//                    TODO - find out the real reason - handled temporarily
+//                    find out the real reason - handled temporarily with try catch
                     builder.create().show();
                 } catch (ClassCastException e) {
                     throw new ClassCastException(this.toString()
@@ -764,7 +764,6 @@ public class ScraggleGameActivity2Combine extends Activity {
                 isPhoneShaked = true;
                 mGameFragment.reshuffleLettersOnShake();
                 restartCounter();
-//                TODO - deselect the selected tiles on shake
 //                Toast toast = Toast.makeText(getApplicationContext(),
 //                                             "Device has shaken.", Toast.LENGTH_LONG);
 //                toast.show();

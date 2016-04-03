@@ -19,6 +19,7 @@ import java.util.Random;
 import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.utils.Constants;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;
 
 /**
  * Created by derylrodrigues on 3/4/16.
@@ -212,6 +213,13 @@ public class RemoteClient {
         Firebase ref = new Firebase(Constants.FIREBASE_DB);
 //        Log.e(TAG, "updateGameData : Get Value for userKey - " + Constants.GAME_KEY);
         Firebase usersRef = ref.child(Constants.GAME_DATA).child(Constants.GAME_KEY);
+        usersRef.setValue(value);
+    }
+
+    public void updateGameDataAfterP2Turn(GameData value) {
+        Firebase ref = new Firebase(Constants.FIREBASE_DB);
+//        Log.e(TAG, "updateGameData : Get Value for userKey - " + Constants.GAME_KEY);
+        Firebase usersRef = ref.child(Constants.GAME_DATA).child(CommunicationConstants.gameKey);
         usersRef.setValue(value);
     }
 

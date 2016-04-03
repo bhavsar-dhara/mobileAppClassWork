@@ -107,6 +107,7 @@ public class ScraggleGameActivity2 extends Activity {
     private boolean isPhoneShaked = false;
 
     private boolean isPlayer2 = false;
+    private String P2EndGameMsg = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -434,6 +435,24 @@ public class ScraggleGameActivity2 extends Activity {
                                     user2player.getUserId());
                         }
                     }, 5000);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+                            builder.setTitle(R.string.game_end_title);
+                            builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score + score2));
+                            builder.setCancelable(false);
+                            builder.setPositiveButton(R.string.ok_label,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            finish();
+                                        }
+                                    });
+                            mDialog = builder.show();
+                            isGameEnd = true;
+                        }
+                    }, 2000);
                 } else {
 //                    ...
                     updatePlayer2DetailsOnFinishP2Combat();
@@ -443,13 +462,43 @@ public class ScraggleGameActivity2 extends Activity {
                         @Override
                         public void run() {
 //                            TODO change it
-                            mCommMain.sendCombatGameOver("Game Over " + user.getUserName() + " won",
-                                    user1player.getUserId());
+                            if (score + score2 > retrievedGameData.getP1Score1() + retrievedGameData.getP1Score2())
+                                mCommMain.sendCombatGameOver("Game Over : Player 2 - " + user.getUserName() + " won",
+                                        user1player.getUserId());
+                            else
+                                mCommMain.sendCombatGameOver("Game Over : You won",
+                                        user1player.getUserId());
                             CommunicationConstants.gameKey = "";
                         }
-                    }, 5000);
+                    }, 15000);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+                            builder.setTitle(R.string.game_end_title);
+                            if (score + score2 > retrievedGameData.getP1Score1() + retrievedGameData.getP1Score2())
+                                P2EndGameMsg = "You Won with score : " + (score + score2);
+                            else
+                                P2EndGameMsg = "Your score : " + (score + score2)
+                                        + " & Player 1 - " + user1player.getUserName() + " won by "
+                                        + "score : " + user1player.getUserPendingIndividualGameScore();
+//                            builder.setMessage(String.format(getResources().getString(R.string.game_end_text), score + score2));
+                            builder.setMessage(P2EndGameMsg);
+                            builder.setCancelable(false);
+                            builder.setPositiveButton(R.string.ok_label,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            finish();
+                                        }
+                                    });
+                            mDialog = builder.show();
+                            isGameEnd = true;
+                        }
+                    }, 3000);
                 }
-                mHandler.postDelayed(new Runnable() {
+//                TODO - Add a customized dialog for player 2 to let him know who won
+                /*mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
@@ -466,7 +515,7 @@ public class ScraggleGameActivity2 extends Activity {
                         mDialog = builder.show();
                         isGameEnd = true;
                     }
-                }, 2000);
+                }, 2000);*/
             }
         }
 
@@ -909,7 +958,7 @@ public class ScraggleGameActivity2 extends Activity {
                         retrievedGameData.isCombinePlay(), true,
                         retrievedGameData.getLettersSelected(),
                         retrievedGameData.getBoggledWords());
-                mRemoteClient.updateGameData(updatedGameData);
+                mRemoteClient.updateGameDataAfterP2Turn(updatedGameData);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
         }, 10000);
