@@ -236,7 +236,7 @@ public class ScraggleGameFragment2 extends Fragment {
 //                smallTileText.setView(innerText);
                 smallTileText.setInnerText(String.valueOf(str.charAt(small)));
 //                str = String.valueOf(retrievedWordList[large][small]);
-                Log.e("initAddAsyncGameLetters", "inside : " + smallTileText.getInnerText());
+//                Log.e("initAddAsyncGameLetters", "inside : " + smallTileText.getInnerText());
                 innerText.setText(String.valueOf(str.charAt(small)));
                 innerText.setBackgroundDrawable(getResources().getDrawable
                         (R.drawable.tile_not_selected_scraggle));
@@ -265,7 +265,7 @@ public class ScraggleGameFragment2 extends Fragment {
                     final ScraggleTile2 smallTileText = mSmallTiles[large][i];
                     gameLetterState[large][i] = str.charAt(small);
 //                    boggledWords[large] += str.charAt(small);
-                    Log.e("boggledWords " + large, boggledWords[large]);
+//                    Log.e("boggledWords " + large, boggledWords[large]);
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
                 }
                 if (((ScraggleGameActivity2) getActivity()).isPhoneShaked()) {
@@ -321,24 +321,24 @@ public class ScraggleGameFragment2 extends Fragment {
                 inner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.e("WordTEST", "inOnCLick");
+//                        Log.e("WordTEST", "inOnCLick");
 
                         smallTile.animate();
                         // ...
-                        Log.e("think", "isPhaseTwo = " + isPhaseTwo);
-                        Log.e("WordTEST", String.valueOf(isAvailable(smallTile)));
-                        Log.e("WordTEST NextMove", String.valueOf(isNextMove(smallTile)));
+//                        Log.e("think", "isPhaseTwo = " + isPhaseTwo);
+//                        Log.e("WordTEST", String.valueOf(isAvailable(smallTile)));
+//                        Log.e("WordTEST NextMove", String.valueOf(isNextMove(smallTile)));
                         if (!isPhaseTwo) {
-                            Log.e("initViews", "inside PhaseOne code");
+//                            Log.e("initViews", "inside PhaseOne code");
 //                        if (isAvailable(smallTile)) {
                             if (isNextMove(smallTile)) {
 //                                ((ScraggleGameActivity2) getActivity()).startThinking();
-                                Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
+//                                Log.e("WordTEST", String.valueOf(smallTile.getIsSelected()));
                                 if (!smallTile.getIsSelected()) {
-                                    Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
+//                                    Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
                                     smallTile.setIsSelected(true);
-                                    Log.e("mLastLarge", String.valueOf(mLastLarge));
-                                    Log.e("fLarge", String.valueOf(fLarge));
+//                                    Log.e("mLastLarge", String.valueOf(mLastLarge));
+//                                    Log.e("fLarge", String.valueOf(fLarge));
                                     makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
                                     inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
 //                                gameScore += getScore(smallTile.getInnerText().charAt(0));
@@ -365,13 +365,13 @@ public class ScraggleGameFragment2 extends Fragment {
                             mLastLarge = fLarge;
                             mLastSmall = fSmall;
                         } else {
-                            Log.e("initViews", "inside PhaseTwo code");
+//                            Log.e("initViews", "inside PhaseTwo code");
 //                            ((ScraggleGameActivity2) getActivity()).startThinking();
-                            Log.e("initViews", "mLastLarge = " + mLastLarge);
-                            Log.e("initViews", "fLarge = " + fLarge);
+//                            Log.e("initViews", "mLastLarge = " + mLastLarge);
+//                            Log.e("initViews", "fLarge = " + fLarge);
                             if (mLastLarge != fLarge) {
                                 if (!smallTile.getIsBlank()) {
-                                    Log.e("initViews", "inside is selected code");
+//                                    Log.e("initViews", "inside is selected code");
                                     smallTile.setIsBlank(true);
 //                                wordsMadePhase2 =
                                     wordCheck2 = makeWord(String.valueOf(smallTile.getInnerText()));
@@ -416,7 +416,7 @@ public class ScraggleGameFragment2 extends Fragment {
                             calcGameScore();
                             ((ScraggleGameActivity2) getActivity()).setScore(gameScore);
                         } else {
-                            Log.e("Long PRESS 2", String.valueOf(fLarge));
+                            Log.e("Long PRESS Phase 2", String.valueOf(fLarge));
                             refreshBoard(mView);
                             v.vibrate(50);
                             calcGameScore2();
@@ -438,7 +438,7 @@ public class ScraggleGameFragment2 extends Fragment {
                     setNextPossibleMoveFromLastMove(mLastSmall, mLastLarge);
                     if (getActivity() == null) return;
                     if (wordMadeList[mLastLarge] != null) {
-                        Log.e("DICT TEST", wordMadeList[mLastLarge]);
+//                        Log.e("DICT TEST", wordMadeList[mLastLarge]);
                         if (wordMadeList[mLastLarge].length() > 2) {
                             Boolean isThereFlag = ((ScraggleGameActivity2) getActivity()).searchWord(wordMadeList[mLastLarge]);
 
@@ -450,7 +450,7 @@ public class ScraggleGameFragment2 extends Fragment {
                                 TextView text = (TextView) customToastRoot.findViewById(R.id.textView1);
                                 String str = String.format(getResources().getString(R.string.custom_toast_text),
                                         wordMadeList[mLastLarge]);
-                                Log.e("WordFound phase1", str);
+//                                Log.e("WordFound phase1", str);
                                 text.setText(str);
 
                                 Toast customtoast = new Toast(getActivity().getApplicationContext());
@@ -476,11 +476,11 @@ public class ScraggleGameFragment2 extends Fragment {
                     ((ScraggleGameActivity2) getActivity()).stopThinking();
                 } else {
                     if (getActivity() == null) return;
-                    Log.e("think", "length = " + wordCheck2.length());
+//                    Log.e("think", "length = " + wordCheck2.length());
                     if (wordCheck2.length() >= 3) {
                         if (!Arrays.asList(wordsMadePhase2).contains(wordCheck2)) {
                             Boolean isThereFlag = ((ScraggleGameActivity2) getActivity()).searchWord(wordCheck2);
-                            Log.e("think 2", "isThereFlag = " + isThereFlag);
+//                            Log.e("think 2", "isThereFlag = " + isThereFlag);
                             if (isThereFlag) {
                                 wordsMadePhase2[countWordFound] = wordCheck2;
                                 View customToastRoot = getActivity().getLayoutInflater().inflate(R.layout.mycustom_toast,
@@ -489,7 +489,7 @@ public class ScraggleGameFragment2 extends Fragment {
                                 TextView text = (TextView) customToastRoot.findViewById(R.id.textView1);
                                 String str = String.format(getResources().getString(R.string.custom_toast_text),
                                         wordCheck2);
-                                Log.e("WordFound phase2", str);
+//                                Log.e("WordFound phase2", str);
                                 text.setText(str);
 
                                 Toast customtoast = new Toast(getActivity().getApplicationContext());
