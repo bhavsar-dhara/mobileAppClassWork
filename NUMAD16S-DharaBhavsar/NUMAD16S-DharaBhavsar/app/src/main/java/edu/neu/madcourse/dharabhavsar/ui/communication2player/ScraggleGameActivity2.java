@@ -730,13 +730,19 @@ public class ScraggleGameActivity2 extends Activity {
     }
 
     public void fetchPlayer1DetailsCombat() {
-        final String player1 = retrievedGameData.getPlayer1ID();
-        Log.e("remote", "userKey = " + player1);
-        mRemoteClient.fetchUserData(Constants.USER_DATA, player1);
+        final String[] player1 = {""};
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                user1player = mRemoteClient.getUserData(player1);
+            player1[0] = retrievedGameData.getPlayer1ID();
+            Log.e("remote", "userKey = " + player1[0]);
+            mRemoteClient.fetchUserData(Constants.USER_DATA, player1[0]);
+            }
+        }, 10000);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                user1player = mRemoteClient.getUserData(player1[0]);
                 Log.e("remote", "username = " + user.getUserName());
             }
         }, 15000);
@@ -928,7 +934,7 @@ public class ScraggleGameActivity2 extends Activity {
                         user1player.getPendingCombineGameKey());
 //                ...
                 mRemoteClient.updateUser2Data(retrievedGameData.getPlayer1ID(), updatedUserData);
-                Log.e("remote player2", "username2 = " + user2player.getUserName());
+                Log.e("remote player2", "username2 = " + user1player.getUserName());
             }
         }, 10000);
     }

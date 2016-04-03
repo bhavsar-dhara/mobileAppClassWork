@@ -49,11 +49,13 @@ public class GcmIntentService extends IntentService {
                 sendNotification(alertText, titleText, contentText);
             } else if (alertText.equals(CommunicationConstants.combatAlertText)) {
                 sendGameNotification(alertText, titleText, contentText);
-                CommunicationConstants.gameKey = extras.getString("gameKey");
+                if(extras.getString("gameKey") != null && extras.getString("gameKey") != "")
+                    CommunicationConstants.gameKey = extras.getString("gameKey");
                 Log.e(TAG, "combat = " + CommunicationConstants.gameKey);
             } else if (alertText.equals(CommunicationConstants.combineAlertText)) {
                 sendCombineGameNotification(alertText, titleText, contentText);
-                CommunicationConstants.gameKey = extras.getString("gameKey");
+                if(extras.getString("gameKey") != null && extras.getString("gameKey") != "")
+                    CommunicationConstants.gameKey = extras.getString("gameKey");
                 Log.e(TAG, "combine = " + CommunicationConstants.gameKey);
             } else {
                 sendNotification(alertText, titleText, contentText);

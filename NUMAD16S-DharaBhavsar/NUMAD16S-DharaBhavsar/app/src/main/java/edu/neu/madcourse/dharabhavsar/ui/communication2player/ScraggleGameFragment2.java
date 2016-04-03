@@ -233,9 +233,10 @@ public class ScraggleGameFragment2 extends Fragment {
                 Button innerText = (Button) outer.findViewById
                         (mSmallIdList[small]);
                 final ScraggleTile2 smallTileText = mSmallTiles[large][small];
-                smallTileText.setView(innerText);
+//                smallTileText.setView(innerText);
+                smallTileText.setInnerText(String.valueOf(str.charAt(small)));
 //                str = String.valueOf(retrievedWordList[large][small]);
-                Log.e("initAddAsyncGameLetters", "inside : " + str.charAt(small));
+                Log.e("initAddAsyncGameLetters", "inside : " + smallTileText.getInnerText());
                 innerText.setText(String.valueOf(str.charAt(small)));
                 innerText.setBackgroundDrawable(getResources().getDrawable
                         (R.drawable.tile_not_selected_scraggle));
