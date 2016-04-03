@@ -165,6 +165,10 @@ will be solved by player 1 and rest will be solved by player 2.\n\
 \n\
 Timing is same for all these game play.\n\
 On losing internet connection game will be paused until reconnected.\n\
+\n\
+\n\*ADD-ON*\n\
+There is an additional feature on shaking the phone - you get to reshuffle
+the letters in the 3x3 board and restart with the new board.\n\
 </string>
 
     <string name="ack_text_2">\
