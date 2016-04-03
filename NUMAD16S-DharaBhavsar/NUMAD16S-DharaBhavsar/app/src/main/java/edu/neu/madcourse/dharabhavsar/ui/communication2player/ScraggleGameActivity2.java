@@ -89,6 +89,8 @@ public class ScraggleGameActivity2 extends Activity {
     private UserData selected2PlayerData;
     private GameData retrievedGameData;
 
+    private final int interval2 = 97000; //97 seconds ; 1 minute 37  - for player2
+
     /*private TextView xcordview;
     private TextView ycordview;
     private TextView buttonIndicator;
@@ -256,7 +258,11 @@ public class ScraggleGameActivity2 extends Activity {
                 counter = new MyCount(savedRemainingInterval, 1000);
             } else {
 //                Log.e("PhaseOne Timer", "interval");
-                counter = new MyCount(interval, 1000);
+                if(!isPlayer2) {
+                    counter = new MyCount(interval, 1000);
+                } else {
+                    counter = new MyCount(interval2, 1000);
+                }
             }
             if(!isPlayer2) {
                 saveInitialGameDataP1Combat();
