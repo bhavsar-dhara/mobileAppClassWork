@@ -58,8 +58,8 @@ public class GcmIntentService extends IntentService {
                 }
             } else if (alertText.equals(CommunicationConstants.combineAlertText)) {
                 if(extras.getString("gameKey") != null && !extras.getString("gameKey").equals("--")) {
-                    CommunicationConstants.gameKey = extras.getString("gameKey");
-                    Log.e(TAG, "combine = " + CommunicationConstants.gameKey);
+                    CommunicationConstants.combineGameKey = extras.getString("gameKey");
+                    Log.e(TAG, "combine = " + CommunicationConstants.combineGameKey);
                     sendCombineGameNotification(alertText, titleText, contentText);
                 } else {
                     sendAfterCombineGameNotification(alertText, titleText, contentText);

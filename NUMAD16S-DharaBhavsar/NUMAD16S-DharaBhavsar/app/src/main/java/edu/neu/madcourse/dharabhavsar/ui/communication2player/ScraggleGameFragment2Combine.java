@@ -24,6 +24,8 @@ import java.util.Random;
 import java.util.Set;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.utils.Constants;
+import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;
 
 public class ScraggleGameFragment2Combine extends Fragment {
     static private int mLargeIdList[] = {R.id.wglarge1, R.id.wglarge2, R.id.wglarge3,
@@ -66,7 +68,9 @@ public class ScraggleGameFragment2Combine extends Fragment {
     private List<Integer> arrInt = new ArrayList<Integer>();
     int randomInt;
 
-    private String[] boggledWords = new String[9];
+    private String[] boggledWords = new String[]{"", "", "", "", "", "", "", "", ""};
+    private String[] boggledWordsRetrieved = new String[9];
+    private String[] selectedWordsMade = new String[]{"", "", "", "", "", "", "", "", ""};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,19 @@ public class ScraggleGameFragment2Combine extends Fragment {
             stringLst = ((ScraggleGameActivity2Combine) getActivity()).methodCallToAsyncTaskRunner();
             setLettersOnBoard();
 //            setLettersOnBoggleBoard();
+        }
+        if (((ScraggleGameActivity2Combine) getActivity()).isPlayer2()) {
+            Log.e("RetrieveDATAP2", CommunicationConstants.combineGameKey);
+            ((ScraggleGameActivity2Combine) getActivity()).
+                    fetchGameWordDetailsCombat(CommunicationConstants.combineGameKey);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    boggledWordsRetrieved = ((ScraggleGameActivity2Combine) getActivity()).
+                            getRetrievedGameData().getBoggledWords();
+                    Log.e("RetrieveDATAP2", String.valueOf(boggledWordsRetrieved.length));
+                }
+            }, 3000);
         }
 
         mSoundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
@@ -130,17 +147,52 @@ public class ScraggleGameFragment2Combine extends Fragment {
                              Bundle savedInstanceState) {
         Log.e("onCreateView", "inside");
 //        Log.e("onCreateView", "inside : " + gameData);
-        View rootView =
+        final View rootView =
                 inflater.inflate(R.layout.large_board_scraggle2, container, false);
         mView = rootView;
         initViews(rootView);
         if (gameData != "" && gameData != null) {
             putState(gameData);
+        } else if (((ScraggleGameActivity2Combine) getActivity()).isPlayer2()) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initAddAsyncGameLetters(rootView);
+                }
+            }, 7000);
         } else {
             initAddLetters(rootView);
         }
         updateAllTiles();
         return rootView;
+    }
+
+    private void initAddAsyncGameLetters(View rootView) {
+        Log.e("initAddAsyncGameLetters", "inside");
+        mEntireBoard.setView(rootView);
+        String str;
+//        boggledWordsRetrieved = Arrays.copyOf(fireBaseGameData.getBoggledWords(), 9);
+        for (int large = 0; large < 9; large++) {
+            View outer = rootView.findViewById(mLargeIdList[large]);
+            mLargeTiles[large].setView(outer);
+            str = boggledWordsRetrieved[large];
+            for (int small = 0; small < 9; small++) {
+                Button innerText = (Button) outer.findViewById
+                        (mSmallIdList[small]);
+                final ScraggleTile2 smallTileText = mSmallTiles[large][small];
+//                smallTileText.setView(innerText);
+                smallTileText.setInnerText(String.valueOf(str.charAt(small)));
+//                str = String.valueOf(retrievedWordList[large][small]);
+//                Log.e("initAddAsyncGameLetters", "inside : " + smallTileText.getInnerText());
+                innerText.setText(String.valueOf(str.charAt(small)));
+                if(innerText.isEnabled())
+                    innerText.setBackgroundDrawable(getResources().getDrawable
+                        (R.drawable.tile_not_selected_scraggle));
+                else
+                    innerText.setBackgroundDrawable(getResources().getDrawable
+                            (R.drawable.tile_deselected_scraggle));
+            }
+        }
     }
 
     private void initAddLetters(View rootView) {
@@ -166,7 +218,7 @@ public class ScraggleGameFragment2Combine extends Fragment {
                     gameLetterState[large][i] = str.charAt(small);
                     smallTileText.setInnerText(String.valueOf(str.charAt(small)));
                 }
-                if (((ScraggleGameActivity2Combine) getActivity()).isPhoneShaked()) {
+                /*if (((ScraggleGameActivity2Combine) getActivity()).isPhoneShaked()) {
                     int i = posnList.get(small);
 //                    Log.e("nineWords ", i + " = " + str);
                     Button innerText = (Button) outer.findViewById
@@ -184,9 +236,12 @@ public class ScraggleGameFragment2Combine extends Fragment {
                     } else {
                         gameScore2 = 0;
                     }
-                }
+                }*/
             }
-            if (((ScraggleGameActivity2Combine) getActivity()).isPhoneShaked()) {
+            for (int small = 0; small < 9; small++) {
+                boggledWords[large] += gameLetterState[large][small];
+            }
+            /*if (((ScraggleGameActivity2Combine) getActivity()).isPhoneShaked()) {
                 wordScores = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
                 if(isPhaseTwo) {
                     wordsMadePhase2 = new String[100];
@@ -195,7 +250,7 @@ public class ScraggleGameFragment2Combine extends Fragment {
                     mLastLarge = -1;
                     mLastSmall = -1;
                 }
-            }
+            }*/
         }
     }
 
@@ -208,6 +263,21 @@ public class ScraggleGameFragment2Combine extends Fragment {
             for (int small = 0; small < 9; small++) {
                 final Button inner = (Button) outer.findViewById
                         (mSmallIdList[small]);
+                if (((ScraggleGameActivity2Combine) getActivity()).isPlayer2()) {
+                    if(large % 2 == 0) {
+//                        Log.e("RetrieveDATAP2", CommunicationConstants.combineGameKey);
+                        inner.setEnabled(false);
+                        inner.setBackgroundDrawable(getResources().getDrawable
+                                (R.drawable.tile_deselected_scraggle));
+                    }
+                } else {
+                    if(large % 2 != 0) {
+//                        Log.e("RetrieveDATAP2", "Player1");
+                        inner.setEnabled(false);
+                        inner.setBackgroundDrawable(getResources().getDrawable
+                                (R.drawable.tile_deselected_scraggle));
+                    }
+                }
                 final int fLarge = large;
                 final int fSmall = small;
                 final ScraggleTile2 smallTile = mSmallTiles[large][small];
@@ -231,11 +301,20 @@ public class ScraggleGameFragment2Combine extends Fragment {
                                 if (!smallTile.getIsSelected()) {
 //                                    Log.e("WordTEST", "in isSel = false :: " + String.valueOf(smallTile.getInnerText()));
                                     smallTile.setIsSelected(true);
+//                                    ...
+                                    selectedWordsMade[fLarge] += fSmall;
 //                                    Log.e("mLastLarge", String.valueOf(mLastLarge));
 //                                    Log.e("fLarge", String.valueOf(fLarge));
                                     makeWord(String.valueOf(smallTile.getInnerText()), fLarge);
                                     inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
 //                                gameScore += getScore(smallTile.getInnerText().charAt(0));
+                                    // any polling mechanism can be used
+                                    if(!((ScraggleGameActivity2Combine) getActivity()).isPlayer2())
+                                        ((ScraggleGameActivity2Combine) getActivity())
+                                                .startTimer1(Constants.COMBINE_GAME_KEY);
+                                    else
+                                        ((ScraggleGameActivity2Combine) getActivity())
+                                                .startTimer1(CommunicationConstants.combineGameKey);
                                 } else {
 //                                    Log.e("WordTEST", "in isSel = true");
                                     smallTile.setIsSelected(false);
@@ -258,6 +337,12 @@ public class ScraggleGameFragment2Combine extends Fragment {
                             }
                             mLastLarge = fLarge;
                             mLastSmall = fSmall;
+
+                            String[] setLetters = ((ScraggleGameActivity2Combine) getActivity())
+                                    .getRetrievedGameData().getLettersSelectedCombine();
+
+
+
                         } else {
                             Log.e("initViews", "inside PhaseTwo code");
 //                            ((ScraggleGameActivity2Combine) getActivity()).startThinking();
@@ -292,11 +377,18 @@ public class ScraggleGameFragment2Combine extends Fragment {
                             isWord[fLarge] = false;
 //                            Log.e("Long PRESS isWord", String.valueOf(isWord[fLarge]));
                             word = "";
+                            selectedWordsMade[fLarge] = "";
                             wordMadeList[fLarge] = "";
 //                        Log.e("Long PRESS word ", wordMadeList[fLarge]);
                             wordScores[fLarge] = 0;
 //                            Log.e("Long PRESS wordScore", String.valueOf(wordScores[fLarge]));
                             setAllNextMoves();
+                            if(!((ScraggleGameActivity2Combine) getActivity()).isPlayer2())
+                                ((ScraggleGameActivity2Combine) getActivity())
+                                        .startTimer1(Constants.COMBINE_GAME_KEY);
+                            else
+                                ((ScraggleGameActivity2Combine) getActivity())
+                                        .startTimer1(CommunicationConstants.combineGameKey);
                             for (int small = 0; small < 9; small++) {
                                 final Button inner = (Button) outer.findViewById
                                         (mSmallIdList[small]);
@@ -952,6 +1044,14 @@ public class ScraggleGameFragment2Combine extends Fragment {
 
     public String[] getBoggledWords() {
         return boggledWords;
+    }
+
+    public String[] getBoggledWordsRetrieved() {
+        return boggledWordsRetrieved;
+    }
+
+    public String[] getSelectedWordsMade() {
+        return selectedWordsMade;
     }
 }
 

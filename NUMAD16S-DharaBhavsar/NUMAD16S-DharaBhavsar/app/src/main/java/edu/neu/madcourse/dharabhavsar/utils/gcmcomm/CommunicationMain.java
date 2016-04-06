@@ -60,6 +60,7 @@ public class CommunicationMain extends Activity implements OnClickListener {
     private Handler mHandler = new Handler();
     private SharedPreferences prefs;
     private String userKey;
+    private SharedPreferences prefsRemote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,9 @@ public class CommunicationMain extends Activity implements OnClickListener {
         mMessage = (EditText) findViewById(R.id.communication_edit_message);
         gcm = GoogleCloudMessaging.getInstance(this);
         context = getApplicationContext();
+
+        prefsRemote = appContext.getSharedPreferences(RemoteClient.class.getSimpleName(),
+                Context.MODE_PRIVATE);
     }
 
     @SuppressLint("NewApi")

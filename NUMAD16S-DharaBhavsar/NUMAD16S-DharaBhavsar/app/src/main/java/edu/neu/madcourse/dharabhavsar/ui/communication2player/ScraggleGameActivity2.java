@@ -89,7 +89,7 @@ public class ScraggleGameActivity2 extends Activity {
     private UserData selected2PlayerData;
     private GameData retrievedGameData;
 
-    private final int interval2 = 97000; //97 seconds ; 1 minute 37  - for player2
+    private final int interval2 = 97000; //97 seconds ; 1 minute 37 secs  - for player2
 
     /*private TextView xcordview;
     private TextView ycordview;
@@ -749,7 +749,7 @@ public class ScraggleGameActivity2 extends Activity {
                 gameLetter = mGameFragment.getGameLetterState();
                 Log.e("remoteClient", "gamedata 1 = " + gameLetter.toString());
                 gameDataFb = new GameData(0, 0, 0, 0, 0, userKey, "", gameLetter, true, false,
-                        false, false, null, mGameFragment.getBoggledWords());
+                        false, false, null, mGameFragment.getBoggledWords(), null);
                 mRemoteClient.saveGameData(gameDataFb);
             }
         }, 5000);
@@ -845,7 +845,8 @@ public class ScraggleGameActivity2 extends Activity {
                         retrievedGameData.isFirstCombatPlay(), true,
                         retrievedGameData.isCombinePlay(), retrievedGameData.isGameOver(),
                         retrievedGameData.getLettersSelected(),
-                        retrievedGameData.getBoggledWords());
+                        retrievedGameData.getBoggledWords(),
+                        retrievedGameData.getLettersSelectedCombine());
                 mRemoteClient.updateGameData(updatedGameData);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }
@@ -963,7 +964,8 @@ public class ScraggleGameActivity2 extends Activity {
                         retrievedGameData.isSecondCombatPlay(),
                         retrievedGameData.isCombinePlay(), true,
                         retrievedGameData.getLettersSelected(),
-                        retrievedGameData.getBoggledWords());
+                        retrievedGameData.getBoggledWords(),
+                        retrievedGameData.getLettersSelectedCombine());
                 mRemoteClient.updateGameDataAfterP2Turn(updatedGameData);
                 Log.e("remote", "retrievedGameData = " + retrievedGameData.getPlayer1ID());
             }

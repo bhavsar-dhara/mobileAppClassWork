@@ -21,6 +21,7 @@ public class GameData {
     private int[][] lettersSelected;        // for combine play - to get the knowledge of the word
                                             // being made by other team player
     private String[] boggledWords;          // to use instead of gameLetterState for simplicity
+    private String[] lettersSelectedCombine;// for better performance
 
     public GameData() {
     }
@@ -28,7 +29,8 @@ public class GameData {
     public GameData(int scoreCombinePlay, int p1Score1, int p1Score2, int p2Score1, int p2Score2,
                     String player1ID, String player2ID, char[][] gameLetterState,
                     boolean firstCombatPlay, boolean secondCombatPlay, boolean combinePlay,
-                    boolean gameOver, int[][] lettersSelected, String[] boggledWords) {
+                    boolean gameOver, int[][] lettersSelected, String[] boggledWords,
+                    String[] lettersSelectedCombine) {
         this.scoreCombinePlay = scoreCombinePlay;
         this.p1Score1 = p1Score1;
         this.p1Score2 = p1Score2;
@@ -43,6 +45,7 @@ public class GameData {
         this.gameOver = gameOver;
         this.lettersSelected = lettersSelected;
         this.boggledWords = boggledWords;
+        this.lettersSelectedCombine = lettersSelectedCombine;
     }
 
     public int getScoreCombinePlay() {
@@ -99,5 +102,9 @@ public class GameData {
 
     public String[] getBoggledWords() {
         return boggledWords;
+    }
+
+    public String[] getLettersSelectedCombine() {
+        return lettersSelectedCombine;
     }
 }
