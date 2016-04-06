@@ -163,6 +163,21 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
+        Button btn9 = (Button) rootView.findViewById(R.id.trickiestpart_button);
+        btn9.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.short_ping_freesound_org);
+                mMediaPlayer.setVolume(0.5f, 0.5f);
+                mMediaPlayer.start();
+
+//                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle3.class);
+//                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 }
