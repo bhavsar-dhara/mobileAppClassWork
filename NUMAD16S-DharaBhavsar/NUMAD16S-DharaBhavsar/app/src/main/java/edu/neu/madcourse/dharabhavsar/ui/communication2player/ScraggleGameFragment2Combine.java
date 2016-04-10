@@ -24,7 +24,6 @@ import java.util.Random;
 import java.util.Set;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
-import edu.neu.madcourse.dharabhavsar.utils.Constants;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;
 
 public class ScraggleGameFragment2Combine extends Fragment {
@@ -309,12 +308,12 @@ public class ScraggleGameFragment2Combine extends Fragment {
                                     inner.setBackgroundDrawable(getResources().getDrawable(R.drawable.tile_selected_scraggle));
 //                                gameScore += getScore(smallTile.getInnerText().charAt(0));
                                     // any polling mechanism can be used
-                                    if(!((ScraggleGameActivity2Combine) getActivity()).isPlayer2())
+                                    /*if(!((ScraggleGameActivity2Combine) getActivity()).isPlayer2())
                                         ((ScraggleGameActivity2Combine) getActivity())
                                                 .startTimer1(Constants.COMBINE_GAME_KEY);
                                     else
                                         ((ScraggleGameActivity2Combine) getActivity())
-                                                .startTimer1(CommunicationConstants.combineGameKey);
+                                                .startTimer1(CommunicationConstants.combineGameKey);*/
                                 } else {
 //                                    Log.e("WordTEST", "in isSel = true");
                                     smallTile.setIsSelected(false);
@@ -383,12 +382,12 @@ public class ScraggleGameFragment2Combine extends Fragment {
                             wordScores[fLarge] = 0;
 //                            Log.e("Long PRESS wordScore", String.valueOf(wordScores[fLarge]));
                             setAllNextMoves();
-                            if(!((ScraggleGameActivity2Combine) getActivity()).isPlayer2())
+                            /*if(!((ScraggleGameActivity2Combine) getActivity()).isPlayer2())
                                 ((ScraggleGameActivity2Combine) getActivity())
                                         .startTimer1(Constants.COMBINE_GAME_KEY);
                             else
                                 ((ScraggleGameActivity2Combine) getActivity())
-                                        .startTimer1(CommunicationConstants.combineGameKey);
+                                        .startTimer1(CommunicationConstants.combineGameKey);*/
                             for (int small = 0; small < 9; small++) {
                                 final Button inner = (Button) outer.findViewById
                                         (mSmallIdList[small]);
