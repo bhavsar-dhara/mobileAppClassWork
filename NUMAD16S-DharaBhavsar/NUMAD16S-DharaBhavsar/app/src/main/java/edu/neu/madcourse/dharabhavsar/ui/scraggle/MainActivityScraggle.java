@@ -5,7 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
-import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.R;
 
 public class MainActivityScraggle extends Activity {
     MediaPlayer mMediaPlayer;

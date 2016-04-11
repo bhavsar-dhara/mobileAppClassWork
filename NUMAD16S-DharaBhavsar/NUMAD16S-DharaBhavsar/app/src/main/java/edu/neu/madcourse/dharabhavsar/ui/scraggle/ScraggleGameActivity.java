@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.TrieLookup;
-import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.R;
 
 public class ScraggleGameActivity extends Activity {
     public static final String KEY_RESTORE = "key_restore";

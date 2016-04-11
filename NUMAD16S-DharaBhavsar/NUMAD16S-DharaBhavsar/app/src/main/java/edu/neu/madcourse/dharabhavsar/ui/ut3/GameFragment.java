@@ -22,7 +22,7 @@ import android.widget.ImageButton;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.R;
 
 public class GameFragment extends Fragment {
    static private int mLargeIds[] = {R.id.large1, R.id.large2, R.id.large3,

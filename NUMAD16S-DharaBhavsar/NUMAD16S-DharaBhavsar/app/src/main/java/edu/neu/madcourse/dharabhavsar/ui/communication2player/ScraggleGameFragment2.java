@@ -25,7 +25,7 @@ import java.util.Random;
 import java.util.Set;
 
 import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
-import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.R;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;
 
 public class ScraggleGameFragment2 extends Fragment {

@@ -6,8 +6,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.widget.TextView;
+
+import edu.neu.madcourse.dharabhavsar.R;
 
 
 public class SensorActivity extends Activity implements SensorEventListener {
@@ -31,8 +34,14 @@ public class SensorActivity extends Activity implements SensorEventListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        displayData = (TextView)findViewById(R.id.counter);
+        WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override public void onLayoutInflated(WatchViewStub stub) {
+                displayData = (TextView)findViewById(R.id.counter);
+            }
+        });
 
         client = DeviceClient.getInstance(this);
     }
@@ -68,7 +77,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
                 Log.w(TAG, "No Accelerometer found");
             }
 
-            if (gravitySensor != null) {
+            /*if (gravitySensor != null) {
                 mSensorManager.registerListener(this, gravitySensor, SensorManager.SENSOR_DELAY_NORMAL);
             } else {
                 Log.w(TAG, "No Gravity Sensor");
@@ -90,7 +99,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
                 mSensorManager.registerListener(this, rotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
             } else {
                 Log.d(TAG, "No Rotation Vector Sensor found");
-            }
+            }*/
 
         }
     }
@@ -111,7 +120,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
         bite = found;
 
         //Check if gyro is giving same values
-        if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+        /*if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
             if(event.values[0] == gyroCheck[0] &&
                     event.values[1] == gyroCheck[1] &&
                     event.values[2] == gyroCheck[2]){
@@ -122,7 +131,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
                 gyroCheck[1] = event.values[1];
                 gyroCheck[2] = event.values[2];
             }
-        }
+        }*/
     }
 
 

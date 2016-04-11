@@ -3,7 +3,7 @@ package edu.neu.madcourse.dharabhavsar.ui.about;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.R;
 
 //import android.support.v4.app.FragmentActivity;
 

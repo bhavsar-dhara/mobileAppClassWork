@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
-import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.R;
 import edu.neu.madcourse.dharabhavsar.utils.Constants;
 import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
 

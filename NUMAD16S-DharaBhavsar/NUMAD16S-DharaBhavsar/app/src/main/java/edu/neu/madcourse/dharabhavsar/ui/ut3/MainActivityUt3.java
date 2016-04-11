@@ -12,7 +12,7 @@ import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
-import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.R;
 
 public class MainActivityUt3 extends Activity {
    MediaPlayer mMediaPlayer;

@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
-import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.R;
 import edu.neu.madcourse.dharabhavsar.utils.Constants;
 import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
