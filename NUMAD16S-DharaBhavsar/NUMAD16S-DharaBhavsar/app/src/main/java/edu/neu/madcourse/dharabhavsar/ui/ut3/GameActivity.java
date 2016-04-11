@@ -18,7 +18,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
-import edu.neu.madcourse.dharabhavsar.R;
+import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class GameActivity extends Activity {
    public static final String KEY_RESTORE = "key_restore";

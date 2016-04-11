@@ -21,7 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-import edu.neu.madcourse.dharabhavsar.R;
+import edu.neu.madcourse.dharabhavsar.ui.main.R;
 import edu.neu.madcourse.dharabhavsar.utils.Constants;
 import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
 

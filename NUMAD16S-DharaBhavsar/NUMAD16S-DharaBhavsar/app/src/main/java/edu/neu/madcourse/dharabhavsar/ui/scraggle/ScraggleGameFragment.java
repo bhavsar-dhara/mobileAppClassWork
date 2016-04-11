@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import edu.neu.madcourse.dharabhavsar.R;
+import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class ScraggleGameFragment extends Fragment {
     static private int mLargeIdList[] = {R.id.wglarge1, R.id.wglarge2, R.id.wglarge3,

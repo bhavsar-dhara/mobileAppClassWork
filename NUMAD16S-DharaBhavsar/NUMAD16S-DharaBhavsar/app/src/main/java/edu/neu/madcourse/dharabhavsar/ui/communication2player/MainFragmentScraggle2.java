@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.neu.madcourse.dharabhavsar.R;
+import edu.neu.madcourse.dharabhavsar.ui.main.R;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationMain;
 
 public class MainFragmentScraggle2 extends Fragment {

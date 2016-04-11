@@ -1,22 +1,38 @@
 package edu.neu.madcourse.dharabhavsar.wear;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.util.FloatMath;
 import android.util.Log;
+import android.util.SparseLongArray;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 import com.opencsv.CSVWriter;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class DeviceClient {
     private static final String TAG = "DeviceClient";
@@ -25,6 +41,8 @@ public class DeviceClient {
     private Context context;
     private int filterId;
     private Map<Integer, Long> lastSensorData = new HashMap<>();
+    private String filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath()
+            + File.separator + "AnalysisData.csv";
     private List<String[]> listValues = new ArrayList<>();
     private boolean vibrating = false;
     private Vibrator v;
@@ -43,7 +61,7 @@ public class DeviceClient {
     public boolean sendSensorData(final int sensorType, final int accuracy, final long timestamp, final float[] values) {
         long t = System.currentTimeMillis();
 
-        long lastTimestamp = lastSensorData.get(sensorType) == null ? 0 : lastSensorData.get(sensorType);
+        long lastTimestamp = lastSensorData.get(sensorType);
         long timeAgo = t - lastTimestamp;
 
         if (lastTimestamp != 0) {
@@ -84,9 +102,6 @@ public class DeviceClient {
             @Override
             protected Void doInBackground(Void... params){
                 try{
-                    String filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath()
-                            + File.separator + "AnalysisData.csv";
-                    Log.e("FileName","The file name is - "+filePath);
                     CSVWriter writer;
                     writer = new CSVWriter(new FileWriter(filePath , false), '\t');
                     writer.writeNext(new String[]{"Date","Sensor","x","y","z"});
@@ -112,9 +127,7 @@ public class DeviceClient {
             @Override
             protected Void doInBackground(List<String[]>... params){
                 try{
-                    String filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath()
-                            + File.separator + "AnalysisData.csv";
-                    Log.e("FileName","The file name is - "+filePath);
+                    Log.i("FileName","The file name is - "+filePath);
                     File f = new File(filePath);
                     CSVWriter writer;
                     if(f.exists() && !f.isDirectory()){
@@ -127,10 +140,10 @@ public class DeviceClient {
                         writer.writeNext(value);
                     writer.close();
                 } catch (IOException e) {
-                    Log.e(TAG, "IOException while writing the file "+e.getMessage());
+                    Log.e(TAG, "IOException while clearing the file "+e.getMessage());
                     e.printStackTrace();
                 } catch (Exception e){
-                    Log.e(TAG, "Exception while writing the file "+e.getMessage());
+                    Log.e(TAG, "Exception while clearing the file "+e.getMessage());
                 }
                 return null;
             }
@@ -215,8 +228,9 @@ public class DeviceClient {
             v.vibrate(500);
         }
     }
-}
 
+
+}
 class Bite{
     private static int upAcc = 0;
     private static int upDec = 0;
@@ -323,7 +337,7 @@ class Bite{
     }
 
     private static void toStrings(){
-        Log.i("Bite"," "+accCorrect+" "+goingUp+" - "+accCorrect+" up"+upAcc+" "+upDec+" "+upCon+" down"+downAcc+" "+downDec+" "+downCon);
+        Log.i("Bite",""+accCorrect+goingUp+" - "+accCorrect+" up"+upAcc+" "+upDec+" "+upCon+" down"+downAcc+" "+downDec+" "+downCon);
     }
 }
 

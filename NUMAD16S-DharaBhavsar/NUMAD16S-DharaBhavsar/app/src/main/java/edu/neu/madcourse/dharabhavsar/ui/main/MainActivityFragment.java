@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import edu.neu.madcourse.dharabhavsar.R;
 import edu.neu.madcourse.dharabhavsar.ui.about.MainActivityAbout;
 import edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle2;
 import edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle3;

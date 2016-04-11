@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import edu.neu.madcourse.dharabhavsar.R;
+import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 /**
  * Created by Dhara on 2/6/2016.

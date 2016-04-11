@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 
-import edu.neu.madcourse.dharabhavsar.R;
+import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 /**
  * Created by Dhara on 3/30/2016.

@@ -41,7 +41,7 @@ import java.util.concurrent.ExecutionException;
 import edu.neu.madcourse.dharabhavsar.model.communication.GameData;
 import edu.neu.madcourse.dharabhavsar.model.communication.UserData;
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.TrieLookup;
-import edu.neu.madcourse.dharabhavsar.R;
+import edu.neu.madcourse.dharabhavsar.ui.main.R;
 import edu.neu.madcourse.dharabhavsar.utils.Constants;
 import edu.neu.madcourse.dharabhavsar.utils.firebaseconn.RemoteClient;
 import edu.neu.madcourse.dharabhavsar.utils.gcmcomm.CommunicationConstants;

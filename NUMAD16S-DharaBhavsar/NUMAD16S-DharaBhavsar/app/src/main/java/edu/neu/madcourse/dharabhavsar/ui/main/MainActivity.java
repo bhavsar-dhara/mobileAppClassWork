@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 
 import com.firebase.client.Firebase;
 
-import edu.neu.madcourse.dharabhavsar.R;
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.Trie;
 
 public class MainActivity extends AppCompatActivity {

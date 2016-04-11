@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "edu.neu.madcourse.dharabhavsar.numad16s_dharabhavsar"
+        applicationId "edu.neu.madcourse.dharabhavsar.wear"
         minSdkVersion 20
         targetSdkVersion 23
         versionCode 1

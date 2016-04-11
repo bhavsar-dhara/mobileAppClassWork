@@ -12,7 +12,7 @@ import android.util.Log;
 import edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2;
 import edu.neu.madcourse.dharabhavsar.ui.communication2player.ScraggleGameActivity2Combine;
 import edu.neu.madcourse.dharabhavsar.ui.main.MainActivity;
-import edu.neu.madcourse.dharabhavsar.R;
+import edu.neu.madcourse.dharabhavsar.ui.main.R;
 
 public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
