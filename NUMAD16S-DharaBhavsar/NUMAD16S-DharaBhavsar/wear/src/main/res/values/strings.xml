@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Wear</string>
+    <string name="app_name">Eat Slower Trainer</string>
+    <string name="take_bite">Take a Bite</string>
+    <string name="bite_detected">Bite Detected</string>
 </resources>

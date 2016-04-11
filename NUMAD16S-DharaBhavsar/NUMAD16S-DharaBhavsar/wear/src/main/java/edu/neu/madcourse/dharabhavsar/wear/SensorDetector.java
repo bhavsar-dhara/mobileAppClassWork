@@ -10,7 +10,7 @@ public class SensorDetector extends Activity{
 
 
     public void startStuff(){
-        startService(new Intent(this, SensorService.class));
+        startService(new Intent(this, SensorActivity.class));
     }
 
 

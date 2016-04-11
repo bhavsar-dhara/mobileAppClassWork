@@ -1,21 +1,18 @@
 package edu.neu.madcourse.dharabhavsar.wear;
 
-import android.app.Notification;
-import android.app.Service;
-import android.content.Intent;
+import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.IBinder;
+import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
-import java.util.concurrent.ScheduledExecutorService;
 
+public class SensorActivity extends Activity implements SensorEventListener {
 
-public class SensorService extends Service implements SensorEventListener {
-
-    private static final String TAG = "SensorService";
+    private static final String TAG = "SensorActivity";
 
     private final static int SENS_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER;
     private final static int SENS_GYROSCOPE = Sensor.TYPE_GYROSCOPE;
@@ -23,39 +20,35 @@ public class SensorService extends Service implements SensorEventListener {
     private final static int SENS_LINEAR_ACCELERATION = Sensor.TYPE_LINEAR_ACCELERATION;
     private final static int SENS_ROTATION_VECTOR = Sensor.TYPE_ROTATION_VECTOR;
 
-    SensorManager mSensorManager;
+    private SensorManager mSensorManager;
+    private TextView displayData;
+    private boolean bite = false;
 
-    private Sensor mHeartrateSensor;
+    private float[] gyroCheck = new float[3];
 
     private DeviceClient client;
-    private ScheduledExecutorService mScheduler;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        displayData = (TextView)findViewById(R.id.counter);
 
         client = DeviceClient.getInstance(this);
-
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Sensor Dashboard");
-        builder.setContentText("Collecting sensor data..");
-        builder.setSmallIcon(R.drawable.ic_full_sad);
-
-        startForeground(1, builder.build());
-
-        startMeasurement();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
+    public void onPause() {
+        super.onPause();
         stopMeasurement();
+        client.writeToFile();
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public void onResume(){
+        super.onResume();
+        startMeasurement();
+        client.clearFile();
     }
 
     protected void startMeasurement() {
@@ -70,7 +63,7 @@ public class SensorService extends Service implements SensorEventListener {
         // Register the listener
         if (mSensorManager != null) {
             if (accelerometerSensor != null) {
-                mSensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                mSensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_UI);
             } else {
                 Log.w(TAG, "No Accelerometer found");
             }
@@ -106,19 +99,61 @@ public class SensorService extends Service implements SensorEventListener {
         if (mSensorManager != null) {
             mSensorManager.unregisterListener(this);
         }
-        if (mScheduler != null && !mScheduler.isTerminated()) {
-            mScheduler.shutdown();
-        }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+        boolean found = client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+
+        //Check if display needs to be changed
+        if(found != bite)
+            updateBiteDisplay(found);
+        bite = found;
+
+        //Check if gyro is giving same values
+        if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+            if(event.values[0] == gyroCheck[0] &&
+                    event.values[1] == gyroCheck[1] &&
+                    event.values[2] == gyroCheck[2]){
+                restartGyroscope();
+            }
+            else{
+                gyroCheck[0] = event.values[0];
+                gyroCheck[1] = event.values[1];
+                gyroCheck[2] = event.values[2];
+            }
+        }
     }
 
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    private void updateBiteDisplay(boolean bite){
+        if(bite){
+            displayData.setText("Bite Detected");
+            displayData.setBackgroundColor(getResources().getColor(R.color.green));
+        }
+        else{
+            displayData.setText("Take a Bite");
+            displayData.setBackgroundColor(getResources().getColor(R.color.white));
+        }
+    }
+
+    /**
+     * Restarts the gyroscope
+     */
+    private void restartGyroscope(){
+        Log.i(TAG,"Restarting the Gyroscope");
+        try {
+            Sensor gyroscopeSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
+            mSensorManager.unregisterListener(this, gyroscopeSensor);
+            mSensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+        catch(Exception e){
+            Log.e(TAG, "Error while restarting the Gyroscope - "+e.getMessage());
+        }
     }
 }
