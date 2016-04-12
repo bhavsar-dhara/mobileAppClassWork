@@ -39,7 +39,7 @@ public class DeviceClient {
 
     public static DeviceClient instance;
     private Context context;
-    private int filterId;
+    private int filterId = -1;
     private Map<Integer, Long> lastSensorData = new HashMap<>();
     private String filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath()
             + File.separator + "AnalysisData.csv";
@@ -59,9 +59,9 @@ public class DeviceClient {
     }
 
     public boolean sendSensorData(final int sensorType, final int accuracy, final long timestamp, final float[] values) {
-        long t = System.currentTimeMillis();
+        /*long t = System.currentTimeMillis();
 
-        long lastTimestamp = lastSensorData.get(sensorType);
+        long lastTimestamp = lastSensorData.get(sensorType) == null ? 0 : lastSensorData.get(sensorType);
         long timeAgo = t - lastTimestamp;
 
         if (lastTimestamp != 0) {
@@ -74,7 +74,7 @@ public class DeviceClient {
             }
         }
 
-        lastSensorData.put(sensorType, t);
+        lastSensorData.put(sensorType, t);*/
 
 
         if(sensorType == Sensor.TYPE_LINEAR_ACCELERATION ||
@@ -104,7 +104,7 @@ public class DeviceClient {
                 try{
                     CSVWriter writer;
                     writer = new CSVWriter(new FileWriter(filePath , false), '\t');
-                    writer.writeNext(new String[]{"Date","Sensor","x","y","z"});
+                    writer.writeNext(new String[]{"Date","Sensor1","x","y","z"});
                     writer.close();
                 }
                 catch (IOException e){
@@ -140,10 +140,10 @@ public class DeviceClient {
                         writer.writeNext(value);
                     writer.close();
                 } catch (IOException e) {
-                    Log.e(TAG, "IOException while clearing the file "+e.getMessage());
+                    Log.e(TAG, "IOException while writing the file "+e.getMessage());
                     e.printStackTrace();
                 } catch (Exception e){
-                    Log.e(TAG, "Exception while clearing the file "+e.getMessage());
+                    Log.e(TAG, "Exception while writing the file "+e.getMessage());
                 }
                 return null;
             }
@@ -165,6 +165,8 @@ public class DeviceClient {
 
     private void detectStuff(long timestamp, float x, float y, float z){
 
+        if(true)
+            return;
         if(vibrating)
             return;
 

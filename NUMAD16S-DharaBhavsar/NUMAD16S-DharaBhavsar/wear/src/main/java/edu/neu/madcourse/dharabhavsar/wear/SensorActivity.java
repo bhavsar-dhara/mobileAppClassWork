@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -21,8 +22,11 @@ public class SensorActivity extends Activity implements SensorEventListener {
     private final static int SENS_ROTATION_VECTOR = Sensor.TYPE_ROTATION_VECTOR;
 
     private SensorManager mSensorManager;
+    private SensorEventListener mSensorListener;
     private TextView displayData;
     private boolean bite = false;
+
+    private int gyroCount = 0;
 
     private float[] gyroCheck = new float[3];
 
@@ -31,8 +35,15 @@ public class SensorActivity extends Activity implements SensorEventListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        displayData = (TextView)findViewById(R.id.counter);
+        WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override
+            public void onLayoutInflated(WatchViewStub stub) {
+                displayData = (TextView)findViewById(R.id.counter);
+            }
+        });
 
         client = DeviceClient.getInstance(this);
     }
@@ -54,6 +65,40 @@ public class SensorActivity extends Activity implements SensorEventListener {
     protected void startMeasurement() {
         mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
 
+        mSensorListener = new SensorEventListener() {
+            @Override
+            public void onAccuracyChanged(Sensor arg0, int arg1) {
+            }
+
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                Sensor sensor = event.sensor;
+                client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+                if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+                    if(event.values[0] == gyroCheck[0] &&
+                            event.values[1] == gyroCheck[1] &&
+                            event.values[2] == gyroCheck[2] &&
+                            gyroCount++ > 20){
+                        restartGyroscope();
+                    }
+                    else{
+                        gyroCount = 0;
+                        gyroCheck[0] = event.values[0];
+                        gyroCheck[1] = event.values[1];
+                        gyroCheck[2] = event.values[2];
+                    }
+                }
+            }
+        };
+
+        mSensorManager.registerListener(mSensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
+        /*mSensorManager.registerListener(mSensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(mSensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
+*/
+        /*
         Sensor accelerometerSensor = mSensorManager.getDefaultSensor(SENS_ACCELEROMETER);
         Sensor gravitySensor = mSensorManager.getDefaultSensor(SENS_GRAVITY);
         Sensor gyroscopeSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
@@ -67,6 +112,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
             } else {
                 Log.w(TAG, "No Accelerometer found");
             }
+
 
             if (gravitySensor != null) {
                 mSensorManager.registerListener(this, gravitySensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -92,12 +138,13 @@ public class SensorActivity extends Activity implements SensorEventListener {
                 Log.d(TAG, "No Rotation Vector Sensor found");
             }
 
-        }
+
+        }*/
     }
 
     private void stopMeasurement() {
         if (mSensorManager != null) {
-            mSensorManager.unregisterListener(this);
+            mSensorManager.unregisterListener(mSensorListener);
         }
     }
 
@@ -114,10 +161,12 @@ public class SensorActivity extends Activity implements SensorEventListener {
         if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
             if(event.values[0] == gyroCheck[0] &&
                     event.values[1] == gyroCheck[1] &&
-                    event.values[2] == gyroCheck[2]){
+                    event.values[2] == gyroCheck[2] &&
+                    gyroCount++ < 20){
                 restartGyroscope();
             }
             else{
+                gyroCount = 0;
                 gyroCheck[0] = event.values[0];
                 gyroCheck[1] = event.values[1];
                 gyroCheck[2] = event.values[2];
@@ -133,11 +182,11 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
     private void updateBiteDisplay(boolean bite){
         if(bite){
-            displayData.setText("Bite Detected");
+            displayData.setText(R.string.bite_detected);
             displayData.setBackgroundColor(getResources().getColor(R.color.green));
         }
         else{
-            displayData.setText("Take a Bite");
+            displayData.setText(R.string.take_bite);
             displayData.setBackgroundColor(getResources().getColor(R.color.white));
         }
     }
@@ -146,11 +195,12 @@ public class SensorActivity extends Activity implements SensorEventListener {
      * Restarts the gyroscope
      */
     private void restartGyroscope(){
+
         Log.i(TAG,"Restarting the Gyroscope");
         try {
             Sensor gyroscopeSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
-            mSensorManager.unregisterListener(this, gyroscopeSensor);
-            mSensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.unregisterListener(mSensorListener, gyroscopeSensor);
+            mSensorManager.registerListener(mSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_UI);
         }
         catch(Exception e){
             Log.e(TAG, "Error while restarting the Gyroscope - "+e.getMessage());
