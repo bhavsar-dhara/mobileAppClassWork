@@ -1,38 +1,22 @@
 package edu.neu.madcourse.dharabhavsar.wear;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
-import android.util.FloatMath;
 import android.util.Log;
-import android.util.SparseLongArray;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
 import com.opencsv.CSVWriter;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class DeviceClient {
     private static final String TAG = "DeviceClient";
@@ -230,9 +214,8 @@ public class DeviceClient {
             v.vibrate(500);
         }
     }
-
-
 }
+
 class Bite{
     private static int upAcc = 0;
     private static int upDec = 0;
