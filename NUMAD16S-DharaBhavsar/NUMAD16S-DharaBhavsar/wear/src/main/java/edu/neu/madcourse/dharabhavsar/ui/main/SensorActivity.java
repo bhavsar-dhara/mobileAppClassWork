@@ -1,4 +1,4 @@
-package edu.neu.madcourse.dharabhavsar.wear;
+package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class SensorActivity extends Activity {
 
     private static final String TAG = "SensorActivity";
+    public static final boolean D = BuildConfig.DEBUG; // This is automatically set when building
 
     private final static int SENS_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER;
     private final static int SENS_GYROSCOPE = Sensor.TYPE_GYROSCOPE;
@@ -57,7 +58,7 @@ public class SensorActivity extends Activity {
 
         mSensorManager = ((SensorManager) getSystemService(Context.SENSOR_SERVICE));
         //gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        linearAccelero = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        linearAccelero = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         client = DeviceClient.getInstance(this);
     }
@@ -66,15 +67,15 @@ public class SensorActivity extends Activity {
     public void onPause() {
         super.onPause();
         stopMeasurement();
-        client.writeToFile();
+//        client.writeToFile();
     }
 
     @Override
     public void onResume(){
         super.onResume();
         startMeasurement();
-        client.clearFile();
-        client.resetValues();
+//        client.clearFile();
+//        client.resetValues();
     }
 
     protected void startMeasurement() {
@@ -115,7 +116,7 @@ public class SensorActivity extends Activity {
         /*mSensorManager.registerListener(mSensorListener,
                 gyro, SensorManager.SENSOR_DELAY_UI);*/
         mSensorManager.registerListener(mSensorListener,
-                linearAccelero, SensorManager.SENSOR_DELAY_GAME);
+                linearAccelero, SensorManager.SENSOR_DELAY_UI);
         /*mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
 */
@@ -215,8 +216,8 @@ public class SensorActivity extends Activity {
         if(bite){
             displayData.setText(R.string.bite_detected);
             displayData.setBackgroundColor(getResources().getColor(R.color.green));
-            //restartGyroscope();
-            restartAccelerometer();
+//            restartGyroscope();
+//            restartAccelerometer();
         }
         else{
             displayData.setText(R.string.take_bite);
