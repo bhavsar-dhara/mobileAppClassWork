@@ -7,6 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.widget.TextView;
@@ -55,7 +56,7 @@ public class SensorActivity extends Activity {
         });
 
         mSensorManager = ((SensorManager) getSystemService(Context.SENSOR_SERVICE));
-        gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        //gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         linearAccelero = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         client = DeviceClient.getInstance(this);
@@ -73,6 +74,7 @@ public class SensorActivity extends Activity {
         super.onResume();
         startMeasurement();
         client.clearFile();
+        client.resetValues();
     }
 
     protected void startMeasurement() {
@@ -85,11 +87,14 @@ public class SensorActivity extends Activity {
             public void onSensorChanged(SensorEvent event) {
 
                 if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+                    if(true)
+                        return;
                     if(event.values[0] == gyroCheck[0] &&
                             event.values[1] == gyroCheck[1] &&
-                            event.values[2] == gyroCheck[2] &&
-                            gyroCount++ > 6){
-                        restartGyroscope();
+                            event.values[2] == gyroCheck[2]){
+                        gyroCount++;
+                        if(gyroCount > 3)
+                            restartGyroscope();
                     }
                     else{
                         gyroCount = 0;
@@ -107,8 +112,8 @@ public class SensorActivity extends Activity {
             }
         };
 
-        mSensorManager.registerListener(mSensorListener,
-                gyro, SensorManager.SENSOR_DELAY_UI);
+        /*mSensorManager.registerListener(mSensorListener,
+                gyro, SensorManager.SENSOR_DELAY_UI);*/
         mSensorManager.registerListener(mSensorListener,
                 linearAccelero, SensorManager.SENSOR_DELAY_GAME);
         /*mSensorManager.registerListener(mSensorListener,
@@ -161,6 +166,7 @@ public class SensorActivity extends Activity {
     private void stopMeasurement() {
         if (mSensorManager != null) {
             mSensorManager.unregisterListener(mSensorListener);
+            mSensorListener = null;
         }
     }
 /*
@@ -209,6 +215,8 @@ public class SensorActivity extends Activity {
         if(bite){
             displayData.setText(R.string.bite_detected);
             displayData.setBackgroundColor(getResources().getColor(R.color.green));
+            //restartGyroscope();
+            restartAccelerometer();
         }
         else{
             displayData.setText(R.string.take_bite);
@@ -224,11 +232,24 @@ public class SensorActivity extends Activity {
         Log.i(TAG,"Restarting the Gyroscope");
         try {
             mSensorManager.unregisterListener(mSensorListener, gyro);
-            mSensorManager.registerListener(mSensorListener, gyro, SensorManager.SENSOR_DELAY_UI);
+            waitFor();
+
         }
         catch(Exception e){
             Log.e(TAG, "Error while restarting the Gyroscope - "+e.getMessage());
         }
+    }
+
+    private void waitFor(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 0.5s = 500ms
+                if(mSensorListener != null)
+                    mSensorManager.registerListener(mSensorListener, gyro, SensorManager.SENSOR_DELAY_UI);
+            }
+        }, 500);
     }
 
     /**

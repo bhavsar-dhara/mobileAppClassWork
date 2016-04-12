@@ -30,7 +30,6 @@ public class DeviceClient {
     private List<String[]> listValues = new ArrayList<>();
     private boolean vibrating = false;
     private Vibrator v;
-    private SensorActivity sensorActivity = new SensorActivity();
 
     public static DeviceClient getInstance(Context context) {
         if (instance == null) {
@@ -73,7 +72,10 @@ public class DeviceClient {
                     Float.toString(values[2])});
         }
 
-        if(detectBite(sensorType, values)){
+        /*if(detectBite(sensorType, values)){
+            vibrate();
+        }*/
+        if(detectBite2(sensorType, values)){
             vibrate();
         }
 
@@ -145,6 +147,8 @@ public class DeviceClient {
     private int accelroCountUp = 0;
     private int accelroCountDown = 0;
     private float maxAccelroValue = 0;
+    private long maxAccelTime = 0;
+    private float lastAccelroUpValue =0;
 
     private long maxGyroUpTime = 0;
     private long maxGyroDownTime = 0;
@@ -155,51 +159,129 @@ public class DeviceClient {
     private int gyroCountDown = 0;
     private float maxGyroValue = 0;
 
-    private void detectBite2(int sensorType, float[] values){
+    public void resetValues(){
+        maxAccelroUpTime = 0;
+        maxAccelroDownTime = 0;
+        lastAccelroUpTime = 0;
+        lastAccelroDownTime = 0;
+        lastAccelroValue = 0;
+        accelroCountUp = 0;
+        accelroCountDown = 0;
+        maxAccelroValue = 0;
+
+        maxGyroUpTime = 0;
+        maxGyroDownTime = 0;
+        lastGyroUpTime = 0;
+        lastGyroDownTime = 0;
+        lastGyroValue = 0;
+        gyroCountUp = 0;
+        gyroCountDown = 0;
+        maxGyroValue = 0;
+    }
+
+    private List<Object> biteList = new ArrayList<>();
+
+    private boolean detectBite2(int sensorType, float[] values){
 
         long currTime = System.currentTimeMillis();
 
-        float valueCheck = values[0] * values[0] + values[1] * values[1] + values[2] * values[2];
+        //float valueCheck = values[0] * values[0] + values[1] * values[1] + values[2] * values[2];
+        float valueCheck = Math.abs(values[0]) + Math.abs(values[1]) + Math.abs(values[2]);
+
+        if(valueCheck < 1){
+            return false;
+        }
 
         if(sensorType == Sensor.TYPE_LINEAR_ACCELERATION){
+            /*if(true)
+                return false;*/
             if(valueCheck > lastAccelroValue){
+                if(lastAccelroUpTime == 0){
+                    lastAccelroUpTime = currTime;
+                }
+                if(lastAccelroUpValue == 0){
+                    lastAccelroUpValue = valueCheck;
+                }
                 if(maxAccelroUpTime < (currTime - lastAccelroUpTime)){
                     maxAccelroUpTime = currTime - lastAccelroUpTime;
                     accelroCountUp = 0;
                     maxAccelroValue = valueCheck;
+                    maxAccelTime = lastAccelroUpTime;
+                    maxAccelroDownTime = 0;
+                    Log.i(TAG, "Max accelroUp Value "+maxAccelroUpTime+" with max value as "+maxAccelroValue);
+                    if(maxAccelroUpTime > 150 && maxAccelroValue > 0.5) {
+                        biteList.clear();
+                        biteList.add(lastAccelroUpTime);
+                        biteList.add(lastAccelroUpValue);
+                    }
+
                 }
                 else{
                     accelroCountUp++;
+                    biteList.clear();
                 }
+                /*long x = biteList.isEmpty() ? currTime : (long)biteList.get(0);
+                if(1500 < currTime - x){
+                    biteList.clear();
+                }*/
                 lastAccelroDownTime = currTime;
             }
-            else{
+            else if(valueCheck < lastAccelroValue){
+
+                if(lastAccelroDownTime == 0){
+                    lastAccelroDownTime = currTime;
+                }
+                float y = biteList.isEmpty() ? -1f : (float)biteList.get(1);
+                if(y != -1 && y <= valueCheck){
+                    long x = biteList.isEmpty() ? -1 : (long) biteList.get(0);
+                    if (x != -1) {
+                        long diff = currTime - x;
+                        Log.i(TAG,  "Bite time is " + diff);
+                        if (diff < 1500 && diff > 300) {
+
+                            return true;
+                        }
+                    }
+                    resetValues();
+                }
+
+
+
+                /*
                 if(maxAccelroDownTime < (currTime - lastAccelroDownTime)){
                     maxAccelroDownTime = currTime - lastAccelroDownTime;
                     accelroCountDown = 0;
+
+
                 }
                 else{
                     accelroCountDown++;
                 }
-
+*/
                 lastAccelroUpTime = currTime;
+                lastAccelroUpValue = valueCheck;
             }
             lastAccelroValue = valueCheck;
-        }
-        if(accelroCountUp > 10){
-            Log.i(TAG, "Max accelroUp Value "+maxAccelroUpTime+" with max value as "+maxAccelroValue);
-        }
-        if(accelroCountDown > 10){
-            Log.i(TAG, "Max accelroDown Value "+maxAccelroDownTime);
+
         }
 
         //For Gyro
         if(sensorType == Sensor.TYPE_GYROSCOPE){
+
+            if(true)return false;
+            /*if(valueCheck > 3){
+                return true;
+            }*/
+
             if(valueCheck > lastGyroValue){
+                if(lastGyroUpTime == 0){
+                    lastGyroUpTime = currTime;
+                }
                 if(maxGyroUpTime < (currTime - lastGyroUpTime)){
                     maxGyroUpTime = currTime - lastGyroUpTime;
                     gyroCountUp = 0;
                     maxGyroValue = valueCheck;
+                    Log.i(TAG, "Max GyroUp Value "+maxGyroUpTime+" with max value as "+maxGyroValue);
                 }
                 else{
                     gyroCountUp++;
@@ -207,9 +289,13 @@ public class DeviceClient {
                 lastGyroDownTime = currTime;
             }
             else{
+                if(lastGyroDownTime == 0){
+                    lastGyroDownTime = currTime;
+                }
                 if(maxGyroDownTime < (currTime - lastGyroDownTime)){
                     maxGyroDownTime = currTime - lastGyroDownTime;
                     gyroCountDown = 0;
+                    Log.i(TAG, "Max GyroDown Value "+maxGyroDownTime);
                 }
                 else{
                     gyroCountDown++;
@@ -219,12 +305,7 @@ public class DeviceClient {
             }
             lastGyroValue = valueCheck;
         }
-        if(gyroCountUp > 10){
-            Log.i(TAG, "Max GyroUp Value "+maxGyroUpTime+" with max value as "+maxGyroValue);
-        }
-        if(gyroCountDown > 10){
-            Log.i(TAG, "Max GyroDown Value "+maxGyroDownTime);
-        }
+        return false;
 
     }
 
@@ -358,8 +439,6 @@ public class DeviceClient {
 
                 @Override
                 public void onFinish() {
-                    sensorActivity.restartGyroscope();
-                    sensorActivity.restartAccelerometer();
                     vibrating = false;
                 }
             }.start();
