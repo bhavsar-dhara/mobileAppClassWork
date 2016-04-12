@@ -30,6 +30,7 @@ public class DeviceClient {
     private List<String[]> listValues = new ArrayList<>();
     private boolean vibrating = false;
     private Vibrator v;
+    private SensorActivity sensorActivity = new SensorActivity();
 
     public static DeviceClient getInstance(Context context) {
         if (instance == null) {
@@ -264,6 +265,8 @@ public class DeviceClient {
 
                 @Override
                 public void onFinish() {
+                    sensorActivity.restartGyroscope();
+                    sensorActivity.restartAccelerometer();
                     vibrating = false;
                 }
             }.start();

@@ -1,6 +1,7 @@
 package edu.neu.madcourse.dharabhavsar.wear;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,10 +10,6 @@ import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.widget.TextView;
-
-import static android.util.FloatMath.cos;
-import static android.util.FloatMath.sin;
-import static android.util.FloatMath.sqrt;
 
 
 public class SensorActivity extends Activity {
@@ -24,6 +21,9 @@ public class SensorActivity extends Activity {
     private final static int SENS_GRAVITY = Sensor.TYPE_GRAVITY;
     private final static int SENS_LINEAR_ACCELERATION = Sensor.TYPE_LINEAR_ACCELERATION;
     private final static int SENS_ROTATION_VECTOR = Sensor.TYPE_ROTATION_VECTOR;
+
+    private Sensor gyro;
+    private Sensor linearAccelero;
 
     private SensorManager mSensorManager;
     private SensorEventListener mSensorListener;
@@ -54,6 +54,10 @@ public class SensorActivity extends Activity {
             }
         });
 
+        mSensorManager = ((SensorManager) getSystemService(Context.SENSOR_SERVICE));
+        gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        linearAccelero = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
         client = DeviceClient.getInstance(this);
     }
 
@@ -72,8 +76,6 @@ public class SensorActivity extends Activity {
     }
 
     protected void startMeasurement() {
-        mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
-
         mSensorListener = new SensorEventListener() {
             @Override
             public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -106,9 +108,9 @@ public class SensorActivity extends Activity {
         };
 
         mSensorManager.registerListener(mSensorListener,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
+                gyro, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(mSensorListener,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_GAME);
+                linearAccelero, SensorManager.SENSOR_DELAY_GAME);
         /*mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
 */
@@ -217,16 +219,30 @@ public class SensorActivity extends Activity {
     /**
      * Restarts the gyroscope
      */
-    private void restartGyroscope(){
+    public void restartGyroscope(){
 
         Log.i(TAG,"Restarting the Gyroscope");
         try {
-            Sensor gyroscopeSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
-            mSensorManager.unregisterListener(mSensorListener, gyroscopeSensor);
-            mSensorManager.registerListener(mSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_UI);
+            mSensorManager.unregisterListener(mSensorListener, gyro);
+            mSensorManager.registerListener(mSensorListener, gyro, SensorManager.SENSOR_DELAY_UI);
         }
         catch(Exception e){
             Log.e(TAG, "Error while restarting the Gyroscope - "+e.getMessage());
+        }
+    }
+
+    /**
+     * Restarts the Linear Accelerometer
+     */
+    public void restartAccelerometer(){
+
+        Log.i(TAG,"Restarting the Linear Accelerometer");
+        try {
+            mSensorManager.unregisterListener(mSensorListener, linearAccelero);
+            mSensorManager.registerListener(mSensorListener, linearAccelero, SensorManager.SENSOR_DELAY_GAME);
+        }
+        catch(Exception e){
+            Log.e(TAG, "Error while restarting the Linear Accelerometer - "+e.getMessage());
         }
     }
 }
