@@ -137,6 +137,99 @@ public class DeviceClient {
         return false;
     }
 
+    private long maxAccelroUpTime = 0;
+    private long maxAccelroDownTime = 0;
+    private long lastAccelroUpTime = 0;
+    private long lastAccelroDownTime = 0;
+    private float lastAccelroValue = 0;
+    private int accelroCountUp = 0;
+    private int accelroCountDown = 0;
+    private float maxAccelroValue = 0;
+
+    private long maxGyroUpTime = 0;
+    private long maxGyroDownTime = 0;
+    private long lastGyroUpTime = 0;
+    private long lastGyroDownTime = 0;
+    private float lastGyroValue = 0;
+    private int gyroCountUp = 0;
+    private int gyroCountDown = 0;
+    private float maxGyroValue = 0;
+
+    private void detectBite2(int sensorType, float[] values){
+
+        long currTime = System.currentTimeMillis();
+
+        float valueCheck = values[0] * values[0] + values[1] * values[1] + values[2] * values[2];
+
+        if(sensorType == Sensor.TYPE_LINEAR_ACCELERATION){
+            if(valueCheck > lastAccelroValue){
+                if(maxAccelroUpTime < (currTime - lastAccelroUpTime)){
+                    maxAccelroUpTime = currTime - lastAccelroUpTime;
+                    accelroCountUp = 0;
+                    maxAccelroValue = valueCheck;
+                }
+                else{
+                    accelroCountUp++;
+                }
+                lastAccelroDownTime = currTime;
+            }
+            else{
+                if(maxAccelroDownTime < (currTime - lastAccelroDownTime)){
+                    maxAccelroDownTime = currTime - lastAccelroDownTime;
+                    accelroCountDown = 0;
+                }
+                else{
+                    accelroCountDown++;
+                }
+
+                lastAccelroUpTime = currTime;
+            }
+            lastAccelroValue = valueCheck;
+        }
+        if(accelroCountUp > 10){
+            Log.i(TAG, "Max accelroUp Value "+maxAccelroUpTime+" with max value as "+maxAccelroValue);
+        }
+        if(accelroCountDown > 10){
+            Log.i(TAG, "Max accelroDown Value "+maxAccelroDownTime);
+        }
+
+        //For Gyro
+        if(sensorType == Sensor.TYPE_GYROSCOPE){
+            if(valueCheck > lastGyroValue){
+                if(maxGyroUpTime < (currTime - lastGyroUpTime)){
+                    maxGyroUpTime = currTime - lastGyroUpTime;
+                    gyroCountUp = 0;
+                    maxGyroValue = valueCheck;
+                }
+                else{
+                    gyroCountUp++;
+                }
+                lastGyroDownTime = currTime;
+            }
+            else{
+                if(maxGyroDownTime < (currTime - lastGyroDownTime)){
+                    maxGyroDownTime = currTime - lastGyroDownTime;
+                    gyroCountDown = 0;
+                }
+                else{
+                    gyroCountDown++;
+                }
+
+                lastGyroUpTime = currTime;
+            }
+            lastGyroValue = valueCheck;
+        }
+        if(gyroCountUp > 10){
+            Log.i(TAG, "Max GyroUp Value "+maxGyroUpTime+" with max value as "+maxGyroValue);
+        }
+        if(gyroCountDown > 10){
+            Log.i(TAG, "Max GyroDown Value "+maxGyroDownTime);
+        }
+
+    }
+
+
+
     /**
      * Clears the file create for logging data
      */
