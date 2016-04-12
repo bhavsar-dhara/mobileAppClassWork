@@ -10,8 +10,12 @@ import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.widget.TextView;
 
+import static android.util.FloatMath.cos;
+import static android.util.FloatMath.sin;
+import static android.util.FloatMath.sqrt;
 
-public class SensorActivity extends Activity implements SensorEventListener {
+
+public class SensorActivity extends Activity {
 
     private static final String TAG = "SensorActivity";
 
@@ -25,6 +29,11 @@ public class SensorActivity extends Activity implements SensorEventListener {
     private SensorEventListener mSensorListener;
     private TextView displayData;
     private boolean bite = false;
+
+    private static final float NS2S = 1.0f / 1000000000.0f;
+    private final static double EPSILON = 0.00001;
+    private final float[] deltaRotationVector = new float[4];
+    private float timestamp;
 
     private int gyroCount = 0;
 
@@ -72,13 +81,12 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                Sensor sensor = event.sensor;
-                client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+
                 if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
                     if(event.values[0] == gyroCheck[0] &&
                             event.values[1] == gyroCheck[1] &&
                             event.values[2] == gyroCheck[2] &&
-                            gyroCount++ > 20){
+                            gyroCount++ > 6){
                         restartGyroscope();
                     }
                     else{
@@ -87,15 +95,21 @@ public class SensorActivity extends Activity implements SensorEventListener {
                         gyroCheck[1] = event.values[1];
                         gyroCheck[2] = event.values[2];
                     }
+                    //calcGyroRotation(event);
+                }
+                boolean check = client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+                if(bite != check){
+                    updateBiteDisplay(check);
+                    bite = check;
                 }
             }
         };
 
         mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
-        /*mSensorManager.registerListener(mSensorListener,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(mSensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_GAME);
+        /*mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
 */
         /*
@@ -147,38 +161,47 @@ public class SensorActivity extends Activity implements SensorEventListener {
             mSensorManager.unregisterListener(mSensorListener);
         }
     }
+/*
+    public void calcGyroRotation(SensorEvent event) {
+        // This timestep's delta rotation to be multiplied by the current rotation
+        // after computing it from the gyro sample data.
+        if (timestamp != 0) {
+            final float dT = (event.timestamp - timestamp) * NS2S;
+            // Axis of the rotation sample, not normalized yet.
+            float axisX = event.values[0];
+            float axisY = event.values[1];
+            float axisZ = event.values[2];
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        boolean found = client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+            // Calculate the angular speed of the sample
+            float omegaMagnitude = sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ);
 
-        //Check if display needs to be changed
-        if(found != bite)
-            updateBiteDisplay(found);
-        bite = found;
-
-        //Check if gyro is giving same values
-        if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-            if(event.values[0] == gyroCheck[0] &&
-                    event.values[1] == gyroCheck[1] &&
-                    event.values[2] == gyroCheck[2] &&
-                    gyroCount++ < 20){
-                restartGyroscope();
+            // Normalize the rotation vector if it's big enough to get the axis
+            // (that is, EPSILON should represent your maximum allowable margin of error)
+            if (omegaMagnitude > EPSILON) {
+                axisX /= omegaMagnitude;
+                axisY /= omegaMagnitude;
+                axisZ /= omegaMagnitude;
             }
-            else{
-                gyroCount = 0;
-                gyroCheck[0] = event.values[0];
-                gyroCheck[1] = event.values[1];
-                gyroCheck[2] = event.values[2];
-            }
+
+            // Integrate around this axis with the angular speed by the timestep
+            // in order to get a delta rotation from this sample over the timestep
+            // We will convert this axis-angle representation of the delta rotation
+            // into a quaternion before turning it into the rotation matrix.
+            float thetaOverTwo = omegaMagnitude * dT / 2.0f;
+            float sinThetaOverTwo = sin(thetaOverTwo);
+            float cosThetaOverTwo = cos(thetaOverTwo);
+            deltaRotationVector[0] = sinThetaOverTwo * axisX;
+            deltaRotationVector[1] = sinThetaOverTwo * axisY;
+            deltaRotationVector[2] = sinThetaOverTwo * axisZ;
+            deltaRotationVector[3] = cosThetaOverTwo;
         }
-    }
-
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+        timestamp = event.timestamp;
+        float[] deltaRotationMatrix = new float[9];
+        SensorManager.getRotationMatrixFromVector(deltaRotationMatrix, deltaRotationVector);
+        // User code should concatenate the delta rotation we computed with the current rotation
+        // in order to get the updated rotation.
+        // rotationCurrent = rotationCurrent * deltaRotationMatrix;
+    }*/
 
     private void updateBiteDisplay(boolean bite){
         if(bite){

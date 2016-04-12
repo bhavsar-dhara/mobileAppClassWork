@@ -72,10 +72,68 @@ public class DeviceClient {
                     Float.toString(values[2])});
         }
 
+        if(detectBite(sensorType, values)){
+            vibrate();
+        }
+
         if(sensorType == Sensor.TYPE_ACCELEROMETER){
             detectStuff(sensorType, values[0], values[1], values[2]);
         }
         return vibrating;
+    }
+
+    List<Long> accel = new ArrayList<>();
+    LinkedList<Long> gyro = new LinkedList<>();
+
+    private boolean detectBite(int sensorType, float[] values){
+
+        int aCount = 0;
+        long currTime = System.currentTimeMillis();
+
+        float absSum = Math.abs(values[0]) + Math.abs(values[1]) + Math.abs(values[2]);
+
+        if(sensorType == Sensor.TYPE_LINEAR_ACCELERATION){
+            if(absSum > 1){
+                accel.add(currTime);
+                Log.i(TAG,"Accelero crossed 1 "+currTime);
+            }
+            else{
+                aCount = accel.size();
+
+                if(aCount < 6 && aCount != 0 && gyro.size() != 0){
+
+                    long sum = 0;
+                    for(Long value : accel){
+                        sum += value;
+                    }
+                    long aAvg = sum/accel.size();
+                    sum = 0;
+                    for(Long value : gyro){
+                        sum += value;
+                    }
+                    long gAvg = sum/gyro.size();
+                    Log.i(TAG, "And the average is "+Math.abs(aAvg - gAvg));
+                    if(Math.abs(aAvg - gAvg) < 100){
+                        return true;
+                    }
+                }
+                accel.clear();
+            }
+        }
+        else{
+
+            if(absSum > 5){
+                Log.i(TAG,"Gyro crossed 1 "+currTime+" "+values[0]+" "+values[1]+" "+values[2]);
+                gyro.offer(currTime);
+            }
+            else{
+                while(currTime - (gyro.peek() != null ? gyro.peek() : currTime) > 100){
+                    if(!gyro.isEmpty())
+                        gyro.poll();
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -88,7 +146,7 @@ public class DeviceClient {
                 try{
                     CSVWriter writer;
                     writer = new CSVWriter(new FileWriter(filePath , false), '\t');
-                    writer.writeNext(new String[]{"Date","Sensor1","x","y","z"});
+                    writer.writeNext(new String[]{"Date","Sensor2","x","y","z"});
                     writer.close();
                 }
                 catch (IOException e){
