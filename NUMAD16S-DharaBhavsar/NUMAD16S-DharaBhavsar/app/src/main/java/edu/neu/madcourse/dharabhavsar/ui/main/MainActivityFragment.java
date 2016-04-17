@@ -14,6 +14,7 @@ import edu.neu.madcourse.dharabhavsar.ui.about.MainActivityAbout;
 import edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle2;
 import edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle3;
 import edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict;
+import edu.neu.madcourse.dharabhavsar.ui.project.WearableLaunchActivity;
 import edu.neu.madcourse.dharabhavsar.ui.scraggle.MainActivityScraggle;
 import edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivityUt3;
 
@@ -172,6 +173,11 @@ public class MainActivityFragment extends Fragment {
                         R.raw.short_ping_freesound_org);
                 mMediaPlayer.setVolume(0.5f, 0.5f);
                 mMediaPlayer.start();
+
+                Intent intent = new Intent(getActivity(), WearableLaunchActivity.class);
+                intent.putExtra("finalProject", false);
+                startActivity(intent);
+
 
 //                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle3.class);
 //                startActivity(intent);

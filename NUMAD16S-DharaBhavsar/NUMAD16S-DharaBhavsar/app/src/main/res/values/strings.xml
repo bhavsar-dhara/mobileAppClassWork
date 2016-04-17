@@ -211,4 +211,23 @@ Help from: Dharam and Deryl\n\
     <string name="test_gcm_title">Send push notification to ...</string>
     <string name="test_gcm_label">Test GCM</string>
 
+    <string name="wearable_not_connected">No Android Wear Connected</string>
+    <string name="trickiest_part_label">Trickiest Part</string>
+    <string name="final_project_label">Final Project</string>
+    <string name="trickiest_part_description">When bite is detected, the wear will vibrate</string>
+    <string name="final_project_description">The goal of our app is to serve the purpose of training
+        you, the user, to reduce your speed of eating food
+gradually which would ultimately aid in reducing your weight.\n\n\
+This app is based on the scientifically proven fact that it takes 20 minutes for our brain to realize that we have had enough
+food to eat. So when we are hungry and we eat fast then we tend to eat more food in these 20 minutes rather than the
+amount of food that would be required to satisfy our hunger. So this Android Wear App would buzz and notify you as soon
+as it senses that there has been an increase in the eating speed; hence reminding you instead to enjoy your meal while
+The app will detect the wrist-hand motion while you are eating. If this motion occurs before the timer runs out then the
+app will notify you about increase in your eating speed.\n\n\
+The app looks at your current eating speed for the first two meals and automatically suggests a slower speed. The app
+also allows you to modify (increase/decrease) the suggested time taken for the meal. This is usually not recommended
+but you could opt for it.\n\n\
+P.S. “Make sure to wear your Android Wear on your eating hand.”</string>
+
+
 </resources>

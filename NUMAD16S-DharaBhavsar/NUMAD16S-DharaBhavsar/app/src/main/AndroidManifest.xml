@@ -20,6 +20,20 @@
         </activity>
 
         <activity
+            android:name="edu.neu.madcourse.dharabhavsar.ui.project.WearableLaunchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.CustomActionBar">
+            <intent-filter>
+                <action android:name="edu.neu.madcourse.dharabhavsar.ui.project.WEARABLELAUNCHACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.communication2player.MainActivityScraggle3"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/wordgame_label"

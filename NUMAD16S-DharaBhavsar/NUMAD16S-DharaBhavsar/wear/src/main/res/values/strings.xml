@@ -1,5 +1,12 @@
 <resources>
-    <string name="app_name">Eat Slower Trainer</string>
+    <string name="app_name">MAD16S-Eat Slower Trainer</string>
     <string name="take_bite">Take a Bite</string>
     <string name="bite_detected">Bite Detected</string>
+    <string name="setup">Setup</string>
+    <string name="trainer">Trainer</string>
+    <string name="hand_notifier">Ensure Android Wear is on your dominant hand</string>
+    <string name="train_notifier">Your first 2 meals would be used to know your normal eating speed
+    </string>
+    <string name="start_meal">Start Meal</string>
+    <string name="finish_meal">Finish Meal</string>
 </resources>
