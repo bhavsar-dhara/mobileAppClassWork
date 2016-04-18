@@ -10,6 +10,7 @@
     <string name="communication_label"> Communication </string>
     <string name="wordgame2_label"> Two Player Word Game </string>
     <string name="trickiestpart_label"> Trickiest Part </string>
+    <string name="finalproject_label"> Final Project </string>
 
     <string name="ut3_app_name">UT3</string>
     <string name="long_app_name">Ultimate Tic Tac Toe</string>

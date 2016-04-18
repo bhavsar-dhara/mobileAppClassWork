@@ -177,10 +177,22 @@ public class MainActivityFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), WearableLaunchActivity.class);
                 intent.putExtra("finalProject", false);
                 startActivity(intent);
+            }
+        });
 
+        Button btn10 = (Button) rootView.findViewById(R.id.finalproject_button);
+        btn10.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-//                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle3.class);
-//                startActivity(intent);
+                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
+                        R.raw.short_ping_freesound_org);
+                mMediaPlayer.setVolume(0.5f, 0.5f);
+                mMediaPlayer.start();
+
+                Intent intent = new Intent(getActivity(), WearableLaunchActivity.class);
+                intent.putExtra("finalProject", true);
+                startActivity(intent);
             }
         });
 
