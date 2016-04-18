@@ -3,53 +3,84 @@ package edu.neu.madcourse.dharabhavsar.ui.main;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.wearable.view.CircularButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Anirudh on 4/16/2016.
  */
-public class ButtonFragment extends Fragment {
+public class ButtonFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener{
 
-    private CircularButton mealButton;
+    private ImageButton mealButton;
     private TextView mealButtonText;
     private boolean mealStarted = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_button, container, false);
+        //View view =  inflater.inflate(R.layout.fragment_button, container, false);
+        View view =  inflater.inflate(R.layout.fragment_meal_button, container, false);
 
-        mealButton = (CircularButton)view.findViewById(R.id.fragment_button);
-        mealButtonText = (TextView)view.findViewById(R.id.fragment_button_text);
+        mealButton = (ImageButton)view.findViewById(R.id.meal_button);
+        mealButtonText = (TextView)view.findViewById(R.id.meal_text);
 
         mealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSharedPreferences("mealPrefs", Context.MODE_PRIVATE).edit().putBoolean("mealStarted", !mealStarted).apply();
-                Intent intent = new Intent(getActivity(), SensorActivity.class);
-                startActivity(intent);
+                mealStarted = !mealStarted;
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                editor.putBoolean(getString(R.string.meal_started),mealStarted).apply();
+                updateDisplay();
             }
         });
 
         return view;
     }
 
+    @Override
     public void onResume(){
         super.onResume();
-        mealStarted = getActivity().getSharedPreferences("mealPrefs", Context.MODE_PRIVATE).getBoolean("mealStarted", false);
+        mealStarted = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getBoolean(getString(R.string.meal_started), false);
+        updateDisplay();
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    private void updateDisplay(){
         if(mealStarted){
-            mealButtonText.setText(R.string.finish_meal);
-            mealButton.setImageResource(R.drawable.ic_stop_white_24dp);
+            mealButtonText.setText(R.string.eating_speed_text);
+            mealButton.setBackground(getResources().getDrawable(R.drawable.finish_meal));
         }
         else{
-            mealButtonText.setText(R.string.start_meal);
-            mealButton.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+            mealButtonText.setText(R.string.hand_notifier);
+            mealButton.setBackground(getResources().getDrawable(R.drawable.begin_meal));
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equalsIgnoreCase("biteTime")) {
+            long diff = Math.round(PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong(key, 0)/1000);
+            Log.i("fjalkejfle", "the difference is "+diff);
+            String t = String.valueOf(diff);
+            mealButtonText.setText("Last bite duration "+t);
         }
     }
 }

@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:id="@+id/project_root"
     android:background="@color/gray_color"
-    android:weightSum="2"
     tools:context="edu.neu.madcourse.dharabhavsar.ui.project.WearableLaunchActivity">
 
     <android.support.v7.widget.Toolbar
@@ -18,9 +17,18 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="center_horizontal"
+        android:isScrollContainer="true"
+        android:text="Eat Slower Trainer"/>
+
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:layout_margin="10dp"
         android:background="@drawable/shape"
         android:layout_weight="1"

@@ -8,18 +8,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
+import android.util.Log;
 import android.widget.TextView;
 
 
 public class SensorActivity extends Activity {
 
     private static final String TAG = "SensorActivity";
-
-    private final static int SENS_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER;
-    private final static int SENS_GYROSCOPE = Sensor.TYPE_GYROSCOPE;
-    private final static int SENS_GRAVITY = Sensor.TYPE_GRAVITY;
-    private final static int SENS_LINEAR_ACCELERATION = Sensor.TYPE_LINEAR_ACCELERATION;
-    private final static int SENS_ROTATION_VECTOR = Sensor.TYPE_ROTATION_VECTOR;
 
     private Sensor gyro;
     private Sensor linearAccelero;
@@ -28,11 +23,6 @@ public class SensorActivity extends Activity {
     private SensorEventListener mSensorListener;
     private TextView displayData;
     private boolean bite = false;
-
-    private static final float NS2S = 1.0f / 1000000000.0f;
-    private final static double EPSILON = 0.00001;
-    private final float[] deltaRotationVector = new float[4];
-    private float timestamp;
 
     private int gyroCount = 0;
 
@@ -54,7 +44,7 @@ public class SensorActivity extends Activity {
         });
 
         mSensorManager = ((SensorManager) getSystemService(Context.SENSOR_SERVICE));
-        //gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         linearAccelero = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         client = DeviceClient.getInstance(this);
@@ -82,15 +72,15 @@ public class SensorActivity extends Activity {
             public void onSensorChanged(SensorEvent event) {
 
                 if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-                    if(true)
-                        return;
                     if(event.values[0] == gyroCheck[0] &&
                             event.values[1] == gyroCheck[1] &&
                             event.values[2] == gyroCheck[2]){
                         gyroCount++;
-                        //if(gyroCount > 3)
-                            //restartGyroscope();
-                        //add code to stop gyroscope
+                        if(gyroCount > 20 && mSensorManager != null) {
+                            mSensorManager.unregisterListener(mSensorListener, gyro);
+                            Log.e(TAG, "Unregistering Gyroscope");
+                        }
+                        return;
                     }
                     else{
                         gyroCount = 0;
@@ -107,8 +97,8 @@ public class SensorActivity extends Activity {
             }
         };
 
-        /*mSensorManager.registerListener(mSensorListener,
-                gyro, SensorManager.SENSOR_DELAY_UI);*/
+        mSensorManager.registerListener(mSensorListener,
+                gyro, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(mSensorListener,
                 linearAccelero, SensorManager.SENSOR_DELAY_UI);
     }

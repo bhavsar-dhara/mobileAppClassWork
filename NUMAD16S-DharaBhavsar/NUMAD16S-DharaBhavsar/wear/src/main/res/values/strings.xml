@@ -7,6 +7,8 @@
     <string name="hand_notifier">Ensure Android Wear is on your dominant hand</string>
     <string name="train_notifier">Your first 2 meals would be used to know your normal eating speed
     </string>
+    <string name="eating_speed_text">Detecting eating speed</string>
     <string name="start_meal">Start Meal</string>
     <string name="finish_meal">Finish Meal</string>
+    <string name="meal_started">mealStarted</string>
 </resources>

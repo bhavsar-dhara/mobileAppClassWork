@@ -1,6 +1,7 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.content.Context;
+import android.hardware.Sensor;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
@@ -46,39 +47,8 @@ public class DeviceClient {
         if(vibrating) {
             return vibrating;
         }
-        /*long t = System.currentTimeMillis();
 
-        long lastTimestamp = lastSensorData.get(sensorType) == null ? 0 : lastSensorData.get(sensorType);
-        long timeAgo = t - lastTimestamp;
-
-        if (lastTimestamp != 0) {
-            if (filterId == sensorType && timeAgo < 100) {
-                return vibrating;
-            }
-
-            if (filterId != sensorType && timeAgo < 3000) {
-                return vibrating;
-            }
-        }
-
-        lastSensorData.put(sensorType, t);*/
-
-
-        /*if(sensorType == Sensor.TYPE_LINEAR_ACCELERATION ||
-                sensorType == Sensor.TYPE_GYROSCOPE ||
-                sensorType == Sensor.TYPE_GAME_ROTATION_VECTOR ||
-                sensorType == Sensor.TYPE_ACCELEROMETER) {
-            listValues.add(new String[]{Long.toString(timestamp),
-                    String.valueOf(sensorType),
-                    Float.toString(values[0]),
-                    Float.toString(values[1]),
-                    Float.toString(values[2])});
-        }*/
-
-        /*if(detectBite(sensorType, values)){
-            vibrate();
-        }*/
-        if(detectBite2(values)){
+        if(detectBite2(sensorType, values)){
             vibrate();
         }
 
@@ -86,14 +56,15 @@ public class DeviceClient {
     }
 
     private LinkedList<Float> yValues = new LinkedList<>();
-    private boolean handRaised = false;
+    private boolean handTurned = false;
 
 
     private boolean handReversed = false;
+    private float zValue;
 
     private void checkIfWatchInversed(float[] values){
         float z = values[2];
-        if(z < 0 && !handReversed){
+        if(z < -2 && zValue < -2 && !handReversed){
             handReversed = true;
             Log.i(TAG, "Hand Reversed");
             new AsyncTask<Void, Void, Void>(){
@@ -111,40 +82,69 @@ public class DeviceClient {
 
             }.execute();
         }
+        zValue = z;
     }
 
-    private boolean detectBite2(float[] values) {
+    private float xGyro;
+    private boolean handRaised;
+    private boolean handLowered;
 
-        checkIfWatchInversed(values);
+    private boolean detectBite2(int sensorType, float[] values) {
 
-        if(handReversed){
-            handRaised = false;
-        }
+        //Log.e(TAG, "handTurned = " + handTurned + sensorType);
+        if(sensorType == Sensor.TYPE_ACCELEROMETER){
+            checkIfWatchInversed(values);
 
-        float y = values[1];
-        yValues.offer(y);
-        if(yValues.size() > 3) {
-            yValues.poll();
-
-            float yAvg = 0;
-            float ySum = 0;
-
-            for(Float yValue : yValues){
-                ySum += yValue;
-            }
-
-            yAvg = ySum/3;
-
-            Log.e(TAG, "yAvg = " + yAvg);
-
-            if(yAvg < -5) {
-                handRaised = true;
-            } else if (yAvg > -2 && handRaised && !handReversed) {
+            if(handReversed){
+                handTurned = false;
                 handRaised = false;
-                Log.i(TAG, "HBite Detected");
-                return true;
+                handLowered = false;
+            }
+
+            float y = values[1];
+            yValues.offer(y);
+            if(yValues.size() > 3) {
+                yValues.poll();
+
+                float yAvg = 0;
+                float ySum = 0;
+
+                for(Float yValue : yValues){
+                    ySum += yValue;
+                }
+
+                yAvg = ySum/3;
+
+                //Log.e(TAG, "yAvg = " + yAvg);
+
+                if(yAvg < -5) {
+                    handTurned = true;
+                } else if (yAvg > -2 && handTurned && handRaised && !handReversed && handLowered) {
+                    handTurned = false;
+                    handRaised = false;
+                    Log.i(TAG, System.currentTimeMillis()+" HBite Detected");
+                    return true;
+                }
             }
         }
+        else{
+            if(handTurned) {
+                if(values[0] > 1 || values[0] < -1)
+                    Log.i(TAG, "Gyro Values " + System.currentTimeMillis() + " " + values[0]+"----------------------------------");
+                else
+                    Log.i(TAG, "Gyro Values " + System.currentTimeMillis() + " " + values[0] + " " + values[1] + " " + values[2]);
+            }
+
+            if(xGyro < -1 && values[0] < -1){
+                handRaised = true;
+            }
+            else if(xGyro > 1 && values[0] > 0.5 && handRaised){
+                handLowered = true;
+            }
+
+            xGyro = values[0];
+        }
+
 
         return false;
     }
