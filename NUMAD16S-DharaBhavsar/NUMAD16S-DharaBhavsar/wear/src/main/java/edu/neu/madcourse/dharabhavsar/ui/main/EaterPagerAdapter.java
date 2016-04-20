@@ -20,15 +20,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
-import android.support.v4.util.LruCache;
 import android.support.wearable.view.CardFragment;
 import android.support.wearable.view.FragmentGridPagerAdapter;
-import android.support.wearable.view.GridPagerAdapter;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -58,6 +53,14 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
                 cardFragment(R.string.setup, R.string.hand_notifier),
                 cardFragment(R.string.trainer, R.string.train_notifier),
                 new ButtonFragment()));
+
+        mRows.add(new Row(
+                cardFragment(R.string.welcome, R.string.welcome_text),
+                cardFragment(R.string.what, R.string.what_text),
+                cardFragment(R.string.how, R.string.how_text),
+                cardFragment(R.string.how2, R.string.how2_text),
+                cardFragment(R.string.how3, R.string.how3_text)
+        ));
     }
 
 

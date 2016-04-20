@@ -11,4 +11,14 @@
     <string name="start_meal">Start Meal</string>
     <string name="finish_meal">Finish Meal</string>
     <string name="meal_started">mealStarted</string>
+    <string name="welcome">Welcome... </string>
+    <string name="welcome_text"> ...to our world of mindful eating</string>
+    <string name="what">What?</string>
+    <string name="what_text">We are going to help you slower your pace of eating</string>
+    <string name="how">How?</string>
+    <string name="how_text">Please don\'t forget to place your wear on your dominant hand</string>
+    <string name="how2">How how?</string>
+    <string name="how2_text">Sit back &amp; start your meal</string>
+    <string name="how3">How how how?</string>
+    <string name="how3_text">Leave the rest to us</string>
 </resources>
