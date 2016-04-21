@@ -1,26 +1,20 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.wearable.view.CircularButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Anirudh on 4/16/2016.
  */
-public class ButtonFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class ButtonFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ImageButton mealButton;
     private TextView mealButtonText;
@@ -78,9 +72,9 @@ public class ButtonFragment extends Fragment implements SharedPreferences.OnShar
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equalsIgnoreCase("biteTime")) {
             long diff = Math.round(PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong(key, 0)/1000);
-            Log.i("fjalkejfle", "the difference is "+diff);
+            Log.i("Bite Time", "the difference is = "+diff);
             String t = String.valueOf(diff);
-            mealButtonText.setText("Last bite duration "+t);
+            mealButtonText.setText("Last bite duration is " + t + " ms");
         }
     }
 }

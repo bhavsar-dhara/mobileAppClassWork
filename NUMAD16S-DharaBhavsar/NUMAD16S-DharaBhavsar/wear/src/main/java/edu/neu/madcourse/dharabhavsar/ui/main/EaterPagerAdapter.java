@@ -49,17 +49,17 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
 
         mRows = new ArrayList<>();
 
-        mRows.add(new Row(
+        /*mRows.add(new Row(
                 cardFragment(R.string.setup, R.string.hand_notifier),
                 cardFragment(R.string.trainer, R.string.train_notifier),
-                new ButtonFragment()));
+                new ButtonFragment()));*/
 
         mRows.add(new Row(
                 cardFragment(R.string.welcome, R.string.welcome_text),
                 cardFragment(R.string.what, R.string.what_text),
                 cardFragment(R.string.how, R.string.how_text),
                 cardFragment(R.string.how2, R.string.how2_text),
-                cardFragment(R.string.how3, R.string.how3_text)
+                new ButtonFragment()
         ));
     }
 
@@ -69,8 +69,9 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
         CardFragment fragment =
                 CardFragment.create(res.getText(titleRes), res.getText(textRes));
         // Add some extra bottom margin to leave room for the page indicator
-        fragment.setCardMarginBottom(
-                res.getDimensionPixelSize(R.dimen.card_margin_bottom));
+        fragment.setCardMarginBottom(res.getDimensionPixelSize(R.dimen.card_margin_bottom));
+        fragment.setCardMarginLeft(res.getDimensionPixelSize(R.dimen.card_margin_sides));
+        fragment.setCardMarginRight(res.getDimensionPixelSize(R.dimen.card_margin_sides));
         return fragment;
     }
 

@@ -25,7 +25,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridViewPager;
@@ -33,7 +32,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnApplyWindowInsetsListener;
 import android.view.WindowInsets;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,7 +178,7 @@ public class MainActivity extends Activity implements SharedPreferences.OnShared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(getString(R.string.meal_started))){
-            Log.i(TAG, "Preferecnes Changed. Value is  "+key);
+            Log.i(TAG, "Preferecnes Changed. Value is " + key);
             boolean mealStarted = sharedPreferences.getBoolean(key, false);
             if(mealStarted){
                 startMeasurement();
