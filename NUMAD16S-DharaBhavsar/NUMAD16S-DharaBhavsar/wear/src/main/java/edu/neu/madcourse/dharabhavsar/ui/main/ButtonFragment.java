@@ -3,7 +3,6 @@ package edu.neu.madcourse.dharabhavsar.ui.main;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,11 +23,6 @@ public class ButtonFragment extends Fragment
     private TextView mealButtonText;
     private TextView timerText;
     private boolean mealStarted = false;
-
-    private DeviceClient client;
-
-    public long savedRemainingInterval = 0;
-    private MyCount counter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,8 +45,6 @@ public class ButtonFragment extends Fragment
             }
         });
 
-        client = DeviceClient.getInstance(this.getActivity());
-
         return view;
     }
 
@@ -64,8 +56,7 @@ public class ButtonFragment extends Fragment
         updateDisplay();
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .registerOnSharedPreferenceChangeListener(this);
-        if(counter != null)
-            counter.start();
+
     }
 
     @Override
@@ -73,17 +64,23 @@ public class ButtonFragment extends Fragment
         super.onPause();
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .unregisterOnSharedPreferenceChangeListener(this);
-        if(counter != null)
-            counter.cancel();
+
     }
 
     private void updateDisplay(){
         if(mealStarted){
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                    .putString(Constants.mealText,
+                            getString(R.string.eating_speed_text)).apply();
             mealButtonText.setText(R.string.eating_speed_text);
             mealButton.setBackground(getResources().getDrawable(R.drawable.finish_meal));
         }
         else{
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                    .putString(Constants.mealText,
+                            getString(R.string.hand_notifier)).apply();
             mealButtonText.setText(R.string.hand_notifier);
+            timerText.setText("");
             mealButton.setBackground(getResources().getDrawable(R.drawable.begin_meal));
         }
     }
@@ -97,63 +94,15 @@ public class ButtonFragment extends Fragment
             String t = String.valueOf(diff);
             mealButtonText.setText("Last bite duration is " + t + " ms");
         }
-        if(key.equalsIgnoreCase(Constants.nextBiteAllowed)) {
-            long biteCount = PreferenceManager.getDefaultSharedPreferences(getActivity())
-                    .getInt(Constants.biteCount, 0);
-            Log.e(TAG, "biteCount = " + biteCount);
-            if(biteCount > 4) {
-                final boolean isAllowed = PreferenceManager.getDefaultSharedPreferences(getActivity())
-                        .getBoolean(key, true);
-                if (!isAllowed) {
-                    final long interval = Math.round(PreferenceManager.getDefaultSharedPreferences(getActivity())
-                            .getLong(Constants.biteInterval, 0) / 1000);
-//                    client.counter = new DeviceClient.MyCount(interval, 1000);
-                    /*new CountDownTimer(interval, 1000) {
-
-                        @Override
-                        public void onTick(long l) {
-                            int secs = (int) (interval / 1000);
-                            int seconds = secs % 60;
-                            int minutes = secs / 60;
-                            String stringTime = String.format("%02d:%02d", minutes, seconds);
-                            Log.e(TAG, "stringTime = " + stringTime);
-                            timerText.setText("Next bite in " + stringTime + " seconds");
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            SharedPreferences.Editor editor = PreferenceManager
-                                    .getDefaultSharedPreferences(getActivity()).edit();
-                            editor.putBoolean(Constants.nextBiteAllowed, true).apply();
-                        }
-                    }.start();*/
-                    counter = new MyCount(interval, 1000);
-                }
-            }
+        if(key.equalsIgnoreCase(Constants.timerText)) {
+            timerText.setText(PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getString(Constants.timerText, "Timer Text"));
         }
-    }
-
-    public class MyCount extends CountDownTimer {
-        public MyCount(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        @Override
-        public void onFinish() {
-            SharedPreferences.Editor editor = PreferenceManager
-                    .getDefaultSharedPreferences(getActivity()).edit();
-            editor.putBoolean(Constants.nextBiteAllowed, true).apply();
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            int secs = (int) (millisUntilFinished);
-            int seconds = secs % 60;
-            int minutes = secs / 60;
-            String stringTime = String.format("%02d:%02d", minutes, seconds);
-            Log.e(TAG, "stringTime = " + stringTime);
-            timerText.setText("Next bite in " + stringTime + " seconds");
-            savedRemainingInterval = millisUntilFinished;
+        if(key.equalsIgnoreCase(Constants.mealText)) {
+            Log.i("BiteTime", "txt = "+ PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getString(Constants.mealText, "Meal Text"));
+            mealButtonText.setText(PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getString(Constants.mealText, "Meal Text"));
         }
     }
 }

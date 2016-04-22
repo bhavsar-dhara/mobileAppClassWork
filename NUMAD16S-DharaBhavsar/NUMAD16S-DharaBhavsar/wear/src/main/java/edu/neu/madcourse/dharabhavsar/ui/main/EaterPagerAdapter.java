@@ -54,13 +54,17 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
                 cardFragment(R.string.trainer, R.string.train_notifier),
                 new ButtonFragment()));*/
 
-        mRows.add(new Row(
+        /*mRows.add(new Row(
                 cardFragment(R.string.welcome, R.string.welcome_text),
                 cardFragment(R.string.what, R.string.what_text),
                 cardFragment(R.string.how, R.string.how_text),
                 cardFragment(R.string.how2, R.string.how2_text),
                 new ButtonFragment(),
                 new SettingsFragment()
+        ));*/
+
+        mRows.add(new Row(
+                new ButtonFragment()
         ));
     }
 

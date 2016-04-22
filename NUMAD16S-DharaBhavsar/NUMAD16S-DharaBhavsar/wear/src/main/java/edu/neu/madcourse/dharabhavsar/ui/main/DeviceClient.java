@@ -1,7 +1,6 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
@@ -63,23 +62,27 @@ public class DeviceClient {
     public boolean sendSensorData2(final int sensorType, final int accuracy,
                                   final long timestamp, final float[] values) {
 
-        if(detectBite2(sensorType, values) && nextBiteAllowed){
+        if(vibrating) {
+            return vibrating;
+        }
+
+        if(detectBite2(sensorType, values)) {
             Log.e(TAG, "BITE DETECTED --> VIBRATE SKIPPED");
-            int biteCount = PreferenceManager.getDefaultSharedPreferences(context)
-                    .getInt(Constants.biteCount, 0);
-            if(biteCount > 5) {
-                nextBiteAllowed = false;
-                SharedPreferences sp = PreferenceManager
-                        .getDefaultSharedPreferences(context);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean(Constants.nextBiteAllowed, nextBiteAllowed).apply();
+            PreferenceManager.getDefaultSharedPreferences(context)
+                    .edit().putBoolean(Constants.biteDetected, true).apply();
+            nextBiteAllowed = PreferenceManager.getDefaultSharedPreferences(context)
+                    .getBoolean(Constants.nextBiteAllowed, true);
+            Log.e(TAG, "nextBiteAllowed = " + nextBiteAllowed);
+            if(!nextBiteAllowed){
+                vibrate();
+                PreferenceManager.getDefaultSharedPreferences(context).edit()
+                        .putString(Constants.mealText,
+                        "Your eating speed has increased").apply();
+                Log.e(TAG, "mealText = " + PreferenceManager.getDefaultSharedPreferences(context)
+                        .getString(Constants.mealText, "xx"));
             }
             return true;
         }
-        /*if(!nextBiteAllowed) {
-
-        }*/
-//        nextBiteAllowed = false;
         return false;
     }
 
@@ -157,12 +160,12 @@ public class DeviceClient {
         }
         else{
             if(handTurned) {
-                if(values[0] > 1 || values[0] < -1)
+               /* if(values[0] > 1 || values[0] < -1)
                     Log.i(TAG, "Gyro Values " + System.currentTimeMillis()
                             + " " + values[0]+"----------------------------------");
                 else
                     Log.i(TAG, "Gyro Values " + System.currentTimeMillis()
-                            + " " + values[0] + " " + values[1] + " " + values[2]);
+                            + " " + values[0] + " " + values[1] + " " + values[2]);*/
             }
 
             if(xGyro < -1 && values[0] < -1){

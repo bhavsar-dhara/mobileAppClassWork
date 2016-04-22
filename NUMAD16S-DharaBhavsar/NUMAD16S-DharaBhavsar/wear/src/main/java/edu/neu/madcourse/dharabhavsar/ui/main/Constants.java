@@ -12,5 +12,8 @@ public class Constants {
     public static final String mealStarted = "mealStarted";
     public static final String biteCount = "biteCount";
     public static final String nextBiteAllowed = "nextBiteAllowed";
+    public static final String biteDetected = "biteDetected";
+    public static final String timerText = "timerText";
+    public static final String mealText = "mealText";
 
 }
