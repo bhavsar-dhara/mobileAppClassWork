@@ -36,7 +36,8 @@ import android.view.WindowInsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class MainActivity extends Activity
+        implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private static final String TAG = "MainActivity";
 
@@ -83,6 +84,7 @@ public class MainActivity extends Activity implements SharedPreferences.OnShared
             }
         });
         pager.setAdapter(new EaterPagerAdapter(this, getFragmentManager()));
+        pager.setBackgroundColor(getResources().getColor(R.color.primary));
         DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
 
@@ -95,24 +97,53 @@ public class MainActivity extends Activity implements SharedPreferences.OnShared
 
     private int biteCount = 0;
 
-    private void updatePreferences(){
+    private void updatePreferences() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         long currTime = System.currentTimeMillis();
-        long biteDuration = currTime - sp.getLong("currTime",0);
+        long biteDuration = currTime - sp.getLong(Constants.currTime,0);
         SharedPreferences.Editor editor = sp.edit();
         if(biteDuration != currTime)
-            editor.putLong("biteTime", biteDuration);
-        editor.putLong("currTime", currTime).apply();
-
+            editor.putLong(Constants.biteTime, biteDuration);
+        editor.putLong(Constants.currTime, currTime).apply();
     }
 
     private List<Long> biteTimeList = new ArrayList<>();
-    private void getAvgBiteSize(){
+
+    private void getAvgBiteSize() {
+        Log.e(TAG, "getAvgBiteSize: 0 = " +  biteTimeList.get(0));
+        Log.e(TAG, "getAvgBiteSize: 1 = " +  biteTimeList.get(1));
+        Log.e(TAG, "getAvgBiteSize: 2 = " +  biteTimeList.get(2));
+        Log.e(TAG, "getAvgBiteSize: 3 = " +  biteTimeList.get(3));
+
         long diff3 = biteTimeList.get(3) - biteTimeList.get(2);
         long diff2 = biteTimeList.get(2) - biteTimeList.get(1);
         long diff1 = biteTimeList.get(1) - biteTimeList.get(0);
-        long maxDiff = (biteTimeList.get(3) - biteTimeList.get(0))/3;
+        Log.e(TAG, "getAvgBiteSize: diff1 = " +  diff1);
+        Log.e(TAG, "getAvgBiteSize: diff2 = " +  diff2);
+        Log.e(TAG, "getAvgBiteSize: diff3 = " +  diff3);
 
+        long maxDiff = (biteTimeList.get(3) - biteTimeList.get(0))/3;
+        Log.e(TAG, "getAvgBiteSize: maxDiff = " +  maxDiff);
+
+        long diffAvg = (diff1 + diff2 + diff3)/3;
+        Log.e(TAG, "getAvgBiteSize: diffAvg = " +  diffAvg);
+
+        long biteInterval = 0;
+
+        if (maxDiff/1000 >= 25) {
+            biteInterval = 30;
+        } else if(maxDiff/1000 < 25 && maxDiff/1000 >= 20) {
+            biteInterval = 25;
+        } else if(maxDiff/1000 < 20 && maxDiff/1000 >= 15) {
+            biteInterval = 20;
+        } else if(maxDiff/1000 < 15) {
+            biteInterval = 15;
+        }
+        Log.e(TAG, "getAvgBiteSize: biteInterval = " +  biteInterval);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong(Constants.biteInterval, biteInterval);
     }
 
     protected void startMeasurement() {
@@ -124,10 +155,10 @@ public class MainActivity extends Activity implements SharedPreferences.OnShared
             @Override
             public void onSensorChanged(SensorEvent event) {
 
-                if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+                if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
                     if(event.values[0] == gyroCheck[0] &&
                             event.values[1] == gyroCheck[1] &&
-                            event.values[2] == gyroCheck[2]){
+                            event.values[2] == gyroCheck[2]) {
                         gyroCount++;
                         if(gyroCount > 20 && mSensorManager != null) {
                             mSensorManager.unregisterListener(mSensorListener, gyro);
@@ -135,26 +166,26 @@ public class MainActivity extends Activity implements SharedPreferences.OnShared
                         }
                         return;
                     }
-                    else{
+                    else {
                         gyroCount = 0;
                         gyroCheck[0] = event.values[0];
                         gyroCheck[1] = event.values[1];
                         gyroCheck[2] = event.values[2];
                     }
                 }
-                boolean check = client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
-                if(bite != check){
+                boolean check = client.sendSensorData2(event.sensor.getType(), event.accuracy,
+                        event.timestamp, event.values);
+                if(bite != check) {
                     //updateBiteDisplay(check);
-                    if(check){
+                    if(check) {
                         biteCount++;
-                        if(biteCount>4){
+                        if(biteCount > 4) {
                             getAvgBiteSize();
                             updatePreferences();
                         }
-                        else{
+                        else {
                             biteTimeList.add(System.currentTimeMillis());
                         }
-
                     }
                     bite = check;
                 }
@@ -177,32 +208,33 @@ public class MainActivity extends Activity implements SharedPreferences.OnShared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.meal_started))){
+        if(key.equals(Constants.mealStarted)) {
             Log.i(TAG, "Preferecnes Changed. Value is " + key);
             boolean mealStarted = sharedPreferences.getBoolean(key, false);
-            if(mealStarted){
+            if(mealStarted) {
                 startMeasurement();
             }
-            else{
+            else {
                 stopMeasurement();
             }
         }
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         Log.i(TAG, "Preferecnes Resume");
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         Log.i(TAG, "Preferecnes Paused");
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.unregisterOnSharedPreferenceChangeListener(this);
-        sp.edit().putBoolean(getString(R.string.meal_started), false).apply();
+        sp.edit().putBoolean(Constants.mealStarted, false).apply();
         stopMeasurement();
     }
 }

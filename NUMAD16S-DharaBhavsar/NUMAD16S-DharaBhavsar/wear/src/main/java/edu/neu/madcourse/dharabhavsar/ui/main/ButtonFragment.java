@@ -14,11 +14,14 @@ import android.widget.TextView;
 /**
  * Created by Anirudh on 4/16/2016.
  */
-public class ButtonFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class ButtonFragment extends Fragment
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ImageButton mealButton;
     private TextView mealButtonText;
     private boolean mealStarted = false;
+
+    private DeviceClient client;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,8 +36,9 @@ public class ButtonFragment extends Fragment implements SharedPreferences.OnShar
             @Override
             public void onClick(View v) {
                 mealStarted = !mealStarted;
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-                editor.putBoolean(getString(R.string.meal_started),mealStarted).apply();
+                SharedPreferences.Editor editor = PreferenceManager
+                        .getDefaultSharedPreferences(getActivity()).edit();
+                editor.putBoolean(Constants.mealStarted, mealStarted).apply();
                 updateDisplay();
             }
         });
@@ -46,15 +50,17 @@ public class ButtonFragment extends Fragment implements SharedPreferences.OnShar
     public void onResume(){
         super.onResume();
         mealStarted = PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .getBoolean(getString(R.string.meal_started), false);
+                .getBoolean(Constants.mealStarted, false);
         updateDisplay();
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private void updateDisplay(){
@@ -70,8 +76,9 @@ public class ButtonFragment extends Fragment implements SharedPreferences.OnShar
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equalsIgnoreCase("biteTime")) {
-            long diff = Math.round(PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong(key, 0)/1000);
+        if(key.equalsIgnoreCase(Constants.biteTime)) {
+            long diff = Math.round(PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getLong(key, 0)/1000);
             Log.i("Bite Time", "the difference is = "+diff);
             String t = String.valueOf(diff);
             mealButtonText.setText("Last bite duration is " + t + " ms");

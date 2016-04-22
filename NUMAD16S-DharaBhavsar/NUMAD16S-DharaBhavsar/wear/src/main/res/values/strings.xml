@@ -10,7 +10,6 @@
     <string name="eating_speed_text">Detecting eating speed</string>
     <string name="start_meal">Start Meal</string>
     <string name="finish_meal">Finish Meal</string>
-    <string name="meal_started">mealStarted</string>
     <string name="welcome">Welcome... </string>
     <string name="welcome_text"> ...to our world of mindful eating</string>
     <string name="what">What?</string>

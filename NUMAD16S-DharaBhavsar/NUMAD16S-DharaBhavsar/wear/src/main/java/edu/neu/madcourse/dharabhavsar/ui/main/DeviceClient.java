@@ -31,6 +31,12 @@ public class DeviceClient {
     private boolean vibrating = false;
     private Vibrator v;
 
+    private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
+    long savedRemainingInterval = 0;
+    private MyCount counter;
+
+    private boolean nextBiteAllowed = true;
+
     public static DeviceClient getInstance(Context context) {
         if (instance == null) {
             instance = new DeviceClient(context.getApplicationContext());
@@ -42,7 +48,8 @@ public class DeviceClient {
         this.context = context;
     }
 
-    public boolean sendSensorData(final int sensorType, final int accuracy, final long timestamp, final float[] values) {
+    public boolean sendSensorData(final int sensorType, final int accuracy,
+                                  final long timestamp, final float[] values) {
 
         if(vibrating) {
             return vibrating;
@@ -53,6 +60,17 @@ public class DeviceClient {
         }
 
         return vibrating;
+    }
+
+    public boolean sendSensorData2(final int sensorType, final int accuracy,
+                                  final long timestamp, final float[] values) {
+
+        if(detectBite2(sensorType, values) && nextBiteAllowed){
+            Log.e(TAG, "BITE DETECTED --> VIBRATE SKIPPED");
+            return true;
+        }
+
+        return false;
     }
 
     private LinkedList<Float> yValues = new LinkedList<>();
@@ -130,9 +148,11 @@ public class DeviceClient {
         else{
             if(handTurned) {
                 if(values[0] > 1 || values[0] < -1)
-                    Log.i(TAG, "Gyro Values " + System.currentTimeMillis() + " " + values[0]+"----------------------------------");
+                    Log.i(TAG, "Gyro Values " + System.currentTimeMillis()
+                            + " " + values[0]+"----------------------------------");
                 else
-                    Log.i(TAG, "Gyro Values " + System.currentTimeMillis() + " " + values[0] + " " + values[1] + " " + values[2]);
+                    Log.i(TAG, "Gyro Values " + System.currentTimeMillis()
+                            + " " + values[0] + " " + values[1] + " " + values[2]);
             }
 
             if(xGyro < -1 && values[0] < -1){
@@ -225,6 +245,25 @@ public class DeviceClient {
             v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
             v.vibrate(500);
+        }
+    }
+
+    public class MyCount extends CountDownTimer {
+        public MyCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            nextBiteAllowed = true;
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            int secs = (int) (millisUntilFinished / 1000);
+            int seconds = secs % 60;
+            int minutes = secs / 60;
+            String stringTime = String.format("%02d:%02d", minutes, seconds);
         }
     }
 }

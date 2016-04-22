@@ -72,6 +72,7 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
         fragment.setCardMarginBottom(res.getDimensionPixelSize(R.dimen.card_margin_bottom));
         fragment.setCardMarginLeft(res.getDimensionPixelSize(R.dimen.card_margin_sides));
         fragment.setCardMarginRight(res.getDimensionPixelSize(R.dimen.card_margin_sides));
+//        fragment.getView().setBackgroundColor(Color.YELLOW);
         return fragment;
     }
 
