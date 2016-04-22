@@ -1,10 +1,12 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.opencsv.CSVWriter;
@@ -30,10 +32,6 @@ public class DeviceClient {
     private List<String[]> listValues = new ArrayList<>();
     private boolean vibrating = false;
     private Vibrator v;
-
-    private final int interval = 90000; //90 seconds ; 1 minute 30 seconds
-    long savedRemainingInterval = 0;
-    private MyCount counter;
 
     private boolean nextBiteAllowed = true;
 
@@ -67,8 +65,20 @@ public class DeviceClient {
 
         if(detectBite2(sensorType, values) && nextBiteAllowed){
             Log.e(TAG, "BITE DETECTED --> VIBRATE SKIPPED");
+            int biteCount = PreferenceManager.getDefaultSharedPreferences(context)
+                    .getInt(Constants.biteCount, 0);
+            if(biteCount > 5) {
+                nextBiteAllowed = false;
+                SharedPreferences sp = PreferenceManager
+                        .getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(Constants.nextBiteAllowed, nextBiteAllowed).apply();
+            }
             return true;
         }
+        /*if(!nextBiteAllowed) {
+
+        }*/
 //        nextBiteAllowed = false;
         return false;
     }
@@ -245,26 +255,6 @@ public class DeviceClient {
             v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
             v.vibrate(500);
-        }
-    }
-
-    public class MyCount extends CountDownTimer {
-        public MyCount(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        @Override
-        public void onFinish() {
-            nextBiteAllowed = true;
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            int secs = (int) (millisUntilFinished / 1000);
-            int seconds = secs % 60;
-            int minutes = secs / 60;
-            String stringTime = String.format("%02d:%02d", minutes, seconds);
-            Log.e(TAG, "stringTime = " + stringTime);
         }
     }
 }

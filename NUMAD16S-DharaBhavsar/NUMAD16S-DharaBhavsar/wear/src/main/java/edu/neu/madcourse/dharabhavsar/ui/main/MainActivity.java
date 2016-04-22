@@ -104,6 +104,7 @@ public class MainActivity extends Activity
         SharedPreferences.Editor editor = sp.edit();
         if(biteDuration != currTime)
             editor.putLong(Constants.biteTime, biteDuration);
+        editor.putInt(Constants.biteCount, biteCount);
         editor.putLong(Constants.currTime, currTime).apply();
     }
 
@@ -143,7 +144,7 @@ public class MainActivity extends Activity
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putLong(Constants.biteInterval, biteInterval);
+        editor.putLong(Constants.biteInterval, biteInterval).apply();
     }
 
     protected void startMeasurement() {
@@ -179,6 +180,12 @@ public class MainActivity extends Activity
                     //updateBiteDisplay(check);
                     if(check) {
                         biteCount++;
+//                        Log.e(TAG, "biteCount = " + biteCount);
+                        SharedPreferences sp = PreferenceManager
+                                .getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putInt(Constants.biteCount, biteCount).apply();
+//                        Log.e(TAG, "sp.biteCount = " + String.valueOf(sp.getLong(Constants.biteCount, 0)));
                         if(biteCount > 4) {
                             getAvgBiteSize();
                             updatePreferences();
@@ -234,6 +241,8 @@ public class MainActivity extends Activity
         Log.i(TAG, "Preferecnes Paused");
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.unregisterOnSharedPreferenceChangeListener(this);
+        sp.edit().putInt(Constants.biteCount, 0).apply();
+        sp.edit().putBoolean(Constants.nextBiteAllowed, true).apply();
         sp.edit().putBoolean(Constants.mealStarted, false).apply();
         stopMeasurement();
     }

@@ -22,7 +22,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|top"
-            android:id="@+id/meal_text" />
+            android:id="@+id/meal_text"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/timer_text" />
 
         <ImageButton
             android:background="@drawable/begin_meal"
