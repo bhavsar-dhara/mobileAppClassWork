@@ -72,14 +72,12 @@ public class DeviceClient {
                     .edit().putBoolean(Constants.biteDetected, true).apply();
             nextBiteAllowed = PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(Constants.nextBiteAllowed, true);
-            Log.e(TAG, "nextBiteAllowed = " + nextBiteAllowed);
             if(!nextBiteAllowed){
+                Log.e(TAG, "BITE DETECTED --> Counter Running");
                 vibrate();
                 PreferenceManager.getDefaultSharedPreferences(context).edit()
                         .putString(Constants.mealText,
                         "Your eating speed has increased").apply();
-                Log.e(TAG, "mealText = " + PreferenceManager.getDefaultSharedPreferences(context)
-                        .getString(Constants.mealText, "xx"));
             }
             return true;
         }
@@ -177,10 +175,9 @@ public class DeviceClient {
 
             xGyro = values[0];
         }
-
-
         return false;
     }
+
     /**
      * Clears the file create for logging data
      */

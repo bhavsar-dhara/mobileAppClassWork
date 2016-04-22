@@ -87,20 +87,11 @@ public class ButtonFragment extends Fragment
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equalsIgnoreCase(Constants.biteTime)) {
-            long diff = Math.round(PreferenceManager.getDefaultSharedPreferences(getActivity())
-                    .getLong(key, 0)/1000);
-            Log.i("Bite Time", "the difference is = "+diff);
-            String t = String.valueOf(diff);
-            mealButtonText.setText("Last bite duration is " + t + " ms");
-        }
         if(key.equalsIgnoreCase(Constants.timerText)) {
             timerText.setText(PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getString(Constants.timerText, "Timer Text"));
         }
         if(key.equalsIgnoreCase(Constants.mealText)) {
-            Log.i("BiteTime", "txt = "+ PreferenceManager.getDefaultSharedPreferences(getActivity())
-                    .getString(Constants.mealText, "Meal Text"));
             mealButtonText.setText(PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getString(Constants.mealText, "Meal Text"));
         }

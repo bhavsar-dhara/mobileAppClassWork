@@ -26,7 +26,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridViewPager;
@@ -61,8 +60,6 @@ public class MainActivity extends Activity
 
     public long savedRemainingInterval = 0;
     private MyCount counter;
-    private boolean vibrating = false;
-    private Vibrator v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,32 +101,8 @@ public class MainActivity extends Activity
         client = DeviceClient.getInstance(this);
     }
 
-    private void updatePreferences() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        long currTime = System.currentTimeMillis();
-        long biteDuration = currTime - sp.getLong(Constants.currTime,0);
-        SharedPreferences.Editor editor = sp.edit();
-        if(biteDuration != currTime)
-            editor.putLong(Constants.biteTime, biteDuration);
-        editor.putInt(Constants.biteCount, biteCount);
-        editor.putLong(Constants.currTime, currTime).apply();
-    }
-
     private void getAvgBiteSize() {
-        Log.e(TAG, "getAvgBiteSize: 0 = " +  biteTimeList.get(0));
-        Log.e(TAG, "getAvgBiteSize: 1 = " +  biteTimeList.get(1));
-        Log.e(TAG, "getAvgBiteSize: 2 = " +  biteTimeList.get(2));
-        Log.e(TAG, "getAvgBiteSize: 3 = " +  biteTimeList.get(3));
-
-        long diff3 = biteTimeList.get(3) - biteTimeList.get(2);
-        long diff2 = biteTimeList.get(2) - biteTimeList.get(1);
-        long diff1 = biteTimeList.get(1) - biteTimeList.get(0);
-        Log.e(TAG, "getAvgBiteSize: diff1 = " +  diff1);
-        Log.e(TAG, "getAvgBiteSize: diff2 = " +  diff2);
-        Log.e(TAG, "getAvgBiteSize: diff3 = " +  diff3);
-
         long maxDiff = (biteTimeList.get(3) - biteTimeList.get(0))/3;
-        Log.e(TAG, "getAvgBiteSize: maxDiff = " +  maxDiff);
 
         if (maxDiff/1000 >= 25) {
             biteInterval = 30;
@@ -140,16 +113,10 @@ public class MainActivity extends Activity
         } else if(maxDiff/1000 < 15) {
             biteInterval = 15;
         }
-        Log.e(TAG, "getAvgBiteSize: biteInterval = " +  biteInterval);
 
-//        TODO - remove it from sharedPrefs
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Constants.nextBiteAllowed, true);
-        editor.putLong(Constants.biteInterval, biteInterval).apply();
-
-        Log.e(TAG, "nextBiteAllowed in avgBiteSize = "
-                + sp.getBoolean(Constants.nextBiteAllowed, true));
+        editor.putBoolean(Constants.nextBiteAllowed, true).apply();
 
         counter = new MyCount(biteInterval * 1000, 1000);
         counter.start();
@@ -171,7 +138,7 @@ public class MainActivity extends Activity
                         gyroCount++;
                         if(gyroCount > 20 && mSensorManager != null) {
                             mSensorManager.unregisterListener(mSensorListener, gyro);
-                            Log.e(TAG, "Unregistering Gyroscope");
+                            Log.e(TAG, "Unregister Gyroscope");
                         }
                         return;
                     }
@@ -188,17 +155,8 @@ public class MainActivity extends Activity
                     //updateBiteDisplay(check);
                     if(check) {
                         biteCount++;
-                        Log.e(TAG, "biteCount = " + biteCount);
-                        SharedPreferences sp = PreferenceManager
-                                .getDefaultSharedPreferences(getApplicationContext());
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putInt(Constants.biteCount, biteCount).apply();
-                        Log.e(TAG, "sp.biteCount = "
-                                + String.valueOf(sp.getInt(Constants.biteCount, 0)));
                         if(biteCount == 5) {
                             getAvgBiteSize();
-//                            updatePreferences();
-
                         }
                         else if(biteCount < 5) {
                             biteTimeList.add(System.currentTimeMillis());
@@ -230,7 +188,7 @@ public class MainActivity extends Activity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(Constants.mealStarted)) {
-            Log.i(TAG, "Preferecnes Changed. Value is " + key);
+            Log.i(TAG, "Preferences Changed. Value is " + key);
             boolean mealStarted = sharedPreferences.getBoolean(key, false);
             if(mealStarted) {
                 startMeasurement();
@@ -240,7 +198,7 @@ public class MainActivity extends Activity
             }
         }
         if(key.equalsIgnoreCase(Constants.biteDetected)) {
-            Log.i(TAG, "Preferecnes Changed2. Value is " + key);
+            Log.i(TAG, "Preferences Changed2. Value is " + key);
             if (sharedPreferences.getBoolean(key, false)) {
                 if (counter != null) {
                     counter.cancel();
@@ -250,8 +208,6 @@ public class MainActivity extends Activity
                     counter.start();
                 }
                 sharedPreferences.edit().putBoolean(key, false).apply();
-                Log.e(TAG, "nextBiteAllowed in spM = "
-                        + sharedPreferences.getBoolean(Constants.nextBiteAllowed, true));
             }
         }
     }
@@ -259,9 +215,11 @@ public class MainActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "Preferecnes Resume");
-        /*if(counter != null)
-            counter.start();*/
+        Log.i(TAG, "Preferences Resume");
+        if(counter != null) {
+            counter = new MyCount(savedRemainingInterval, 1000);
+            counter.start();
+        }
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
     }
@@ -269,18 +227,18 @@ public class MainActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(TAG, "Preferecnes Paused");
+        Log.i(TAG, "Preferences Paused");
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.biteCount, 0);
-        editor.putBoolean(Constants.nextBiteAllowed, true);
-        editor.putBoolean(Constants.mealStarted, false).apply();
-        Log.e(TAG, "nextBiteAllowed in onPause = "
-                + sp.getBoolean(Constants.nextBiteAllowed, true));
+        editor.remove(Constants.mealText);
+        editor.remove(Constants.nextBiteAllowed);
+        editor.remove(Constants.biteDetected);
+        editor.remove(Constants.timerText);
+        editor.remove(Constants.mealStarted).apply();
         sp.unregisterOnSharedPreferenceChangeListener(this);
         stopMeasurement();
-        /*if(counter != null)
-            counter.cancel();*/
+        if(counter != null)
+            counter.cancel();
     }
 
     public class MyCount extends CountDownTimer {
@@ -305,7 +263,6 @@ public class MainActivity extends Activity
             int seconds = secs % 60;
             int minutes = secs / 60;
             String stringTime = String.format("%02d:%02d", minutes, seconds);
-            Log.e(TAG, "stringTime = " + stringTime);
             String timerText = "Next bite in " + stringTime + " seconds";
             editor.putString(Constants.timerText, timerText).apply();
             savedRemainingInterval = millisUntilFinished;
