@@ -69,7 +69,7 @@ public class DeviceClient {
             Log.e(TAG, "BITE DETECTED --> VIBRATE SKIPPED");
             return true;
         }
-
+//        nextBiteAllowed = false;
         return false;
     }
 
@@ -264,6 +264,7 @@ public class DeviceClient {
             int seconds = secs % 60;
             int minutes = secs / 60;
             String stringTime = String.format("%02d:%02d", minutes, seconds);
+            Log.e(TAG, "stringTime = " + stringTime);
         }
     }
 }

@@ -10,4 +10,7 @@ public class Constants {
     public static final String biteTime = "biteTime";
     public static final String currTime = "currTime";
     public static final String mealStarted = "mealStarted";
+    public static final String biteCount = "biteCount";
+    public static final String nextBiteAllowed = "nextBiteAllowed";
+
 }
