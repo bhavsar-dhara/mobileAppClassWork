@@ -242,6 +242,9 @@ public class WearableLaunchActivity extends AppCompatActivity implements
         str.append("4.) Udacity Course on Wear Apps<br>");
         str.append("5.) Google sample code on Wear<br>");
         str.append("6.) Google Material Design Icons<br>");
+        str.append("7.) Tested on the following Android Wear models:<br>");
+        str.append("      a.) Moto 360<br>");
+        str.append("      b.) LG G Watch R<br>");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(Html.fromHtml(str.toString()));
