@@ -229,6 +229,7 @@ The app looks at your current eating speed for the first two meals and automatic
 also allows you to modify (increase/decrease) the suggested time taken for the meal. This is usually not recommended
 but you could opt for it.\n\n\
 P.S. “Make sure to wear your Android Wear on your eating hand.”</string>
+    <string name="launch_on_wear">Launch on Wear</string>
 
 
 </resources>

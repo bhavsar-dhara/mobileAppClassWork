@@ -50,7 +50,6 @@ public class MainActivity extends Activity
     private boolean bite = false;
 
     private int gyroCount = 0;
-
     private float[] gyroCheck = new float[3];
 
     private DeviceClient client;
@@ -60,6 +59,8 @@ public class MainActivity extends Activity
 
     public long savedRemainingInterval = 0;
     private MyCount counter;
+
+    private boolean manualSettings = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +117,8 @@ public class MainActivity extends Activity
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Constants.nextBiteAllowed, true).apply();
+        editor.putString(Constants.mealText, "");
+        editor.putBoolean(Constants.nextBiteAllowed, false).apply();
 
         if(counter != null)
             counter.cancel();
@@ -154,7 +156,6 @@ public class MainActivity extends Activity
                 boolean check = client.sendSensorData2(event.sensor.getType(), event.accuracy,
                         event.timestamp, event.values);
                 if(bite != check) {
-                    //updateBiteDisplay(check);
                     if(check) {
                         SharedPreferences sp = PreferenceManager
                                 .getDefaultSharedPreferences(MainActivity.this);
@@ -168,7 +169,8 @@ public class MainActivity extends Activity
                                 biteTimeList.add(System.currentTimeMillis());
                             }
                         } else {
-                            biteInterval = Long.parseLong(sp.getString(Constants.manualDurationSet, "30"));
+                            biteInterval = Long.parseLong(sp
+                                    .getString(Constants.manualDurationSet, "30"));
                             if(counter != null)
                                 counter.cancel();
                             counter = new MyCount(biteInterval * 1000, 1000);
@@ -201,11 +203,13 @@ public class MainActivity extends Activity
         biteCount = 0;
     }
 
+    private boolean mealStarted;
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(Constants.mealStarted)) {
             Log.i(TAG, "Preferences Changed. Value is " + key);
-            boolean mealStarted = sharedPreferences.getBoolean(key, false);
+            mealStarted = sharedPreferences.getBoolean(key, false);
             if(mealStarted) {
                 startMeasurement();
             }
@@ -213,17 +217,39 @@ public class MainActivity extends Activity
                 stopMeasurement();
             }
         }
-        if(key.equalsIgnoreCase(Constants.biteDetected)) {
+        else if(key.equalsIgnoreCase(Constants.biteDetected)) {
             Log.i(TAG, "Preferences Changed2. Value is " + key);
             if (sharedPreferences.getBoolean(key, false)) {
-                if (counter != null) {
-                    counter.cancel();
-                }
-                if(biteCount > 4) {
+                if(!manualSettings && biteCount > 4) {
+                    if (counter != null) {
+                        counter.cancel();
+                    }
                     counter = new MyCount(biteInterval * 1000, 1000);
                     counter.start();
                 }
                 sharedPreferences.edit().putBoolean(key, false).apply();
+            }
+        }
+        else if(key.equalsIgnoreCase(Constants.manualBiteInterval)){
+            manualSettings = sharedPreferences.getBoolean(key, manualSettings);
+            if(counter != null)
+                counter.cancel();
+            sharedPreferences.edit().putBoolean(Constants.nextBiteAllowed, true).apply();
+            sharedPreferences.edit().putString(Constants.timerText, "").apply();
+            mealStarted = sharedPreferences.getBoolean(Constants.mealStarted, false);
+            if(!mealStarted){
+                sharedPreferences.edit().putString(Constants.mealText,
+                        getString(R.string.hand_notifier)).apply();
+            }
+            if(manualSettings) {
+                biteInterval = Long.parseLong(sharedPreferences
+                        .getString(Constants.manualDurationSet, "30"));
+            } else {
+                biteCount = 0;
+                if(mealStarted) {
+                    sharedPreferences.edit().putString(Constants.mealText,
+                            getString(R.string.eating_speed_text)).apply();
+                }
             }
         }
     }
@@ -232,13 +258,6 @@ public class MainActivity extends Activity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "Preferences Resume");
-        if(counter != null) {
-            counter.cancel();
-            counter.start();
-        } else {
-            counter = new MyCount(savedRemainingInterval, 1000);
-            counter.start();
-        }
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
     }
@@ -269,6 +288,7 @@ public class MainActivity extends Activity
         public void onFinish() {
             SharedPreferences.Editor editor = PreferenceManager
                     .getDefaultSharedPreferences(MainActivity.this).edit();
+            editor.putString(Constants.mealText, "");
             editor.putString(Constants.timerText, "Take your Next Bite");
             editor.putBoolean(Constants.nextBiteAllowed, true).apply();
         }

@@ -15,8 +15,7 @@ import android.widget.TextView;
 /**
  * Created by Dhara on 4/21/2016.
  */
-public class SettingsFragment extends Fragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener  {
+public class SettingsFragment extends Fragment {
 
     private ImageButton leftButton;
     private TextView secondsText;
@@ -99,11 +98,6 @@ public class SettingsFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
     }
 

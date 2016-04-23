@@ -1,5 +1,7 @@
 package edu.neu.madcourse.dharabhavsar.ui.project;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -9,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +47,7 @@ public class WearableLaunchActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private boolean mResolvingError = false;
     private Snackbar snackbar;
+    private AlertDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +227,33 @@ public class WearableLaunchActivity extends AppCompatActivity implements
         new StartWearableActivityTask().execute();
     }
 
+    /**
+     * Opens Acknowledgement Dialog Box
+     */
+    public void onAckWearableActivityClick(View view) {
+        Log.i(TAG, "Ack Dialog Box");
 
+        StringBuffer str = new StringBuffer();
+        str.append("<b><u>Eat Slower Trainer</u></b><br><br>");
+        str.append("<u>Acknowledgements</u><br>");
+        str.append("1.) Professor Intille<br>");
+        str.append("2.) TAs : Dharam and Deryl<br>");
+        str.append("3.) SensorDashboard App<br>");
+        str.append("4.) Udacity Course on Wear Apps<br>");
+        str.append("5.) Google sample code on Wear<br>");
+        str.append("6.) Google Material Design Icons<br>");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(Html.fromHtml(str.toString()));
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.ok_label,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // nothing
+                    }
+                });
+        mDialog = builder.show();
+    }
 
 }

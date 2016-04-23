@@ -45,13 +45,34 @@
 
     </ScrollView>
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:orientation="horizontal"
         android:layout_weight="1"
-        android:text="Launch"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/launch_on_android_wear"
-        android:onClick="onStartWearableActivityClick"/>
+        android:weightSum="2"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/launch_on_wear"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/launch_on_android_wear"
+            android:onClick="onStartWearableActivityClick"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/acknowledgementsBtn"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/acknowledgements_on_android_wear"
+            android:onClick="onAckWearableActivityClick"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
 
 </LinearLayout>

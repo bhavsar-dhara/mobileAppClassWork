@@ -154,7 +154,7 @@ public class DeviceClient {
                 xAvg = xSum/3;
 
                 if(handTurned) {
-                    Log.e(TAG, "xAvg = " + xAvg + " & yAvg = " + yAvg);
+//                    Log.e(TAG, "xAvg = " + xAvg + " & yAvg = " + yAvg);
                 }
 
                if (handTurned && !handReversed && xAvg > -2 && xAvg < 2) {
