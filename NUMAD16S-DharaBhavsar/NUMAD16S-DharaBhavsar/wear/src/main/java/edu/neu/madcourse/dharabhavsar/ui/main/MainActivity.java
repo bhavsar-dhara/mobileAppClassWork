@@ -118,6 +118,8 @@ public class MainActivity extends Activity
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(Constants.nextBiteAllowed, true).apply();
 
+        if(counter != null)
+            counter.cancel();
         counter = new MyCount(biteInterval * 1000, 1000);
         counter.start();
     }
@@ -154,12 +156,23 @@ public class MainActivity extends Activity
                 if(bite != check) {
                     //updateBiteDisplay(check);
                     if(check) {
-                        biteCount++;
-                        if(biteCount == 5) {
-                            getAvgBiteSize();
-                        }
-                        else if(biteCount < 5) {
-                            biteTimeList.add(System.currentTimeMillis());
+                        SharedPreferences sp = PreferenceManager
+                                .getDefaultSharedPreferences(MainActivity.this);
+                        boolean isManualSettings =
+                                sp.getBoolean(Constants.manualBiteInterval, false);
+                        if(!isManualSettings) {
+                            biteCount++;
+                            if (biteCount == 5) {
+                                getAvgBiteSize();
+                            } else if (biteCount < 5) {
+                                biteTimeList.add(System.currentTimeMillis());
+                            }
+                        } else {
+                            biteInterval = Long.parseLong(sp.getString(Constants.manualDurationSet, "30"));
+                            if(counter != null)
+                                counter.cancel();
+                            counter = new MyCount(biteInterval * 1000, 1000);
+                            counter.start();
                         }
                     }
                     bite = check;
@@ -170,7 +183,7 @@ public class MainActivity extends Activity
         mSensorManager.registerListener(mSensorListener,
                 gyro, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(mSensorListener,
-                linearAccelero, SensorManager.SENSOR_DELAY_UI);
+                linearAccelero, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private void stopMeasurement() {
@@ -178,12 +191,15 @@ public class MainActivity extends Activity
             mSensorManager.unregisterListener(mSensorListener);
             mSensorListener = null;
         }
-        SharedPreferences.Editor editor = PreferenceManager
-                .getDefaultSharedPreferences(MainActivity.this).edit();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
+        if(!sp.contains(Constants.noTutorial))
+            editor.putBoolean(Constants.noTutorial, true);
         editor.putString(Constants.timerText, "").apply();
-        counter.cancel();
+        if(counter != null)
+            counter.cancel();
+        biteCount = 0;
     }
-
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -217,6 +233,9 @@ public class MainActivity extends Activity
         super.onResume();
         Log.i(TAG, "Preferences Resume");
         if(counter != null) {
+            counter.cancel();
+            counter.start();
+        } else {
             counter = new MyCount(savedRemainingInterval, 1000);
             counter.start();
         }
@@ -230,12 +249,12 @@ public class MainActivity extends Activity
         Log.i(TAG, "Preferences Paused");
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
+        sp.unregisterOnSharedPreferenceChangeListener(this);
         editor.remove(Constants.mealText);
         editor.remove(Constants.nextBiteAllowed);
         editor.remove(Constants.biteDetected);
         editor.remove(Constants.timerText);
         editor.remove(Constants.mealStarted).apply();
-        sp.unregisterOnSharedPreferenceChangeListener(this);
         stopMeasurement();
         if(counter != null)
             counter.cancel();

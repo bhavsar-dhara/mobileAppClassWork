@@ -85,6 +85,7 @@ public class DeviceClient {
     }
 
     private LinkedList<Float> yValues = new LinkedList<>();
+    private LinkedList<Float> xValues = new LinkedList<>();
     private boolean handTurned = false;
 
 
@@ -93,7 +94,7 @@ public class DeviceClient {
 
     private void checkIfWatchInversed(float[] values){
         float z = values[2];
-        if(z < -2 && zValue < -2 && !handReversed){
+        if(z < -3 && zValue < -3 && !handReversed){
             handReversed = true;
             Log.i(TAG, "Hand Reversed");
             new AsyncTask<Void, Void, Void>(){
@@ -116,7 +117,6 @@ public class DeviceClient {
 
     private float xGyro;
     private boolean handRaised;
-    private boolean handLowered;
 
     private boolean detectBite2(int sensorType, float[] values) {
 
@@ -127,38 +127,50 @@ public class DeviceClient {
             if(handReversed){
                 handTurned = false;
                 handRaised = false;
-                handLowered = false;
             }
 
             float y = values[1];
             yValues.offer(y);
+            xValues.offer(values[0]);
             if(yValues.size() > 3) {
                 yValues.poll();
+                xValues.poll();
 
                 float yAvg = 0;
                 float ySum = 0;
-
+                float xAvg = 0;
+                float xSum = 0;
+/*
                 for(Float yValue : yValues){
                     ySum += yValue;
+                }*/
+
+                for(int i=0; i< 3; i++){
+                    ySum += yValues.get(i);
+                    xSum += xValues.get(i);
                 }
 
                 yAvg = ySum/3;
+                xAvg = xSum/3;
 
-                //Log.e(TAG, "yAvg = " + yAvg);
+                if(handTurned) {
+                    Log.e(TAG, "xAvg = " + xAvg + " & yAvg = " + yAvg);
+                }
 
-                if(yAvg < -5) {
-                    handTurned = true;
-                } else if (yAvg > -2 && handTurned && handRaised && !handReversed && handLowered) {
+               if (handTurned && !handReversed && xAvg > -2 && xAvg < 2) {
                     handTurned = false;
                     handRaised = false;
                     Log.i(TAG, System.currentTimeMillis()+" HBite Detected");
                     return true;
                 }
+                else if(yAvg < -5 && Math.abs(xAvg) > 4) {
+                    handTurned = true;
+                }
             }
         }
         else{
             if(handTurned) {
-               /* if(values[0] > 1 || values[0] < -1)
+                /*if(values[0] > 1 || values[0] < -1)
                     Log.i(TAG, "Gyro Values " + System.currentTimeMillis()
                             + " " + values[0]+"----------------------------------");
                 else
@@ -166,17 +178,14 @@ public class DeviceClient {
                             + " " + values[0] + " " + values[1] + " " + values[2]);*/
             }
 
-            if(xGyro < -1 && values[0] < -1){
+           /* if(xGyro < -1 && values[0] < -1){
                 handRaised = true;
-            }
-            else if(xGyro > 1 && values[0] > 0.5 && handRaised){
-                handLowered = true;
-            }
-
+            }*/
             xGyro = values[0];
         }
         return false;
     }
+
 
     /**
      * Clears the file create for logging data

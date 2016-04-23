@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.wearable.view.CardFragment;
 import android.support.wearable.view.FragmentGridPagerAdapter;
 import android.util.Log;
@@ -39,6 +40,7 @@ import java.util.List;
  */
 public class EaterPagerAdapter extends FragmentGridPagerAdapter {
     private static final int TRANSITION_DURATION_MILLIS = 100;
+    private static final String TAG = "EaterPagerAdapter";
 
     private final Context mContext;
     private List<Row> mRows;
@@ -48,24 +50,30 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
         mContext = ctx;
 
         mRows = new ArrayList<>();
+        boolean noTutorial = PreferenceManager.getDefaultSharedPreferences(ctx)
+                                    .getBoolean(Constants.noTutorial, false);
 
+        Log.e(TAG, "noTutorial = " + noTutorial);
         /*mRows.add(new Row(
                 cardFragment(R.string.setup, R.string.hand_notifier),
                 cardFragment(R.string.trainer, R.string.train_notifier),
                 new ButtonFragment()));*/
 
-        /*mRows.add(new Row(
-                cardFragment(R.string.welcome, R.string.welcome_text),
-                cardFragment(R.string.what, R.string.what_text),
-                cardFragment(R.string.how, R.string.how_text),
-                cardFragment(R.string.how2, R.string.how2_text),
-                new ButtonFragment(),
-                new SettingsFragment()
-        ));*/
-
-        mRows.add(new Row(
-                new ButtonFragment()
-        ));
+        if(!noTutorial) {
+            mRows.add(new Row(
+                    cardFragment(R.string.welcome, R.string.welcome_text),
+                    cardFragment(R.string.what, R.string.what_text),
+                    cardFragment(R.string.how, R.string.how_text),
+                    cardFragment(R.string.how2, R.string.how2_text),
+                    new ButtonFragment(),
+                    new SettingsFragment()
+            ));
+        } else {
+            mRows.add(new Row(
+                    new ButtonFragment(),
+                    new SettingsFragment()
+            ));
+        }
     }
 
 
