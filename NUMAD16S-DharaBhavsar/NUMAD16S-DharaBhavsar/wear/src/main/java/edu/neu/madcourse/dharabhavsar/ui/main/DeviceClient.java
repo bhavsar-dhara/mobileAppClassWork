@@ -72,6 +72,7 @@ public class DeviceClient {
                     .edit().putBoolean(Constants.biteDetected, true).apply();
             nextBiteAllowed = PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(Constants.nextBiteAllowed, true);
+            vibrate();
             if(!nextBiteAllowed){
                 Log.e(TAG, "BITE DETECTED --> Counter Running");
                 vibrate();
@@ -154,7 +155,7 @@ public class DeviceClient {
                 xAvg = xSum/3;
 
                 if(handTurned) {
-//                    Log.e(TAG, "xAvg = " + xAvg + " & yAvg = " + yAvg);
+                    Log.e(TAG, "xAvg = " + xAvg + " & yAvg = " + yAvg);
                 }
 
                if (handTurned && !handReversed && xAvg > -2 && xAvg < 2) {
@@ -249,6 +250,7 @@ public class DeviceClient {
     private void vibrate(){
         if(!vibrating) {
             vibrating = true;
+//            Toast.makeText(context, "TEST Vibrate", Toast.LENGTH_SHORT).show();
             new CountDownTimer(1000, 1000) {
 
                 @Override

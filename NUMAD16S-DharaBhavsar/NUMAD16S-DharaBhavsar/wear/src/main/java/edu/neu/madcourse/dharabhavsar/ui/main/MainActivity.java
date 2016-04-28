@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -38,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity
-        implements SharedPreferences.OnSharedPreferenceChangeListener{
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "MainActivity";
 
@@ -66,6 +65,12 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        NotificationBuilder.update(this);
+        finish();
+        if(true)
+            return;
+
         final Resources res = getResources();
         final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
         Log.i(TAG, "Trying to apply insets");
@@ -127,7 +132,9 @@ public class MainActivity extends Activity
     }
 
     protected void startMeasurement() {
-        mSensorListener = new SensorEventListener() {
+        NotificationBuilder.update(this);
+        finish();
+        /*mSensorListener = new SensorEventListener() {
             @Override
             public void onAccuracyChanged(Sensor arg0, int arg1) {
             }
@@ -185,11 +192,11 @@ public class MainActivity extends Activity
         mSensorManager.registerListener(mSensorListener,
                 gyro, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(mSensorListener,
-                linearAccelero, SensorManager.SENSOR_DELAY_NORMAL);
+                linearAccelero, SensorManager.SENSOR_DELAY_NORMAL);*/
     }
 
     private void stopMeasurement() {
-        if (mSensorManager != null) {
+        /*if (mSensorManager != null) {
             mSensorManager.unregisterListener(mSensorListener);
             mSensorListener = null;
         }
@@ -200,7 +207,7 @@ public class MainActivity extends Activity
         editor.putString(Constants.timerText, "").apply();
         if(counter != null)
             counter.cancel();
-        biteCount = 0;
+        biteCount = 0;*/
     }
 
     private boolean mealStarted;
