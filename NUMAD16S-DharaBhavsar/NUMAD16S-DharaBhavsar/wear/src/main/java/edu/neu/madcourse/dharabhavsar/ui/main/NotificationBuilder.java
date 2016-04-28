@@ -38,6 +38,11 @@ public class NotificationBuilder {
                 PendingIntent.getActivity(mContext, 0, workoutIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Intent stopIntent = new Intent(mContext, StatsActivity.class);
+
+        PendingIntent stopPendingIntent = PendingIntent.getActivity(mContext, 0, stopIntent,
+                PendingIntent.FLAG_ONE_SHOT);
+
         // Setup background, custom card size and set an intent to launch
         // inside an activity view when displaying this notification
         NotificationCompat.WearableExtender wearableExtender =
@@ -45,10 +50,15 @@ public class NotificationBuilder {
                         .setBackground(BitmapFactory.decodeResource(
                                 mContext.getResources(), R.drawable.background_project_1))
                         .setCustomSizePreset(Notification.WearableExtender.SIZE_DEFAULT)
-                        .setDisplayIntent(workoutPendingIntent);
+                        .setDisplayIntent(workoutPendingIntent)
+
+                ;
 
         // Add wearable specific features to our builder
         builder.extend(wearableExtender);
+
+        builder.addAction(R.drawable.ic_stop_white_24dp, mContext.getString(R.string.finish_meal),
+                stopPendingIntent);
 
         return builder.build();
     }

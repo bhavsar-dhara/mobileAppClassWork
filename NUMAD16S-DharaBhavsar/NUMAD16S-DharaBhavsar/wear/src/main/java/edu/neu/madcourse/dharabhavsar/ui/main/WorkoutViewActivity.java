@@ -12,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,6 +62,8 @@ public class WorkoutViewActivity extends Activity {
         linearAccelero = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         client = DeviceClient.getInstance(this);
+
+        //setAmbientEnabled();
     }
 
     @Override
