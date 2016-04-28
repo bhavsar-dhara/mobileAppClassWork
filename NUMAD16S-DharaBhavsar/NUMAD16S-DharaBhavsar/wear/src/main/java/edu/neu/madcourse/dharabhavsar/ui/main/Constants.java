@@ -16,4 +16,5 @@ public class Constants {
     public static final String manualDurationSet = "manualDurationSet"; // Value is String
     public static final String PREF_SHARED = "sharedPrefs";
     public static final String MEAL_START_TIME = "mealStartTime";
+    public static final String MEAL_BITES = "mealBites";
 }

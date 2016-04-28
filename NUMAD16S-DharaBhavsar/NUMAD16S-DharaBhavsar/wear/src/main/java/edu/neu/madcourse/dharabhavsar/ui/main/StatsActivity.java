@@ -37,6 +37,7 @@ public class StatsActivity extends Activity {
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.PREF_SHARED, MODE_PRIVATE);
         timeDuration = timeDuration - sharedPreferences.getLong(Constants.MEAL_START_TIME, timeDuration);
+        bites = sharedPreferences.getInt(Constants.MEAL_BITES, bites);
 
         int yourBInterval = 0;
         if(bites != 0)

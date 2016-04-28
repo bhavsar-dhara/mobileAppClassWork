@@ -6,12 +6,14 @@ package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -35,6 +37,8 @@ public class WorkoutViewActivity extends Activity {
 
     private DeviceClient client;
 
+    private SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class WorkoutViewActivity extends Activity {
 
         Log.i(TAG, "In onCreate Method");
 
+        sharedPreferences = getSharedPreferences(Constants.PREF_SHARED, MODE_PRIVATE);
         // Get a reference of our ImageView layout component to be used
         // to display our circular progress timer.
         mCircularImageView = (ImageView) findViewById(R.id.imageview);
@@ -63,7 +68,9 @@ public class WorkoutViewActivity extends Activity {
 
         client = DeviceClient.getInstance(this);
 
-        //setAmbientEnabled();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(Constants.MEAL_BITES, 0);
+        editor.putLong(Constants.MEAL_START_TIME, System.currentTimeMillis()).apply();
     }
 
     @Override
@@ -115,6 +122,8 @@ public class WorkoutViewActivity extends Activity {
                         event.timestamp, event.values);
                 if(bite != check) {
                     bite = check;
+                    int bite = sharedPreferences.getInt(Constants.MEAL_BITES, 0);
+                    sharedPreferences.edit().putInt(Constants.MEAL_BITES, ++bite).apply();
                     mCircularProgressTimer.stop();
                     mCircularProgressTimer.restart();
                     mCircularProgressTimer.start();
