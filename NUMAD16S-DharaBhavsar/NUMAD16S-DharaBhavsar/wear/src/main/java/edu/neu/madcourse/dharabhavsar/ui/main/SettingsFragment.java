@@ -1,9 +1,12 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,8 @@ import android.widget.TextView;
  */
 public class SettingsFragment extends Fragment {
 
+    private static final String TAG = "SettingsFragment";
+    private static final int REQUEST_CODE = 1;
     private ImageButton leftButton;
     private TextView secondsText;
     private ImageButton rightButton;
@@ -66,7 +71,15 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        leftButton.setOnClickListener(new View.OnClickListener() {
+        secondsText.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(getActivity(), CustomWearableList.class);
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+
+        /*leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int seconds = Integer.parseInt(secondsText.getText().toString());
@@ -84,7 +97,7 @@ public class SettingsFragment extends Fragment {
                 secondsText.setText(String.valueOf(seconds));
                 sp.edit().putString(Constants.manualDurationSet, String.valueOf(seconds)).apply();
             }
-        });
+        });*/
 
         return view;
     }
@@ -103,7 +116,7 @@ public class SettingsFragment extends Fragment {
 
     private void initialScreen() {
         boolean isManualSettings = sp.getBoolean(Constants.manualBiteInterval, false);
-        String noOfSeconds = sp.getString(Constants.manualDurationSet, "30");
+        String noOfSeconds = sp.getString(Constants.manualDurationSet, getString(R.string._30));
 
         if(isManualSettings) {
             isManual.setChecked(true);
@@ -114,6 +127,18 @@ public class SettingsFragment extends Fragment {
             isManual.setChecked(false);
             linearLayout.setVisibility(View.GONE);
             text2.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        getActivity();
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            String result = data.getStringExtra("result");
+            Log.i(TAG, "result obtained = " + result);
+            sp.edit().putString(Constants.manualDurationSet, result).apply();
+            secondsText.setText(result);
         }
     }
 }
