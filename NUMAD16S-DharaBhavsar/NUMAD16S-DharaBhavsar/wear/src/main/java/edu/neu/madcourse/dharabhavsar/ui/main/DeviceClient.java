@@ -188,66 +188,13 @@ public class DeviceClient {
     }
 
 
-    /**
-     * Clears the file create for logging data
-     */
-    protected void clearFile(){
-        new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected Void doInBackground(Void... params){
-                try{
-                    CSVWriter writer;
-                    writer = new CSVWriter(new FileWriter(filePath , false), '\t');
-                    writer.writeNext(new String[]{"Date","Sensor2","x","y","z"});
-                    writer.close();
-                }
-                catch (IOException e){
-                    Log.e(TAG, "IOException while clearing the file "+e.getMessage());
-                }
 
-                return null;
-            }
-        }.execute();
-    }
-
-
-    /**
-     * Writes data to file and saves it
-     */
-    protected void writeToFile(){
-
-        new AsyncTask<List<String[]>, Void, Void>(){
-
-            @Override
-            protected Void doInBackground(List<String[]>... params){
-                try{
-                    Log.i("FileName","The file name is - "+filePath);
-                    File f = new File(filePath);
-                    CSVWriter writer;
-                    if(f.exists() && !f.isDirectory()){
-                        writer = new CSVWriter(new FileWriter(filePath , true), '\t');
-                    }
-                    else {
-                        writer = new CSVWriter(new FileWriter(filePath), '\t');
-                    }
-                    for(String[] value : params[0])
-                        writer.writeNext(value);
-                    writer.close();
-                } catch (IOException e) {
-                    Log.e(TAG, "IOException while writing the file "+e.getMessage());
-                    e.printStackTrace();
-                } catch (Exception e){
-                    Log.e(TAG, "Exception while writing the file "+e.getMessage());
-                }
-                return null;
-            }
-        }.execute(listValues);
-    }
 
     /**
      * Vibrates the device for 0.5 seconds
      */
     private void vibrate(){
+        Log.i(TAG, "Yaaayyy.... Detected a bite");
         if(!vibrating) {
             vibrating = true;
 //            Toast.makeText(context, "TEST Vibrate", Toast.LENGTH_SHORT).show();

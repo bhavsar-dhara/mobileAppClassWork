@@ -28,4 +28,6 @@
     <string name="seconds">seconds</string>
     <string name="_30">30</string>
     <string name="manual_settings">Manual Settings</string>
+
+    <string name="next_bite_in">Take your next bite in</string>
 </resources>
