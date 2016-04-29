@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/ic_keyboard_arrow_left_black_24dp"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
             <EditText
                 android:id="@+id/editText"
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
         </LinearLayout>
 

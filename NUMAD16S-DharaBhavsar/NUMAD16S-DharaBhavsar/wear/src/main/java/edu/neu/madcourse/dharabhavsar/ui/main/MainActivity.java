@@ -67,10 +67,10 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*NotificationBuilder.update(this);
+        NotificationBuilder.update(this);
         finish();
         if(true)
-            return;*/
+            return;
 
         final Resources res = getResources();
         final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);

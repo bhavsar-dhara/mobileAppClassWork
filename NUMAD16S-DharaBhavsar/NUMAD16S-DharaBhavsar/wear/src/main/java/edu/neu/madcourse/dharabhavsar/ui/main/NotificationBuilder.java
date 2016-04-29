@@ -3,6 +3,7 @@ package edu.neu.madcourse.dharabhavsar.ui.main;
 /**
  * Created by Dhara on 4/27/2016.
  */
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -32,14 +33,17 @@ public class NotificationBuilder {
         // that is, WorkoutActivity.class to display the custom notification.
         Intent workoutIntent = new Intent(mContext, WorkoutViewActivity.class);
 
+        workoutIntent.setAction("MainINtent");
+
         // The intent needs to be packaged into a pending intent so that the
         // notification service can fire it on our behalf.
         PendingIntent workoutPendingIntent =
                 PendingIntent.getActivity(mContext, 0, workoutIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent.FLAG_ONE_SHOT);
 
         Intent stopIntent = new Intent(mContext, StatsActivity.class);
 
+        stopIntent.setAction("ABCD");
 
         PendingIntent stopPendingIntent = PendingIntent.getActivity(mContext, 0, stopIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -49,6 +53,14 @@ public class NotificationBuilder {
                 R.drawable.ic_stop_white_24dp, mContext.getString(R.string.finish_meal),
                 stopPendingIntent).build();
 
+        /*// TEST
+        Intent viewIntent = new Intent(mContext, SensorActivity.class);
+        PendingIntent viewPendingIntent =
+                PendingIntent.getActivity(mContext, 0, viewIntent, 0);
+        NotificationCompat.Action action2 = new NotificationCompat.Action.Builder(
+                R.drawable.ic_timer_black_24dp, mContext.getString(R.string.take_bite),
+                viewPendingIntent).build();*/
+
         // Setup background, custom card size and set an intent to launch
         // inside an activity view when displaying this notification
         NotificationCompat.WearableExtender wearableExtender =
@@ -57,11 +69,11 @@ public class NotificationBuilder {
                                 mContext.getResources(), R.drawable.background_project_1))
                         .setCustomSizePreset(Notification.WearableExtender.SIZE_DEFAULT)
                         .addAction(action)
+                        //.addAction(action2)
                         .setDisplayIntent(workoutPendingIntent);
 
         // Add wearable specific features to our builder
         builder.extend(wearableExtender);
-        builder.addAction(action);
 
         return builder.build();
     }

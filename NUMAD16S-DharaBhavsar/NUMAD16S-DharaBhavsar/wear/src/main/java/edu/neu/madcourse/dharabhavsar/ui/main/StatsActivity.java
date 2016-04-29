@@ -1,12 +1,11 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +13,8 @@ import android.widget.TextView;
  * Created by Anirudh on 4/28/2016.
  */
 public class StatsActivity extends Activity {
+
+    private static final String TAG = "StatsActivity";
 
     private TextView mealDuration;
     private TextView yourBiteInterval;
@@ -23,6 +24,8 @@ public class StatsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "in StatsActivity");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 

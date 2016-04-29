@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.wearable.view.WearableListView;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class CustomWearableList extends Activity {
         mHeader = (TextView) findViewById(R.id.header);
 
         String noOfSeconds = sp.getString(Constants.manualDurationSet, getString(R.string._30));
-        Log.i(TAG, "noOfSeconds = " + noOfSeconds);
+//        Log.i(TAG, "noOfSeconds = " + noOfSeconds);
 
         WearableListView wearableListView =
                 (WearableListView) findViewById(R.id.wearable_List);

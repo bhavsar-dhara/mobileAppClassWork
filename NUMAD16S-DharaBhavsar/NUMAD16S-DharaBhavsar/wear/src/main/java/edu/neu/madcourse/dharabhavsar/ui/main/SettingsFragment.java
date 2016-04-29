@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,7 +135,7 @@ public class SettingsFragment extends Fragment {
         getActivity();
         if(requestCode == 1 && resultCode == Activity.RESULT_OK) {
             String result = data.getStringExtra("result");
-            Log.i(TAG, "result obtained = " + result);
+//            Log.i(TAG, "result obtained = " + result);
             sp.edit().putString(Constants.manualDurationSet, result).apply();
             secondsText.setText(result);
         }
