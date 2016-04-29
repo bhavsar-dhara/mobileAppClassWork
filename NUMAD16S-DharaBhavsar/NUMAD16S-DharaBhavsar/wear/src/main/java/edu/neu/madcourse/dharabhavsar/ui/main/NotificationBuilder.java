@@ -32,6 +32,7 @@ public class NotificationBuilder {
         // Create an intent that will be launched inside of an activity view,
         // that is, WorkoutActivity.class to display the custom notification.
         Intent workoutIntent = new Intent(mContext, WorkoutViewActivity.class);
+
         workoutIntent.setAction("workoutIntent");
         // The intent needs to be packaged into a pending intent so that the
         // notification service can fire it on our behalf.
@@ -44,7 +45,7 @@ public class NotificationBuilder {
         PendingIntent stopPendingIntent = PendingIntent.getActivity(mContext, 0, stopIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action.Builder(
-                R.drawable.ic_stop_white_24dp, mContext.getString(R.string.finish_meal),
+                R.drawable.ic_stop_white_36dp, mContext.getString(R.string.finish_meal),
                 stopPendingIntent).build();
 
         // Setup background, custom card size and set an intent to launch

@@ -22,7 +22,7 @@ public class BeginMealFragment extends Fragment {
         beginMealButton = (CircularButton)view.findViewById(R.id.begin_meal_button);
 
         beginMealButton.setImageDrawable(getResources()
-                .getDrawable(R.drawable.ic_play_arrow_white_24dp));
+                .getDrawable(R.drawable.ic_play_arrow_white_36dp));
 
         beginMealButton.setOnClickListener(new View.OnClickListener() {
             @Override

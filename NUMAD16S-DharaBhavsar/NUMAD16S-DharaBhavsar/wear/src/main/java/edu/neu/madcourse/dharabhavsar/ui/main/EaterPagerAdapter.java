@@ -66,7 +66,7 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
             ));
         } else {
             mRows.add(new Row(
-                    cardFragment(R.string.reminder, R.string.how_text),
+                    cardFragment(R.string.reminder, R.string.reminder_text),
                     new BeginMealFragment(),
                     new SettingsFragment()
             ));

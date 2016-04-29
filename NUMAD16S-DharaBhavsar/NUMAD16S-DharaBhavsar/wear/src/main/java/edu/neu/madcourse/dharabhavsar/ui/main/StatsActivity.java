@@ -1,10 +1,12 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.wearable.activity.ConfirmationActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -27,6 +29,15 @@ public class StatsActivity extends Activity {
         Log.e(TAG, "in StatsActivity");
 
         super.onCreate(savedInstanceState);
+
+        // Show Confirmation
+        Intent intent = new Intent(this, ConfirmationActivity.class);
+        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                ConfirmationActivity.SUCCESS_ANIMATION);
+        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
+                getString(R.string.all_set));
+        startActivity(intent);
+
         setContentView(R.layout.activity_stats);
 
         NotificationManagerCompat notificationManager =
@@ -78,4 +89,5 @@ public class StatsActivity extends Activity {
             verticalLine.setBackgroundColor(Color.RED);
         }
     }
+
 }

@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -21,12 +19,9 @@ public class SettingsFragment extends Fragment {
 
     private static final String TAG = "SettingsFragment";
     private static final int REQUEST_CODE = 1;
-    private ImageButton leftButton;
     private TextView secondsText;
-    private ImageButton rightButton;
     private CheckBox isManual;
     private SharedPreferences sp;
-    private LinearLayout linearLayout;
     private TextView text2;
 
     @Override
@@ -35,11 +30,8 @@ public class SettingsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.settings_layout, container, false);
 
-        leftButton = (ImageButton)view.findViewById(R.id.decreaseButton);
         secondsText = (TextView) view.findViewById(R.id.editText);
-        rightButton = (ImageButton)view.findViewById(R.id.increaseButton);
         isManual = (CheckBox)view.findViewById(R.id.checkBox);
-        linearLayout = (LinearLayout)view.findViewById(R.id.setBiteInterval);
         text2 = (TextView)view.findViewById(R.id.textView2);
 
         sp = getActivity().getSharedPreferences(Constants.PREF_SHARED, Context.MODE_PRIVATE);
@@ -51,7 +43,7 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 if(isManual.isChecked()) {
                     sp.edit().putBoolean(Constants.manualBiteInterval, true).apply();
-                    linearLayout.setVisibility(View.VISIBLE);
+                    secondsText.setVisibility(View.VISIBLE);
                     text2.setVisibility(View.VISIBLE);
                     String noOfSeconds = "30";
                     if (sp.contains(Constants.manualDurationSet))
@@ -64,7 +56,7 @@ public class SettingsFragment extends Fragment {
                     secondsText.setKeyListener(null);
                 } else {
                     sp.edit().putBoolean(Constants.manualBiteInterval, false).apply();
-                    linearLayout.setVisibility(View.GONE);
+                    secondsText.setVisibility(View.GONE);
                     text2.setVisibility(View.GONE);
                 }
             }
@@ -117,12 +109,12 @@ public class SettingsFragment extends Fragment {
 
         if(isManualSettings) {
             isManual.setChecked(true);
-            linearLayout.setVisibility(View.VISIBLE);
+            secondsText.setVisibility(View.VISIBLE);
             text2.setVisibility(View.VISIBLE);
             secondsText.setText(noOfSeconds);
         } else {
             isManual.setChecked(false);
-            linearLayout.setVisibility(View.GONE);
+            secondsText.setVisibility(View.GONE);
             text2.setVisibility(View.GONE);
         }
     }
