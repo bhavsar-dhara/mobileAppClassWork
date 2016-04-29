@@ -30,12 +30,15 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
     private Order mOrder;
     private int mValue;
     private float mSweepAngle;
+    private boolean mCheck;
 
-    public CircularProgressDrawable(int currentValue, int maxValue, Order order) {
+    public CircularProgressDrawable(int currentValue, int maxValue, Order order,
+                                    boolean biteCheck) {
         super();
         mValue = currentValue;
         mMaxValue = maxValue;
         mOrder = order;
+        mCheck = biteCheck;
         mPaint = new Paint();
     }
 
@@ -62,11 +65,19 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         canvas.drawArc(oval, START_ANGLE, mSweepAngle, true, mPaint);
 
         // Set text in the center of our circle
-        mPaint.setStrokeWidth(0);
-        mPaint.setTextAlign(Paint.Align.CENTER);
-        mPaint.setColor(Color.parseColor("#ffffff"));
-        mPaint.setTextSize(30);
-        canvas.drawText(""+mValue+"s", x, y+(mPaint.getTextSize()/3), mPaint);
+        if(mCheck) {
+            mPaint.setStrokeWidth(0);
+            mPaint.setTextAlign(Paint.Align.CENTER);
+            mPaint.setColor(Color.parseColor("#ffffff"));
+            mPaint.setTextSize(30);
+            canvas.drawText("" + mValue + "s", x, y + (mPaint.getTextSize() / 3), mPaint);
+        } else {
+            mPaint.setStrokeWidth(0);
+            mPaint.setTextAlign(Paint.Align.CENTER);
+            mPaint.setColor(Color.parseColor("#ffffff"));
+            mPaint.setTextSize(30);
+            canvas.drawText("?", x, y + (mPaint.getTextSize() / 3), mPaint);
+        }
     }
 
     @Override

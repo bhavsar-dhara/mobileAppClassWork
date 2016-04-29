@@ -8,11 +8,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.opencsv.CSVWriter;
-
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -67,18 +63,46 @@ public class DeviceClient {
         }
 
         if(detectBite2(sensorType, values)) {
-            Log.e(TAG, "BITE DETECTED --> VIBRATE SKIPPED");
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit().putBoolean(Constants.biteDetected, true).apply();
             nextBiteAllowed = PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(Constants.nextBiteAllowed, true);
-            vibrate();
+            Log.e(TAG, "in BITE DETECTED = " + nextBiteAllowed);
             if(!nextBiteAllowed){
                 Log.e(TAG, "BITE DETECTED --> Counter Running");
                 vibrate();
+                // if increase in speed then show this message
                 PreferenceManager.getDefaultSharedPreferences(context).edit()
                         .putString(Constants.mealText,
-                        "Your eating speed has increased").apply();
+                        context.getString(R.string.speed_increase)).apply();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean sendSensorData3(final int sensorType, final float[] values, int counterTime,
+                                   int biteCount, boolean isManual) {
+
+        if(vibrating) {
+            return vibrating;
+        }
+
+        if(detectBite2(sensorType, values)) {
+            Log.e(TAG, "in BITE DETECTED = " + counterTime);
+            if(isManual || biteCount >= 4) {
+                if(counterTime > 0) {
+                    Log.e(TAG, "BITE DETECTED --> Counter Running, Vibrate");
+                    // if increase in speed then show this message
+                    PreferenceManager.getDefaultSharedPreferences(context).edit()
+                            .putString(Constants.mealText,
+                                    context.getString(R.string.speed_increase)).apply();
+                    vibrate();
+                }
+                else if(counterTime == 0){
+                    PreferenceManager.getDefaultSharedPreferences(context).edit()
+                            .putString(Constants.mealText, "").apply();
+                }
             }
             return true;
         }
@@ -186,9 +210,6 @@ public class DeviceClient {
         }
         return false;
     }
-
-
-
 
     /**
      * Vibrates the device for 0.5 seconds

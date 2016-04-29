@@ -13,16 +13,18 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.wearable.activity.WearableActivity;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class WorkoutViewActivity extends Activity {
+import java.util.ArrayList;
+import java.util.List;
 
-    public static final int MAX_TIME = 30;      // 30s countdown timer
-    public static final int START_TIME = 30;    // Countdown from 30 to zero
+public class WorkoutViewActivity extends Activity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    public static final int MAX_TIME = 40;      // 30s countdown timer
     private static CircularProgressDrawable mCircularProgressTimer;
     private ImageView mCircularImageView;
 
@@ -38,7 +40,9 @@ public class WorkoutViewActivity extends Activity {
     private DeviceClient client;
 
     private SharedPreferences sharedPreferences;
-
+    private boolean isManual;
+    private int biteInterval;
+    private int biteCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +57,30 @@ public class WorkoutViewActivity extends Activity {
         mCircularImageView = (ImageView) findViewById(R.id.imageview);
         title = (TextView)findViewById(R.id.title);
 
-        // Create an instance of a drawable circular progress timer
-        mCircularProgressTimer = new CircularProgressDrawable(START_TIME,
-                MAX_TIME, CircularProgressDrawable.Order.DESCENDING);
+        isManual = sharedPreferences.getBoolean(Constants.manualBiteInterval, false);
+        if(isManual) {
+            biteInterval = Integer.parseInt(sharedPreferences.getString(Constants.manualDurationSet,
+                    "0"));
+            // Create an instance of a drawable circular progress timer
+            mCircularProgressTimer = new CircularProgressDrawable(biteInterval,
+                    biteInterval, CircularProgressDrawable.Order.DESCENDING, true);
+            sharedPreferences.edit().putInt(Constants.SUGGESTED_BITE_INTERVAL,
+                    biteInterval).apply();
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putString(Constants.mealText, "").apply();
+            // if timer runs out then show this message or normal text for manual set bite duration
+            title.setText(R.string.take_bite);
+        }
+        else{
+            // Create an instance of a drawable circular progress timer
+            mCircularProgressTimer = new CircularProgressDrawable(MAX_TIME,
+                    MAX_TIME, CircularProgressDrawable.Order.DESCENDING, false);
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putString(Constants.mealText,
+                            this.getString(R.string.eating_speed_text)).apply();
+            // if detecting speed then show this message
+            title.setText(R.string.eating_speed_text);
+        }
 
         // Set a callback to update our circular progress timer
         mCircularProgressTimer.setCallback(mPieDrawableCallback);
@@ -78,6 +103,8 @@ public class WorkoutViewActivity extends Activity {
         super.onResume();
         Log.i(TAG, "In onResume");
         startMeasurement();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -85,6 +112,8 @@ public class WorkoutViewActivity extends Activity {
         super.onPause();
         Log.i(TAG, "In onPause");
         stopMeasurement();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private Drawable.Callback mPieDrawableCallback = new Drawable.Callback() {
@@ -105,6 +134,32 @@ public class WorkoutViewActivity extends Activity {
         }
     };
 
+    private List<Integer> biteTimeList = new ArrayList<>();
+    private int getAvgBiteSize() {
+
+        int biteInterval = 0;
+
+        long maxDiff = (biteTimeList.get(3) - biteTimeList.get(0))/3;
+
+        // TODO: Add logic for doing some stuff here
+        if (maxDiff/1000 >= 25) {
+            biteInterval = 30;
+        } else if(maxDiff < 25 && maxDiff >= 20) {
+            biteInterval = 25;
+        } else if(maxDiff < 20 && maxDiff >= 15) {
+            biteInterval = 20;
+        } else if(maxDiff < 15) {
+            biteInterval = 15;
+        }
+
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putString(Constants.mealText, "").apply();
+
+        return biteInterval;
+    }
+
+    private boolean timerZero = false;
+
     protected void startMeasurement() {
 
         Log.i(TAG, "started Measurement");
@@ -117,16 +172,48 @@ public class WorkoutViewActivity extends Activity {
             @Override
             public void onSensorChanged(SensorEvent event) {
 
-//                Log.i(TAG, "values are "+event.values);
-                boolean check = client.sendSensorData2(event.sensor.getType(), event.accuracy,
-                        event.timestamp, event.values);
+                if(!timerZero && mCircularProgressTimer.getValue() == 0){
+                    timerZero = true;
+                    PreferenceManager.getDefaultSharedPreferences(WorkoutViewActivity.this)
+                            .edit()
+                            .putString(Constants.mealText,
+                                    WorkoutViewActivity.this.getString(R.string.take_bite))
+                            .apply();
+                }
+
+                boolean check = client.sendSensorData3(event.sensor.getType(), event.values,
+                        mCircularProgressTimer.getValue(), biteCount, isManual);
                 if(bite != check) {
                     bite = check;
-                    int bite = sharedPreferences.getInt(Constants.MEAL_BITES, 0);
-                    sharedPreferences.edit().putInt(Constants.MEAL_BITES, ++bite).apply();
-                    mCircularProgressTimer.stop();
-                    mCircularProgressTimer.restart();
-                    mCircularProgressTimer.start();
+                    if(check) {
+                        timerZero = false;
+                        biteCount++;
+                        Log.i(TAG, "The bite count is " + biteCount);
+                        //int bite = sharedPreferences.getInt(Constants.MEAL_BITES, 0);
+                        sharedPreferences.edit().putInt(Constants.MEAL_BITES, biteCount).apply();
+
+                        if (!isManual && biteCount < 5) {
+                            biteTimeList.add(MAX_TIME - mCircularProgressTimer.getValue());
+                            if (biteCount == 4) {
+                                biteInterval = getAvgBiteSize();
+                                sharedPreferences.edit().putInt(Constants.SUGGESTED_BITE_INTERVAL,
+                                        biteInterval).apply();
+                                mCircularProgressTimer.stop();
+                                mCircularProgressTimer = new CircularProgressDrawable(biteInterval,
+                                        biteInterval, CircularProgressDrawable.Order.DESCENDING, true);
+                                // Set a drawable object for our Imageview
+                                mCircularImageView.setImageDrawable(mCircularProgressTimer);
+                                PreferenceManager.getDefaultSharedPreferences
+                                        (WorkoutViewActivity.this).edit()
+                                        .putString(Constants.mealText, "").apply();
+                                // if timer runs out then show this message
+                                title.setText("");
+                            }
+                        }
+                        mCircularProgressTimer.stop();
+                        mCircularProgressTimer.restart();
+                        mCircularProgressTimer.start();
+                    }
                 }
             }
         };
@@ -135,7 +222,6 @@ public class WorkoutViewActivity extends Activity {
                 linearAccelero, SensorManager.SENSOR_DELAY_NORMAL);
 
         mCircularProgressTimer.start();
-        title.setText(R.string.bite_detected);
     }
 
     private void stopMeasurement() {
@@ -144,5 +230,14 @@ public class WorkoutViewActivity extends Activity {
             mSensorListener = null;
         }
         mCircularProgressTimer.stop();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equalsIgnoreCase(Constants.mealText)) {
+            Log.i(TAG, "Preferences Changed. Value is " + key);
+            String text = sharedPreferences.getString(Constants.mealText, "defValue");
+            title.setText(text);
+        }
     }
 }

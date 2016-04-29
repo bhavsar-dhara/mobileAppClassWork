@@ -17,4 +17,5 @@ public class Constants {
     public static final String PREF_SHARED = "sharedPrefs";
     public static final String MEAL_START_TIME = "mealStartTime";
     public static final String MEAL_BITES = "mealBites";
+    public static final String SUGGESTED_BITE_INTERVAL = "biteInterval";
 }

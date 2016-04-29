@@ -36,15 +36,16 @@ public class StatsActivity extends Activity {
 
         long timeDuration = System.currentTimeMillis();
         int bites = 1;
-        long biteInterval = 0;
+        int biteInterval = 0;
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.PREF_SHARED, MODE_PRIVATE);
         timeDuration = timeDuration - sharedPreferences.getLong(Constants.MEAL_START_TIME, timeDuration);
         bites = sharedPreferences.getInt(Constants.MEAL_BITES, bites);
+        biteInterval = sharedPreferences.getInt(Constants.SUGGESTED_BITE_INTERVAL, biteInterval);
 
         int yourBInterval = 0;
         if(bites != 0)
-            yourBInterval = (int) timeDuration/bites;
+            yourBInterval = (int) timeDuration/(bites*1000);
 
 
         horizontalLine = findViewById(R.id.stats_horizontal_line);
