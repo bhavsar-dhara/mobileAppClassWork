@@ -2,6 +2,7 @@ package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.preference.PreferenceManager;
 import android.support.wearable.view.CircularButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,8 @@ public class BeginMealFragment extends Fragment {
                 startActivity(intent);*/
                 NotificationBuilder.update(getActivity());
                 getActivity().finish();
+                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                        .putBoolean(Constants.noTutorial, true).apply();
             }
         });
 
