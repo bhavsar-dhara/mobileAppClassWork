@@ -25,16 +25,14 @@ public class NotificationBuilder {
     public Notification buildNotification() {
         // Setup our notification contents and icon
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
-                .setContentTitle("Workout")
-                .setContentText("Push Ups")
+                .setContentTitle(mContext.getString(R.string.app))
+                .setPriority(Notification.PRIORITY_HIGH)
                 .setSmallIcon(R.mipmap.ic_launcher2);
 
         // Create an intent that will be launched inside of an activity view,
         // that is, WorkoutActivity.class to display the custom notification.
         Intent workoutIntent = new Intent(mContext, WorkoutViewActivity.class);
-
-        workoutIntent.setAction("MainINtent");
-
+        workoutIntent.setAction("workoutIntent");
         // The intent needs to be packaged into a pending intent so that the
         // notification service can fire it on our behalf.
         PendingIntent workoutPendingIntent =
@@ -42,24 +40,12 @@ public class NotificationBuilder {
                         PendingIntent.FLAG_ONE_SHOT);
 
         Intent stopIntent = new Intent(mContext, StatsActivity.class);
-
-        stopIntent.setAction("ABCD");
-
+        stopIntent.setAction("stopIntent");
         PendingIntent stopPendingIntent = PendingIntent.getActivity(mContext, 0, stopIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-
-
         NotificationCompat.Action action = new NotificationCompat.Action.Builder(
                 R.drawable.ic_stop_white_24dp, mContext.getString(R.string.finish_meal),
                 stopPendingIntent).build();
-
-        /*// TEST
-        Intent viewIntent = new Intent(mContext, SensorActivity.class);
-        PendingIntent viewPendingIntent =
-                PendingIntent.getActivity(mContext, 0, viewIntent, 0);
-        NotificationCompat.Action action2 = new NotificationCompat.Action.Builder(
-                R.drawable.ic_timer_black_24dp, mContext.getString(R.string.take_bite),
-                viewPendingIntent).build();*/
 
         // Setup background, custom card size and set an intent to launch
         // inside an activity view when displaying this notification
@@ -81,6 +67,7 @@ public class NotificationBuilder {
     public static void update(Context context) {
         NotificationBuilder builder = new NotificationBuilder(context);
         Notification notification = builder.buildNotification();
+        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(context);
         notificationManager.notify(NOTIFICATION_ID, notification);

@@ -62,7 +62,7 @@ public class WorkoutViewActivity extends Activity
             biteInterval = Integer.parseInt(sharedPreferences.getString(Constants.manualDurationSet,
                     "0"));
             // Create an instance of a drawable circular progress timer
-            mCircularProgressTimer = new CircularProgressDrawable(biteInterval,
+            mCircularProgressTimer = new CircularProgressDrawable(0,
                     biteInterval, CircularProgressDrawable.Order.DESCENDING, true);
             sharedPreferences.edit().putInt(Constants.SUGGESTED_BITE_INTERVAL,
                     biteInterval).apply();
@@ -221,7 +221,8 @@ public class WorkoutViewActivity extends Activity
         mSensorManager.registerListener(mSensorListener,
                 linearAccelero, SensorManager.SENSOR_DELAY_NORMAL);
 
-        mCircularProgressTimer.start();
+        if(!isManual)
+            mCircularProgressTimer.start();
     }
 
     private void stopMeasurement() {

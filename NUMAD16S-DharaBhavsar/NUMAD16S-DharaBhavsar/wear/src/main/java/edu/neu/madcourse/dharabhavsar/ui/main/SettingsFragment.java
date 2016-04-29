@@ -2,10 +2,10 @@ package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +42,7 @@ public class SettingsFragment extends Fragment {
         linearLayout = (LinearLayout)view.findViewById(R.id.setBiteInterval);
         text2 = (TextView)view.findViewById(R.id.textView2);
 
-        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp = getActivity().getSharedPreferences(Constants.PREF_SHARED, Context.MODE_PRIVATE);
 
         initialScreen();
 
@@ -104,13 +104,11 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
     }
 
     private void initialScreen() {

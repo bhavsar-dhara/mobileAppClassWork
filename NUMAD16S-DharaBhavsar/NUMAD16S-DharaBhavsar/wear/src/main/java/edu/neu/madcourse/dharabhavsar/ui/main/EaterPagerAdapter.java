@@ -54,10 +54,6 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
                                     .getBoolean(Constants.noTutorial, false);
 
         Log.e(TAG, "noTutorial = " + noTutorial);
-        /*mRows.add(new Row(
-                cardFragment(R.string.setup, R.string.hand_notifier),
-                cardFragment(R.string.trainer, R.string.train_notifier),
-                new ButtonFragment()));*/
 
         if(!noTutorial) {
             mRows.add(new Row(
@@ -65,12 +61,13 @@ public class EaterPagerAdapter extends FragmentGridPagerAdapter {
                     cardFragment(R.string.what, R.string.what_text),
                     cardFragment(R.string.how, R.string.how_text),
                     cardFragment(R.string.how2, R.string.how2_text),
-                    new ButtonFragment(),
+                    new BeginMealFragment(),
                     new SettingsFragment()
             ));
         } else {
             mRows.add(new Row(
-                    new ButtonFragment(),
+                    cardFragment(R.string.reminder, R.string.how_text),
+                    new BeginMealFragment(),
                     new SettingsFragment()
             ));
         }

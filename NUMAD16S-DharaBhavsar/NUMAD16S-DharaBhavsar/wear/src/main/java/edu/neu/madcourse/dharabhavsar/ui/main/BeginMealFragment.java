@@ -1,8 +1,7 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.wearable.view.CircularButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,18 +21,30 @@ public class BeginMealFragment extends Fragment {
 
         beginMealButton = (CircularButton)view.findViewById(R.id.begin_meal_button);
 
-        beginMealButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_white_24dp));
+        beginMealButton.setImageDrawable(getResources()
+                .getDrawable(R.drawable.ic_play_arrow_white_24dp));
 
         beginMealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                /*Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-                startActivity(intent);
+                startActivity(intent);*/
+                NotificationBuilder.update(getActivity());
                 getActivity().finish();
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
     }
 }
