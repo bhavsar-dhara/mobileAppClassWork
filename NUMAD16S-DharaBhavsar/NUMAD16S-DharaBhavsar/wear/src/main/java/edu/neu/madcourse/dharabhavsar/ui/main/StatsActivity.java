@@ -75,19 +75,40 @@ public class StatsActivity extends Activity {
 
         mealDuration.setText(displayTime);
 
+        String notApplicable = "NA";
+
         if(bites != 0) {
             yourBiteInterval.setText(String.valueOf(yourBInterval));
-            suggBiteInterval.setText(String.valueOf(biteInterval));
         }
         else {
-            yourBiteInterval.setText("NA");
-            suggBiteInterval.setText("NA");
+            yourBiteInterval.setText(notApplicable);
+        }
+
+        if(biteInterval != 0){
+            suggBiteInterval.setText(String.valueOf(biteInterval));
+        }
+        else{
+            suggBiteInterval.setText(notApplicable);
         }
 
         if(yourBInterval < biteInterval){
             horizontalLine.setBackgroundColor(Color.RED);
             verticalLine.setBackgroundColor(Color.RED);
         }
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+
+        //Clear the shared Preferences
+        SharedPreferences.Editor editor = getSharedPreferences(Constants.PREF_SHARED, MODE_PRIVATE)
+                .edit();
+
+        editor.remove(Constants.MEAL_START_TIME);
+        editor.remove(Constants.MEAL_BITES);
+        editor.remove(Constants.SUGGESTED_BITE_INTERVAL);
+        editor.apply();
     }
 
 }
