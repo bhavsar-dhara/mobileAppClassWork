@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
             }
         });
         pager.setAdapter(new EaterPagerAdapter(this, getFragmentManager()));
-        pager.setBackgroundColor(getResources().getColor(R.color.primary));
+        pager.setBackground(getDrawable(R.drawable.image_meal2));
         DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
     }

@@ -139,10 +139,23 @@ public class WorkoutViewActivity extends Activity
 
         int biteInterval = 0;
 
-        long maxDiff = (biteTimeList.get(3) - biteTimeList.get(0))/3;
+        int sum = 0;
+        for(Integer i : biteTimeList){
+            sum += i;
+        }
+        int maxDiff = sum/biteTimeList.size();
 
-        // TODO: Add logic for doing some stuff here
-        if (maxDiff/1000 >= 25) {
+        Log.e(TAG, "MaxDiff = " + maxDiff);
+        if(maxDiff < 13){
+            biteInterval =  15;
+        }
+        else{
+            biteInterval = (int)Math.ceil(maxDiff * 1.15);
+            Log.e(TAG, "Automatic bite interval for diff of "+maxDiff+" is "+biteInterval);
+        }
+
+        // TODO Add logic for doing some stuff here
+        /*if (maxDiff/1000 >= 25) {
             biteInterval = 30;
         } else if(maxDiff < 25 && maxDiff >= 20) {
             biteInterval = 25;
@@ -150,7 +163,7 @@ public class WorkoutViewActivity extends Activity
             biteInterval = 20;
         } else if(maxDiff < 15) {
             biteInterval = 15;
-        }
+        }*/
 
         PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putString(Constants.mealText, "").apply();

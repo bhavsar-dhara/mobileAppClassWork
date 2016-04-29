@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
@@ -25,7 +26,8 @@ public class NotificationBuilder {
     public Notification buildNotification() {
         // Setup our notification contents and icon
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
-                .setContentTitle(mContext.getString(R.string.app))
+                .setContentTitle(mContext.getString(R.string.running))
+                .setColor(Color.BLACK)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setSmallIcon(R.mipmap.ic_launcher2);
 
@@ -53,7 +55,7 @@ public class NotificationBuilder {
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
                         .setBackground(BitmapFactory.decodeResource(
-                                mContext.getResources(), R.drawable.background_project_1))
+                                mContext.getResources(), R.drawable.image_meal1))
                         .setCustomSizePreset(Notification.WearableExtender.SIZE_DEFAULT)
                         .addAction(action)
                         //.addAction(action2)
