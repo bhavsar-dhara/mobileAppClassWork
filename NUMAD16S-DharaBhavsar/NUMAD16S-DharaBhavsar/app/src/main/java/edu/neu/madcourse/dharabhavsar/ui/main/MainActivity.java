@@ -6,20 +6,17 @@ import android.support.v7.widget.Toolbar;
 
 import com.firebase.client.Firebase;
 
-import edu.neu.madcourse.dharabhavsar.ui.dictionary.Trie;
-
 public class MainActivity extends AppCompatActivity {
-//public class MainActivity extends Application {
-
-    Trie trie;
-    String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setTitle(getResources().getString(R.string.title_name));
-        Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_main);
+
+        this.setTitle(getResources().getString(R.string.title_name));
+
+        Firebase.setAndroidContext(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }

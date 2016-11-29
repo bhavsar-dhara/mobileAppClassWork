@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivityUt3;
  */
 public class MainActivityFragment extends Fragment {
 
+    private static final String TAG = MainActivityFragment.class.getSimpleName();
+
     MediaPlayer mMediaPlayer;
 
     public MainActivityFragment() {
@@ -40,12 +43,10 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
                 getActivity().finish();
 
+                Log.i(TAG, "clicked on quit_button");
 //                Returning back to the Home Screen
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
@@ -60,14 +61,13 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
 
+                Log.i(TAG, "clicked on tictactoe_button");
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityUt3.class);
                 startActivity(intent);
-            }});
+            }
+        });
 
         // Method to generate an error
         Button btn3 = (Button) rootView.findViewById(R.id.generate_error_button);
@@ -75,11 +75,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.distillerystudio_error_03_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.distillerystudio_error_03_freesound_org);
 
+                Log.i(TAG, "clicked on generate_error_button");
 //          App generates an error due to proper
                 PackageManager pm = getActivity().getPackageManager();
                 Intent intent = pm.getLaunchIntentForPackage("edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivity");
@@ -93,11 +91,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
 
+                Log.i(TAG, "clicked on about_button");
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityAbout.class);
                 startActivity(intent);
             }
@@ -108,11 +104,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
 
+                Log.i(TAG, "clicked on dictionary_button");
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityDict.class);
                 startActivity(intent);
             }
@@ -123,11 +117,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
 
+                Log.i(TAG, "clicked on wordgame_button");
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle.class);
                 startActivity(intent);
             }
@@ -138,11 +130,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
 
+                Log.i(TAG, "clicked on communication_button");
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle2.class);
 //                Intent intent = new Intent(MainActivityFragment.this.getActivity(), CommunicationMain.class);
                 startActivity(intent);
@@ -154,11 +144,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
 
+                Log.i(TAG, "clicked on wordgame2player_button");
                 Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle3.class);
                 startActivity(intent);
             }
@@ -169,11 +157,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
 
+                Log.i(TAG, "clicked on trickiestpart_button");
                 Intent intent = new Intent(getActivity(), WearableLaunchActivity.class);
                 intent.putExtra("finalProject", false);
                 startActivity(intent);
@@ -185,11 +171,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mMediaPlayer = MediaPlayer.create(MainActivityFragment.this.getActivity(),
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                playSound(R.raw.short_ping_freesound_org);
 
+                Log.i(TAG, "clicked on finalproject_button");
                 Intent intent = new Intent(getActivity(), WearableLaunchActivity.class);
                 intent.putExtra("finalProject", true);
                 startActivity(intent);
@@ -197,5 +181,11 @@ public class MainActivityFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void playSound(int soundID) {
+        mMediaPlayer = MediaPlayer.create(this.getActivity(), soundID);
+        mMediaPlayer.setVolume(0.5f, 0.5f);
+        mMediaPlayer.start();
     }
 }
