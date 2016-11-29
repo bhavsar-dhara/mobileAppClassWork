@@ -4,31 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    tools:context="edu.neu.madcourse.dharabhavsar.ui.about.MainActivityAbout"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="edu.neu.madcourse.dharabhavsar.ui.about.MainActivityAbout">
     <!--tools:context=".AboutActivity"-->
 
-    //Custom Title Bar
+    <!--Custom Title Bar-->
     <TextView
+        android:id="@+id/about_title_bar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/about_title_bar_height"
-        android:id="@+id/about_title_bar"
         android:background="@color/about_title_bar_color"
-        android:textColor="@color/about_title_bar_font_color"
-        android:text="@string/about_app_screen"
         android:focusable="false"
+        android:text="@string/about_app_screen"
+        android:textColor="@color/about_title_bar_font_color"
         android:textSize="@dimen/abc_action_bar_content_inset_material"
         android:textStyle="bold"
-        android:typeface="sans">
-    </TextView>
+        android:typeface="sans" />
 
     <fragment
         android:id="@+id/fragment_main_about"
         class="edu.neu.madcourse.dharabhavsar.ui.about.MainFragmentAbout"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center"
+        android:layout_weight="1"
         tools:layout="@layout/fragment_main_about" />
 
 </LinearLayout>
