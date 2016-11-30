@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -40,7 +39,6 @@ public class MainActivityDict extends AppCompatActivity {
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
 
-    private Handler mHandler = new Handler();
     String resultStr = "";
     String finalResult = "";
     TextView textViewWordList;
@@ -56,7 +54,7 @@ public class MainActivityDict extends AppCompatActivity {
         setContentView(R.layout.activity_main_dict);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.about_app_screen));
+        getSupportActionBar().setTitle(getString(R.string.test_dict_app_screen));
 
         boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {
@@ -70,6 +68,7 @@ public class MainActivityDict extends AppCompatActivity {
 //         Method to show the list of words found from the provided word list
         textViewWordList = (TextView) findViewById(R.id.textViewWordList);
         textViewWordList.setMovementMethod(new ScrollingMovementMethod());
+
         editWordText = (EditText) findViewById(R.id.editWordText);
 
 //        Reading from a file occurs in the AsyncTaskRunner
@@ -79,10 +78,15 @@ public class MainActivityDict extends AppCompatActivity {
                 String result1 = "";
                 String word = String.valueOf(editWordText.getText());
                 Log.e("WORD LENGTH Fragment", "afterTextChanged: " + word.length() + " word = " + word);
-                if (word.length() >= 3) {
-                    insertedText = word;
+                if (word.length() == 1) {
                     try {
                         new AsyncTaskRunner().execute(word).get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                } else if (word.length() >= 3) {
+                    insertedText = word;
+                    try {
                         String res = new AsyncTaskRunner2().execute().get();
                         Log.e("addTextChangedListener", "res = " + res);
 //                        Log.e("addTextChangedListener", resp);
@@ -108,7 +112,7 @@ public class MainActivityDict extends AppCompatActivity {
                     result1 = resultStr;
                     Log.e("RESULT CONCAT Fragment", "afterTextChanged: RESULT STRING = " + result1);
                 } else {
-                    List<String> list = Arrays.asList(resultStr.split("\n"));
+                    List<String> list = Arrays.asList(resultStr.split("\\n"));
                     Set<String> uniqueWords = new HashSet<String>(list);
                     finalResult = "";
                     for (String s1 : uniqueWords) {
@@ -197,7 +201,6 @@ public class MainActivityDict extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mHandler.removeCallbacks(null);
         String gameData = getData();
         getPreferences(MODE_PRIVATE).edit()
                 .putString(PREF_RESTORE, gameData)

@@ -3,8 +3,6 @@
     android:id="@+id/scroll_view_main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingBottom="20dp"
-    android:paddingTop="12dp"
     android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
@@ -33,7 +31,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/finalproject_label"
             android:textAllCaps="false" />
@@ -43,7 +40,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/trickiestpart_label"
             android:textAllCaps="false" />
@@ -53,7 +49,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/wordgame2_label"
             android:textAllCaps="false" />
@@ -63,7 +58,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/communication_label"
             android:textAllCaps="false" />
@@ -73,7 +67,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/wordgame_label"
             android:textAllCaps="false" />
@@ -83,7 +76,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/dictionary_label"
             android:textAllCaps="false" />
@@ -93,7 +85,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/tictactoe_label"
             android:textAllCaps="false" />
@@ -104,7 +95,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/generate_error_label"
             android:textAllCaps="false" />
@@ -114,7 +104,6 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/about_label"
             android:textAllCaps="false" />
@@ -124,9 +113,9 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/menu_button_margin"
             android:padding="@dimen/menu_button_padding"
             android:text="@string/quit_label"
             android:textAllCaps="false" />
     </LinearLayout>
+
 </ScrollView>
