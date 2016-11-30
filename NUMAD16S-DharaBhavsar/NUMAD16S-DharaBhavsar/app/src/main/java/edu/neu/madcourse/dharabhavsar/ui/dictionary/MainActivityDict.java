@@ -2,10 +2,8 @@ package edu.neu.madcourse.dharabhavsar.ui.dictionary;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -29,6 +27,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import edu.neu.madcourse.dharabhavsar.ui.main.R;
+import edu.neu.madcourse.dharabhavsar.utils.CommonUtils;
 
 
 /**
@@ -43,7 +42,6 @@ public class MainActivityDict extends AppCompatActivity {
     String finalResult = "";
     TextView textViewWordList;
     EditText editWordText;
-    MediaPlayer mMediaPlayer;
     String result = "";
     HashMap<String, String> vocabList = new HashMap<String, String>();
     String insertedText = "";
@@ -101,10 +99,7 @@ public class MainActivityDict extends AppCompatActivity {
                         Log.e("addTextChangedListener", finalResult);
                         textViewWordList.setText(finalResult);
                         if (!TextUtils.equals(res, "")) {
-                            mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
-                                    R.raw.short_ping_freesound_org);
-                            mMediaPlayer.setVolume(0.5f, 0.5f);
-                            mMediaPlayer.start();
+                            CommonUtils.playSound(getBaseContext(),  R.raw.short_ping_freesound_org);
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -143,10 +138,7 @@ public class MainActivityDict extends AppCompatActivity {
         clearBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                CommonUtils.playSound(getBaseContext(),  R.raw.short_ping_freesound_org);
 
                 // Clear text when clicked
 //                editWordText.setText("");
@@ -162,10 +154,7 @@ public class MainActivityDict extends AppCompatActivity {
         returnToMenuBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                CommonUtils.playSound(getBaseContext(),  R.raw.short_ping_freesound_org);
 
                 MainActivityDict.this.finish();
             }
@@ -176,10 +165,7 @@ public class MainActivityDict extends AppCompatActivity {
         acknowledgementsBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
-                        R.raw.short_ping_freesound_org);
-                mMediaPlayer.setVolume(0.5f, 0.5f);
-                mMediaPlayer.start();
+                CommonUtils.playSound(getBaseContext(),  R.raw.short_ping_freesound_org);
 
                 Intent intent = new Intent(MainActivityDict.this, AcknowledgementMainActivity.class);
                 startActivity(intent);

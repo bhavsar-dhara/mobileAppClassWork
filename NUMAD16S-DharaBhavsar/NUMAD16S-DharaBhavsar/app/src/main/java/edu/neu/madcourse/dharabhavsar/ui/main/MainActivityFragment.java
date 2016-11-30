@@ -2,7 +2,6 @@ package edu.neu.madcourse.dharabhavsar.ui.main;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,6 +17,7 @@ import edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict;
 import edu.neu.madcourse.dharabhavsar.ui.project.WearableLaunchActivity;
 import edu.neu.madcourse.dharabhavsar.ui.scraggle.MainActivityScraggle;
 import edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivityUt3;
+import edu.neu.madcourse.dharabhavsar.utils.CommonUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -25,8 +25,6 @@ import edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivityUt3;
 public class MainActivityFragment extends Fragment {
 
     private static final String TAG = MainActivityFragment.class.getSimpleName();
-
-    MediaPlayer mMediaPlayer;
 
     public MainActivityFragment() {
     }
@@ -43,7 +41,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
                 getActivity().finish();
 
                 Log.i(TAG, "clicked on quit_button");
@@ -61,10 +59,10 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on tictactoe_button");
-                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityUt3.class);
+                Intent intent = new Intent(getActivity(), MainActivityUt3.class);
                 startActivity(intent);
             }
         });
@@ -75,7 +73,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.distillerystudio_error_03_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.distillerystudio_error_03_freesound_org);
 
                 Log.i(TAG, "clicked on generate_error_button");
 //          App generates an error due to proper
@@ -91,10 +89,10 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on about_button");
-                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityAbout.class);
+                Intent intent = new Intent(getActivity(), MainActivityAbout.class);
                 startActivity(intent);
             }
         });
@@ -104,10 +102,10 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on dictionary_button");
-                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityDict.class);
+                Intent intent = new Intent(getActivity(), MainActivityDict.class);
                 startActivity(intent);
             }
         });
@@ -117,10 +115,10 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on wordgame_button");
-                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle.class);
+                Intent intent = new Intent(getActivity(), MainActivityScraggle.class);
                 startActivity(intent);
             }
         });
@@ -130,11 +128,11 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on communication_button");
-                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle2.class);
-//                Intent intent = new Intent(MainActivityFragment.this.getActivity(), CommunicationMain.class);
+                Intent intent = new Intent(getActivity(), MainActivityScraggle2.class);
+//                Intent intent = new Intent(getActivity(), CommunicationMain.class);
                 startActivity(intent);
             }
         });
@@ -144,10 +142,10 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on wordgame2player_button");
-                Intent intent = new Intent(MainActivityFragment.this.getActivity(), MainActivityScraggle3.class);
+                Intent intent = new Intent(getActivity(), MainActivityScraggle3.class);
                 startActivity(intent);
             }
         });
@@ -157,7 +155,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on trickiestpart_button");
                 Intent intent = new Intent(getActivity(), WearableLaunchActivity.class);
@@ -171,7 +169,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                playSound(R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on finalproject_button");
                 Intent intent = new Intent(getActivity(), WearableLaunchActivity.class);
@@ -181,11 +179,5 @@ public class MainActivityFragment extends Fragment {
         });
 
         return rootView;
-    }
-
-    private void playSound(int soundID) {
-        mMediaPlayer = MediaPlayer.create(this.getActivity(), soundID);
-        mMediaPlayer.setVolume(0.5f, 0.5f);
-        mMediaPlayer.start();
     }
 }
