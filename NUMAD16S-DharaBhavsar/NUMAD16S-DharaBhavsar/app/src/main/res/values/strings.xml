@@ -231,5 +231,6 @@ but you could opt for it.\n\n\
 P.S. “Make sure to wear your Android Wear on your eating hand.”</string>
     <string name="launch_on_wear">Launch on Wear</string>
 
+    <string name="enter_word_here">Enter word here..</string>
 
 </resources>

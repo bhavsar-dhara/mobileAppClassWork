@@ -44,6 +44,17 @@
         </activity>
 
         <activity
+            android:name="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict"
+            android:fitsSystemWindows="true"
+            android:label="@string/dictActivityLabel"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize|adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict" />
+        </activity>
+
+        <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.project.WearableLaunchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.CustomActionBar">
@@ -165,16 +176,6 @@
 
         <activity android:name="edu.neu.madcourse.dharabhavsar.ui.ut3.GameActivity"
             android:theme="@style/Ut3Theme"/>
-
-        <activity
-            android:name="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict"
-            android:fitsSystemWindows="true"
-            android:label="@string/dictActivityLabel"
-            android:windowSoftInputMode="stateVisible|adjustResize|adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict" />
-        </activity>
 
         <activity
             android:name="edu.neu.madcourse.dharabhavsar.ui.dictionary.AcknowledgementMainActivity"

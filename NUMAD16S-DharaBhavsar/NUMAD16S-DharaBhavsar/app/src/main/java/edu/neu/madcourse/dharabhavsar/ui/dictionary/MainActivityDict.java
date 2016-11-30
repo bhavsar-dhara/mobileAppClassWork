@@ -1,6 +1,5 @@
 package edu.neu.madcourse.dharabhavsar.ui.dictionary;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
@@ -8,12 +7,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,7 +33,7 @@ import edu.neu.madcourse.dharabhavsar.ui.main.R;
 /**
  * Created by Dhara on 2/4/2016.
  */
-public class MainActivityDict extends Activity {
+public class MainActivityDict extends AppCompatActivity {
 
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
@@ -45,14 +44,16 @@ public class MainActivityDict extends Activity {
     EditText editWordText;
     MediaPlayer mMediaPlayer;
     String result = "";
-    HashMap<String,String> vocabList = new HashMap<String, String>();
+    HashMap<String, String> vocabList = new HashMap<String, String>();
     String insertedText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_dict);
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.about_app_screen));
 
         boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {
@@ -74,13 +75,13 @@ public class MainActivityDict extends Activity {
             public void afterTextChanged(Editable s) {
                 String result1 = "";
                 String word = String.valueOf(editWordText.getText());
-                Log.e("WORD LENGTH Fragment", "afterTextChanged: " + word.length()+" word = " + word);
-                if(word.length() >= 3) {
+                Log.e("WORD LENGTH Fragment", "afterTextChanged: " + word.length() + " word = " + word);
+                if (word.length() >= 3) {
                     insertedText = word;
                     try {
                         new AsyncTaskRunner().execute(word).get();
                         String res = new AsyncTaskRunner2().execute().get();
-                        Log.e("addTextChangedListener", "res = "+res);
+                        Log.e("addTextChangedListener", "res = " + res);
 //                        Log.e("addTextChangedListener", resp);
                         resultStr = resultStr + res + "\n";
                         List<String> list = Arrays.asList(resultStr.split("\n"));
@@ -92,7 +93,7 @@ public class MainActivityDict extends Activity {
                         }
                         Log.e("addTextChangedListener", finalResult);
                         textViewWordList.setText(finalResult);
-                        if(res != "") {
+                        if (res != "") {
                             mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
                                     R.raw.short_ping_freesound_org);
                             mMediaPlayer.setVolume(0.5f, 0.5f);
@@ -127,7 +128,7 @@ public class MainActivityDict extends Activity {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                if(s.length() != 0)
+                if (s.length() != 0)
                     textViewWordList.setText("");
             }
         });
@@ -182,7 +183,7 @@ public class MainActivityDict extends Activity {
         Log.d("MainActivityDict", "restore = " + restore);
     }
 
-    static{
+    static {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     }
@@ -204,7 +205,10 @@ public class MainActivityDict extends Activity {
     }
 
     //    getData()
-    /** Create a string containing the state of the game. */
+
+    /**
+     * Create a string containing the state of the game.
+     */
     public String getData() {
         StringBuilder builder = new StringBuilder();
         builder.append(editWordText);
@@ -214,7 +218,10 @@ public class MainActivityDict extends Activity {
         return builder.toString();
     }
 //    putData()
-    /** Restore the state of the game from the given string. */
+
+    /**
+     * Restore the state of the game from the given string.
+     */
     public void putData(String gameData) {
         String[] fields = gameData.split(",");
         int index = 0;
@@ -226,30 +233,30 @@ public class MainActivityDict extends Activity {
         @Override
         protected HashMap doInBackground(String... params) {
             String word = params[0];
+            try {
                 try {
-                    try {
-                        Resources res = getResources();
-                        InputStream in_s = null;
-                        String fileName = String.valueOf(word.charAt(0));
-                        int resID = getResources().getIdentifier(fileName, "raw", getPackageName());
-                        in_s = res.openRawResource(resID);
+                    Resources res = getResources();
+                    InputStream in_s = null;
+                    String fileName = String.valueOf(word.charAt(0));
+                    int resID = getResources().getIdentifier(fileName, "raw", getPackageName());
+                    in_s = res.openRawResource(resID);
 
-                        byte[] b = new byte[in_s.available()];
-                        in_s.read(b);
-                        result = new String(b);
-                        String[] strings = result.split("\\n");
-                        Log.e("INSERT", "inserting count = " + strings.length);
-                        for (String s : strings) {
-                            vocabList.put(s, s);
-                        }
-                        Log.e("INSERT", "inserted");
-                    } catch (IOException e) {
-                        Log.e("ERROR", "not inserted");
+                    byte[] b = new byte[in_s.available()];
+                    in_s.read(b);
+                    result = new String(b);
+                    String[] strings = result.split("\\n");
+                    Log.e("INSERT", "inserting count = " + strings.length);
+                    for (String s : strings) {
+                        vocabList.put(s, s);
                     }
-                } catch (Exception e) {
-                    Thread.interrupted();
-                    Log.e("AsyncTaskRunner", "Exception occurred");
+                    Log.e("INSERT", "inserted");
+                } catch (IOException e) {
+                    Log.e("ERROR", "not inserted");
                 }
+            } catch (Exception e) {
+                Thread.interrupted();
+                Log.e("AsyncTaskRunner", "Exception occurred");
+            }
             return vocabList;
         }
     }
