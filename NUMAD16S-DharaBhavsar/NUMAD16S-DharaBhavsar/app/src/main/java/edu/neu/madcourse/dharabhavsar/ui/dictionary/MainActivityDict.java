@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -37,6 +39,7 @@ public class MainActivityDict extends AppCompatActivity {
 
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
+
     private Handler mHandler = new Handler();
     String resultStr = "";
     String finalResult = "";
@@ -64,7 +67,7 @@ public class MainActivityDict extends AppCompatActivity {
             }
         }
 
-        // Method to show the list of words found from the provided word list
+//         Method to show the list of words found from the provided word list
         textViewWordList = (TextView) findViewById(R.id.textViewWordList);
         textViewWordList.setMovementMethod(new ScrollingMovementMethod());
         editWordText = (EditText) findViewById(R.id.editWordText);
@@ -93,15 +96,13 @@ public class MainActivityDict extends AppCompatActivity {
                         }
                         Log.e("addTextChangedListener", finalResult);
                         textViewWordList.setText(finalResult);
-                        if (res != "") {
+                        if (!TextUtils.equals(res, "")) {
                             mMediaPlayer = MediaPlayer.create(MainActivityDict.this,
                                     R.raw.short_ping_freesound_org);
                             mMediaPlayer.setVolume(0.5f, 0.5f);
                             mMediaPlayer.start();
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                    } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
                     result1 = resultStr;
