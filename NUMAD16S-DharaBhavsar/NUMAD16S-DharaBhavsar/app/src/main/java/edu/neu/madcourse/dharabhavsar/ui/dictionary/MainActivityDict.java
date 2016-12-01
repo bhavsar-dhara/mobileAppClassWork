@@ -9,9 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
+import android.text.method.KeyListener;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -68,6 +74,20 @@ public class MainActivityDict extends AppCompatActivity {
         textViewWordList.setMovementMethod(new ScrollingMovementMethod());
 
         editWordText = (EditText) findViewById(R.id.editWordText);
+
+        editWordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE) {
+//                    MainActivityDict.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                    hideSoftKeyboard();
+//                    InputMethodManager imm = (InputMethodManager)textView.getContext().getSystemService(MainActivityDict.this.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
 //        Reading from a file occurs in the AsyncTaskRunner
         editWordText.addTextChangedListener(new TextWatcher() {
@@ -217,6 +237,13 @@ public class MainActivityDict extends AppCompatActivity {
         int index = 0;
         editWordText.setText(fields[index++]);
         textViewWordList.setText(fields[index++]);
+    }
+
+    public void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                this.INPUT_METHOD_SERVICE
+        );
+        imm.hideSoftInputFromWindow(editWordText.getWindowToken(), 0);
     }
 
     private class AsyncTaskRunner extends AsyncTask<String, Void, HashMap> {
