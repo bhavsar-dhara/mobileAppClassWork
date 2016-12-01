@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp"
     tools:context="edu.neu.madcourse.dharabhavsar.ui.dictionary.MainActivityDict">
 
     <!--Custom Title Bar-->
@@ -12,7 +14,6 @@
         android:id="@+id/about_title_bar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/about_title_bar_height"
-        android:layout_row="0"
         android:background="@color/about_title_bar_color"
         android:focusable="false"
         android:text="@string/test_dict_app_screen"
@@ -21,21 +22,26 @@
         android:textStyle="bold"
         android:typeface="sans" />
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/editWordText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:hint="@string/enter_word_here"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editWordText"
         android:orientation="horizontal"
         android:weightSum="5">
-
-        <EditText
-            android:id="@+id/editWordText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:digits="abcdefghijklmnopqrstuvwxyz"
-            android:hint="@string/enter_word_here"
-            android:imeOptions="actionDone" />
 
         <Button
             android:id="@+id/clearBtn"
@@ -46,20 +52,12 @@
             android:text="@string/clearBtn"
             android:textAllCaps="false" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="5">
-
         <Button
             android:id="@+id/returnToMenuBtn"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text="@string/returnToMenuBtn"
             android:textAllCaps="false" />
 
@@ -78,9 +76,12 @@
         android:id="@+id/textViewWordList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout"
         android:layout_marginTop="10dp"
         android:isScrollContainer="true"
         android:scrollbars="vertical"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -11,7 +11,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -69,6 +72,20 @@ public class MainActivityDict extends AppCompatActivity {
 
         editWordText = (EditText) findViewById(R.id.editWordText);
 
+        editWordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE) {
+//                    MainActivityDict.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                    hideSoftKeyboard();
+//                    InputMethodManager imm = (InputMethodManager)textView.getContext().getSystemService(MainActivityDict.this.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
+
 //        Reading from a file occurs in the AsyncTaskRunner
         editWordText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -99,7 +116,7 @@ public class MainActivityDict extends AppCompatActivity {
                         Log.e("addTextChangedListener", finalResult);
                         textViewWordList.setText(finalResult);
                         if (!TextUtils.equals(res, "")) {
-                            CommonUtils.playSound(getBaseContext(),  R.raw.short_ping_freesound_org);
+                            CommonUtils.playSound(getBaseContext(), R.raw.short_ping_freesound_org);
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -138,7 +155,7 @@ public class MainActivityDict extends AppCompatActivity {
         clearBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                CommonUtils.playSound(getBaseContext(),  R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getBaseContext(), R.raw.short_ping_freesound_org);
 
                 // Clear text when clicked
 //                editWordText.setText("");
@@ -154,7 +171,7 @@ public class MainActivityDict extends AppCompatActivity {
         returnToMenuBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                CommonUtils.playSound(getBaseContext(),  R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getBaseContext(), R.raw.short_ping_freesound_org);
 
                 MainActivityDict.this.finish();
             }
@@ -165,7 +182,7 @@ public class MainActivityDict extends AppCompatActivity {
         acknowledgementsBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                CommonUtils.playSound(getBaseContext(),  R.raw.short_ping_freesound_org);
+                CommonUtils.playSound(getBaseContext(), R.raw.short_ping_freesound_org);
 
                 Intent intent = new Intent(MainActivityDict.this, AcknowledgementMainActivity.class);
                 startActivity(intent);
@@ -217,6 +234,13 @@ public class MainActivityDict extends AppCompatActivity {
         int index = 0;
         editWordText.setText(fields[index++]);
         textViewWordList.setText(fields[index++]);
+    }
+
+    public void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                this.INPUT_METHOD_SERVICE
+        );
+        imm.hideSoftInputFromWindow(editWordText.getWindowToken(), 0);
     }
 
     private class AsyncTaskRunner extends AsyncTask<String, Void, HashMap> {
