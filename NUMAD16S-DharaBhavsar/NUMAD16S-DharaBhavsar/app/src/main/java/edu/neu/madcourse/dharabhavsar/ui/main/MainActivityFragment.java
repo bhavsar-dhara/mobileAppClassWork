@@ -94,6 +94,7 @@ public class MainActivityFragment extends Fragment {
                 Log.i(TAG, "clicked on about_button");
                 Intent intent = new Intent(getActivity(), MainActivityAbout.class);
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_from_left);
             }
         });
 
