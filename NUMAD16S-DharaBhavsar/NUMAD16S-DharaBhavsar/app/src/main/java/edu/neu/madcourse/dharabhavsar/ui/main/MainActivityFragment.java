@@ -1,9 +1,14 @@
 package edu.neu.madcourse.dharabhavsar.ui.main;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +27,7 @@ import edu.neu.madcourse.dharabhavsar.utils.CommonUtils;
 /**
  * A placeholder fragment containing a simple view.
  */
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class MainActivityFragment extends Fragment {
 
     private static final String TAG = MainActivityFragment.class.getSimpleName();
@@ -89,12 +95,19 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Transition a = TransitionInflater.from(getActivity()).inflateTransition(R.transition.slide_right);
+                    getActivity().getWindow().setEnterTransition(a);
+                }
+
                 CommonUtils.playSound(getContext(), R.raw.short_ping_freesound_org);
 
                 Log.i(TAG, "clicked on about_button");
                 Intent intent = new Intent(getActivity(), MainActivityAbout.class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_from_left);
+//                getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_from_left);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
+                startActivity(intent, options.toBundle());
             }
         });
 
