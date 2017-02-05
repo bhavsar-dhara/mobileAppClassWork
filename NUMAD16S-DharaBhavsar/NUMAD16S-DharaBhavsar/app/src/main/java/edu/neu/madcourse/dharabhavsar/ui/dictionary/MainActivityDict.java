@@ -12,7 +12,6 @@ import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -56,7 +55,6 @@ public class MainActivityDict extends AppCompatActivity {
         setContentView(R.layout.activity_main_dict);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.test_dict_app_screen));
 
         boolean restore = getIntent().getBooleanExtra(KEY_RESTORE, false);
         if (restore) {

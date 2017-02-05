@@ -82,7 +82,7 @@ public class MainActivityFragment extends Fragment {
                 CommonUtils.playSound(getContext(), R.raw.distillerystudio_error_03_freesound_org);
 
                 Log.i(TAG, "clicked on generate_error_button");
-//          App generates an error due to proper
+//                App generates an error due to passing an incorrect activity - runtime error
                 PackageManager pm = getActivity().getPackageManager();
                 Intent intent = pm.getLaunchIntentForPackage("edu.neu.madcourse.dharabhavsar.ui.ut3.MainActivity");
                 startActivity(intent);
@@ -95,7 +95,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Transition a = TransitionInflater.from(getActivity()).inflateTransition(R.transition.slide_right);
                     getActivity().getWindow().setEnterTransition(a);
                 }

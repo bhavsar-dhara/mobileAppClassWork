@@ -3,7 +3,6 @@ package edu.neu.madcourse.dharabhavsar.ui.about;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -25,18 +24,23 @@ public class MainActivityAbout extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.about_app_screen));
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Transition a = TransitionInflater.from(this).inflateTransition(R.transition.slide_right);
             this.getWindow().setEnterTransition(a);
+        } else {
+            overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_from_left);
         }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finishAfterTransition();
-//        finish();
-//        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_from_right);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAfterTransition();
+        } else {
+            finish();
+            overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_from_right);
+        }
     }
 
     @Override
@@ -44,9 +48,12 @@ public class MainActivityAbout extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            finishAfterTransition();
-//            finish();
-//            overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_from_right);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                finishAfterTransition();
+            } else {
+                finish();
+                overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_from_right);
+            }
             return true;
         }
 

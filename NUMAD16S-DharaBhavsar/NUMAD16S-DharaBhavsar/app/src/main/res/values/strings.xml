@@ -44,7 +44,7 @@ both sides in the larger game.
     <string name="clearBtn"> Clear </string>
     <string name="returnToMenuBtn"> Return to menu </string>
     <string name="acknowledgementsBtn"> Acknowledgements </string>
-    <string name="dictActivityLabel"> Test Dictionary </string>
+    <string name="dictActivityLabel"> Dictionary </string>
     <string name="test_dict_app_screen"> Test Dictionary </string>
     <string name="ack_app_screen"> Acknowledgements </string>
 

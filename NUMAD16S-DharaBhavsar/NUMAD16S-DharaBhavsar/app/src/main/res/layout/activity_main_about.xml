@@ -9,17 +9,17 @@
     <!--tools:context=".AboutActivity"-->
 
     <!--Custom Title Bar-->
-    <TextView
-        android:id="@+id/about_title_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/about_title_bar_height"
-        android:background="@color/about_title_bar_color"
-        android:focusable="false"
-        android:text="@string/about_app_screen"
-        android:textColor="@color/about_title_bar_font_color"
-        android:textSize="@dimen/abc_action_bar_content_inset_material"
-        android:textStyle="bold"
-        android:typeface="sans" />
+    <!--<TextView-->
+        <!--android:id="@+id/about_title_bar"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="@dimen/about_title_bar_height"-->
+        <!--android:background="@color/about_title_bar_color"-->
+        <!--android:focusable="false"-->
+        <!--android:text="@string/about_app_screen"-->
+        <!--android:textColor="@color/about_title_bar_font_color"-->
+        <!--android:textSize="@dimen/abc_action_bar_content_inset_material"-->
+        <!--android:textStyle="bold"-->
+        <!--android:typeface="sans" />-->
 
     <fragment
         android:id="@+id/fragment_main_about"
